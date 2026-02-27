@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="IA Studio — Descubrí las mejores herramientas de IA por categoría. Rankings, videos, precios y updates.">
+  <title>IA Studio — Directorio Educativo de Inteligencia Artificial</title>
+  <link rel="stylesheet" href="styles/main.css">
+  <link rel="stylesheet" href="styles/components.css">
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='28' font-size='28'>🧠</text></svg>">
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="container">
+      <a href="#" class="navbar__logo">
+        <div class="navbar__logo-icon">⚡</div>
+        IA<span class="navbar__logo-accent">Studio</span>
+      </a>
+      <div class="navbar__links">
+        <a href="#herramientas" class="navbar__link">Herramientas</a>
+        <a href="#stats" class="navbar__link">Estadísticas</a>
+        <a href="#contacto" class="navbar__link">Comunidad</a>
+      </div>
+      <div class="navbar__actions">
+        <a href="#" class="btn btn--primary btn--sm">Unirse Gratis</a>
+      </div>
+      <button class="navbar__burger" aria-label="Menú"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="inicio">
+    <div class="hero__shapes">
+      <div class="hero__shape hero__shape--1"></div>
+      <div class="hero__shape hero__shape--2"></div>
+      <div class="hero__shape hero__shape--3"></div>
+    </div>
+    <div class="container hero__container">
+      <div class="hero__content reveal">
+        <div class="hero__badge"><span class="hero__badge-dot"></span> Directorio Educativo para LATAM</div>
+        <h1 class="hero__title">Encontrá la <span class="hero__title-gradient">IA perfecta</span> para lo que necesitás
+        </h1>
+        <p class="hero__desc">Explorá, compará y aprendé con las mejores herramientas de Inteligencia Artificial.
+          Videos, rankings y precios actualizados.</p>
+        <div class="hero__search">
+          <div class="hero__search-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <circle cx="11" cy="11" r="8" />
+              <path d="M21 21l-4.35-4.35" />
+            </svg></div>
+          <input type="text" placeholder="Buscar herramientas de IA…" id="search-input">
+          <button class="hero__search-btn">Buscar</button>
+        </div>
+        <!-- PILLS -->
+        <div class="filters reveal">
+          <button class="filter-pill active" data-category="all">✨ Todos <span
+              class="filter-pill__count">12</span></button>
+          <button class="filter-pill" data-category="arte"><span class="filter-pill__emoji">🎨</span> Arte y Visual
+            <span class="filter-pill__count">2</span></button>
+          <button class="filter-pill" data-category="mate"><span class="filter-pill__emoji">🧮</span> Matemáticas <span
+              class="filter-pill__count">2</span></button>
+          <button class="filter-pill" data-category="code"><span class="filter-pill__emoji">💻</span> Programación <span
+              class="filter-pill__count">3</span></button>
+          <button class="filter-pill" data-category="letras"><span class="filter-pill__emoji">📜</span> Letras e
+            Historia <span class="filter-pill__count">3</span></button>
+          <button class="filter-pill" data-category="salud"><span class="filter-pill__emoji">🩺</span> Salud <span
+              class="filter-pill__count">2</span></button>
+        </div>
+      </div>
+      <!-- Hero Visual -->
+      <div class="hero__visual reveal">
+        <div class="hero__visual-glow"></div>
+        <img src="assets/images/hero-visual.png" alt="IA Studio — Fusión de tecnología y cultura latinoamericana"
+          class="hero__visual-img">
+      </div>
+    </div>
+  </section>
+
+  <!-- TOOLS GRID -->
+  <section class="tools-section section" id="herramientas">
+    <div class="container">
+      <div class="tools__header reveal">
+        <div class="tools__count">Mostrando <strong>12</strong> herramientas</div>
+        <a href="#" class="btn btn--outline btn--sm">Sugerir herramienta →</a>
+      </div>
+      <div class="tools__grid" id="tools-grid">
+
+        <!-- CARD TEMPLATE: Each card has strip, badge, name, desc, stars, price/quality, video btn -->
+
+        <!-- 1: Midjourney — Arte -->
+        <div class="tool-card reveal reveal-d1" data-category="arte">
+          <div class="tool-card__strip"></div>
+          <div class="tool-card__header">
+            <div class="tool-card__logo-wrap">
+              <div class="tool-card__logo" style="background:var(--cat-arte-bg);color:var(--cat-arte);">🎨</div>
+              <div>
+                <div class="tool-card__name">Midjourney</div>
+                <div class="tool-card__version">v6.1</div>
+              </div>
+            </div>
+            <span class="cat-badge cat-badge--arte">Arte</span>
+          </div>
+          <div class="tool-card__body">
+            <p class="tool-card__desc">Generador de imágenes artísticas por IA. Creá ilustraciones, arte conceptual y
+              diseños fotorrealistas con prompts de texto.</p>
+            <div class="tool-card__meta">
+              <div class="tool-card__rating">
+                <div class="stars"><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg></div>
+                <span class="tool-card__rating-value">4.9</span><span class="tool-card__reviews">(3.1k)</span>
+              </div>
+              <div class="tool-card__price-quality"><span class="tool-card__pq-label">P/C</span>
+                <div class="tool-card__pq-bar">
+                  <div class="tool-card__pq-dot filled"></div>
+                  <div class="tool-card__pq-dot filled"></div>
+                  <div class="tool-card__pq-dot filled"></div>
+                  <div class="tool-card__pq-dot filled"></div>
+                  <div class="tool-card__pq-dot"></div>
+                </div>
+              </div>
+            </div>
+            <div class="tool-card__pricing"><span class="tag tag--paid">Pago</span><span class="price">USD
+                $10</span><span class="period">/mes</span></div>
+          </div>
+          <div class="tool-card__footer"><a href="#" class="btn btn--outline btn--sm">Ver Detalles</a><a href="#"
+              class="tool-card__video-btn" title="Ver Video"><svg viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="5,3 19,12 5,21" />
+              </svg></a></div>
+        </div>
+
+        <!-- 2: DALL-E — Arte -->
+        <div class="tool-card reveal reveal-d2" data-category="arte">
+          <div class="tool-card__strip"></div>
+          <div class="tool-card__header">
+            <div class="tool-card__logo-wrap">
+              <div class="tool-card__logo" style="background:var(--cat-arte-bg);color:var(--cat-arte);">🖼️</div>
+              <div>
+                <div class="tool-card__name">DALL·E 3</div>
+                <div class="tool-card__version">OpenAI</div>
+              </div>
+            </div>
+            <span class="cat-badge cat-badge--arte">Arte</span>
+          </div>
+          <div class="tool-card__body">
+            <p class="tool-card__desc">Generación de imágenes integrada en ChatGPT. Ideal para crear contenido visual,
+              mockups y arte conceptual rápidamente.</p>
+            <div class="tool-card__meta">
+              <div class="tool-card__rating">
+                <div class="stars"><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg><svg viewBox="0 0 24 24" class="empty">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg></div>
+                <span class="tool-card__rating-value">4.5</span><span class="tool-card__reviews">(2.0k)</span>
+              </div>
+              <div class="tool-card__price-quality"><span class="tool-card__pq-label">P/C</span>
+                <div class="tool-card__pq-bar">
+                  <div class="tool-card__pq-dot filled"></div>
+                  <div class="tool-card__pq-dot filled"></div>
+                  <div class="tool-card__pq-dot filled"></div>
+                  <div class="tool-card__pq-dot filled"></div>
+                  <div class="tool-card__pq-dot filled"></div>
+                </div>
+              </div>
+            </div>
+            <div class="tool-card__pricing"><span class="tag tag--freemium">Freemium</span><span class="price">USD
+                $20</span><span class="period">/mes (Plus)</span></div>
+          </div>
+          <div class="tool-card__footer"><a href="#" class="btn btn--outline btn--sm">Ver Detalles</a><a href="#"
+              class="tool-card__video-btn" title="Ver Video"><svg viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="5,3 19,12 5,21" />
+              </svg></a></div>
+        </div>
+
+        <!-- 3: Wolfram Alpha — Mate -->
+        <div class="tool-card reveal reveal-d3" data-category="mate">
+          <div class="tool-card__strip"></div>
+          <div class="tool-card__header">
+            <div class="tool-card__logo-wrap">
+              <div class="tool-card__logo" style="background:var(--cat-mate-bg);color:var(--cat-mate);">🧮</div>
+              <div>
+                <div class="tool-card__name">Wolfram Alpha</div>
+                <div class="tool-card__version">Wolfram</div>
+              </div>
+            </div>
+            <span class="cat-badge cat-badge--mate">Matemáticas</span>
+          </div>
+          <div class="tool-card__body">
+            <p class="tool-card__desc">Motor de conocimiento computacional. Resuelve ecuaciones, grafica funciones y
+              analiza datos paso a paso con explicaciones.</p>
+            <div class="tool-card__meta">
+              <div class="tool-card__rating">
+                <div class="stars"><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg><svg viewBox="0 0 24 24" class="empty">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg></div>
+                <span class="tool-card__rating-value">4.6</span><span class="tool-card__reviews">(1.5k)</span>
+              </div>
+              <div class="tool-card__price-quality"><span class="tool-card__pq-label">P/C</span>
+                <div class="tool-card__pq-bar">
+                  <div class="tool-card__pq-dot filled"></div>
+                  <div class="tool-card__pq-dot filled"></div>
+                  <div class="tool-card__pq-dot filled"></div>
+                  <div class="tool-card__pq-dot filled"></div>
+                  <div class="tool-card__pq-dot"></div>
+                </div>
+              </div>
+            </div>
+            <div class="tool-card__pricing"><span class="tag tag--freemium">Freemium</span><span class="price">USD
+                $7.25</span><span class="period">/mes</span></div>
+          </div>
+          <div class="tool-card__footer"><a href="#" class="btn btn--outline btn--sm">Ver Detalles</a><a href="#"
+              class="tool-card__video-btn" title="Ver Video"><svg viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="5,3 19,12 5,21" />
+              </svg></a></div>
+        </div>
+
+        <!-- 4: Photomath — Mate -->
+        <div class="tool-card reveal reveal-d4" data-category="mate">
+          <div class="tool-card__strip"></div>
+          <div class="tool-card__header">
+            <div class="tool-card__logo-wrap">
+              <div class="tool-card__logo" style="background:var(--cat-mate-bg);color:var(--cat-mate);">📐</div>
+              <div>
+                <div class="tool-card__name">Photomath</div>
+                <div class="tool-card__version">Google</div>
+              </div>
+            </div>
+            <span class="cat-badge cat-badge--mate">Matemáticas</span>
+          </div>
+          <div class="tool-card__body">
+            <p class="tool-card__desc">Escaneá un problema matemático con la cámara y obtené la solución paso a paso.
+              Perfecto para estudiantes de secundaria y universidad.</p>
+            <div class="tool-card__meta">
+              <div class="tool-card__rating">
+                <div class="stars"><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg></div>
+                <span class="tool-card__rating-value">4.8</span><span class="tool-card__reviews">(5.2k)</span>
+              </div>
+              <div class="tool-card__price-quality"><span class="tool-card__pq-label">P/C</span>
+                <div class="tool-card__pq-bar">
+                  <div class="tool-card__pq-dot filled"></div>
+                  <div class="tool-card__pq-dot filled"></div>
+                  <div class="tool-card__pq-dot filled"></div>
+                  <div class="tool-card__pq-dot filled"></div>
+                  <div class="tool-card__pq-dot filled"></div>
+                </div>
+              </div>
+            </div>
+            <div class="tool-card__pricing"><span class="tag tag--free">Gratis</span><span class="price">USD
+                $10</span><span class="period">/mes Plus</span></div>
+          </div>
+          <div class="tool-card__footer"><a href="#" class="btn btn--outline btn--sm">Ver Detalles</a><a href="#"
+              class="tool-card__video-btn" title="Ver Video"><svg viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="5,3 19,12 5,21" />
+              </svg></a></div>
+        </div>
+
+        <!-- 5: GitHub Copilot — Code -->
+        <div class="tool-card reveal reveal-d5" data-category="code">
+          <div class="tool-card__strip"></div>
+          <div class="tool-card__header">
+            <div class="tool-card__logo-wrap">
+              <div class="tool-card__logo" style="background:var(--cat-code-bg);color:var(--cat-code);">💻</div>
+              <div>
+                <div class="tool-card__name">GitHub Copilot</div>
+                <div class="tool-card__version">GitHub / Microsoft</div>
+              </div>
+            </div>
+            <span class="cat-badge cat-badge--code">Código</span>
+          </div>
+          <div class="tool-card__body">
+            <p class="tool-card__desc">Copiloto de código IA. Autocompletado inteligente, generación de tests,
+              refactoring y explicación de código directamente en tu IDE.</p>
+            <div class="tool-card__meta">
+              <div class="tool-card__rating">
+                <div class="stars"><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg><svg viewBox="0 0 24 24" class="empty">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg></div>
+                <span class="tool-card__rating-value">4.5</span><span class="tool-card__reviews">(2.0k)</span>
+              </div>
+              <div class="tool-card__price-quality"><span class="tool-card__pq-label">P/C</span>
+                <div class="tool-card__pq-bar">
+                  <div class="tool-card__pq-dot filled"></div>
+                  <div class="tool-card__pq-dot filled"></div>
+                  <div class="tool-card__pq-dot filled"></div>
+                  <div class="tool-card__pq-dot filled"></div>
+                  <div class="tool-card__pq-dot"></div>
+                </div>
+              </div>
+            </div>
+            <div class="tool-card__pricing"><span class="tag tag--freemium">Freemium</span><span class="price">USD
+                $10</span><span class="period">/mes</span></div>
+          </div>
+          <div class="tool-card__footer"><a href="#" class="btn btn--outline btn--sm">Ver Detalles</a><a href="#"
+              class="tool-card__video-btn" title="Ver Video"><svg viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="5,3 19,12 5,21" />
+              </svg></a></div>
+        </div>
+
+        <!-- 6: Replit AI — Code -->
+        <div class="tool-card reveal reveal-d6" data-category="code">
+          <div class="tool-card__strip"></div>
+          <div class="tool-card__header">
+            <div class="tool-card__logo-wrap">
+              <div class="tool-card__logo" style="background:var(--cat-code-bg);color:var(--cat-code);">⚙️</div>
+              <div>
+                <div class="tool-card__name">Replit AI</div>
+                <div class="tool-card__version">Replit</div>
+              </div>
+            </div>
+            <span class="cat-badge cat-badge--code">Código</span>
+          </div>
+          <div class="tool-card__body">
+            <p class="tool-card__desc">IDE online con IA integrada. Escribí, ejecutá y deployá código con asistencia de
+              IA. Perfecto para aprender a programar.</p>
+            <div class="tool-card__meta">
+              <div class="tool-card__rating">
+                <div class="stars"><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg><svg viewBox="0 0 24 24" class="empty">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg></div>
+                <span class="tool-card__rating-value">4.3</span><span class="tool-card__reviews">(1.1k)</span>
+              </div>
+              <div class="tool-card__price-quality"><span class="tool-card__pq-label">P/C</span>
+                <div class="tool-card__pq-bar">
+                  <div class="tool-card__pq-dot filled"></div>
+                  <div class="tool-card__pq-dot filled"></div>
+                  <div class="tool-card__pq-dot filled"></div>
+                  <div class="tool-card__pq-dot filled"></div>
+                  <div class="tool-card__pq-dot filled"></div>
+                </div>
+              </div>
+            </div>
+            <div class="tool-card__pricing"><span class="tag tag--free">Gratis</span><span class="price">USD
+                $25</span><span class="period">/mes Hacker</span></div>
+          </div>
+          <div class="tool-card__footer"><a href="#" class="btn btn--outline btn--sm">Ver Detalles</a><a href="#"
+              class="tool-card__video-btn" title="Ver Video"><svg viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="5,3 19,12 5,21" />
+              </svg></a></div>
+        </div>
+
+        <!-- 7: Claude — Code -->
+        <div class="tool-card reveal reveal-d1" data-category="code">
+          <div class="tool-card__strip"></div>
+          <div class="tool-card__header">
+            <div class="tool-card__logo-wrap">
+              <div class="tool-card__logo" style="background:var(--cat-code-bg);color:var(--cat-code);">🧠</div>
+              <div>
+                <div class="tool-card__name">Claude Code</div>
+                <div class="tool-card__version">Anthropic</div>
+              </div>
+            </div>
+            <span class="cat-badge cat-badge--code">Código</span>
+          </div>
+          <div class="tool-card__body">
+            <p class="tool-card__desc">Asistente de IA especializado en razonamiento y programación. Excelente para
+              análisis de código, debugging y arquitectura de software.</p>
+            <div class="tool-card__meta">
+              <div class="tool-card__rating">
+                <div class="stars"><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg></div>
+                <span class="tool-card__rating-value">4.8</span><span class="tool-card__reviews">(1.6k)</span>
+              </div>
+              <div class="tool-card__price-quality"><span class="tool-card__pq-label">P/C</span>
+                <div class="tool-card__pq-bar">
+                  <div class="tool-card__pq-dot filled"></div>
+                  <div class="tool-card__pq-dot filled"></div>
+                  <div class="tool-card__pq-dot filled"></div>
+                  <div class="tool-card__pq-dot filled"></div>
+                  <div class="tool-card__pq-dot"></div>
+                </div>
+              </div>
+            </div>
+            <div class="tool-card__pricing"><span class="tag tag--freemium">Freemium</span><span class="price">USD
+                $20</span><span class="period">/mes Pro</span></div>
+          </div>
+          <div class="tool-card__footer"><a href="#" class="btn btn--outline btn--sm">Ver Detalles</a><a href="#"
+              class="tool-card__video-btn" title="Ver Video"><svg viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="5,3 19,12 5,21" />
+              </svg></a></div>
+        </div>
+
+        <!-- 8: ChatGPT — Letras -->
+        <div class="tool-card reveal reveal-d2" data-category="letras">
+          <div class="tool-card__strip"></div>
+          <div class="tool-card__header">
+            <div class="tool-card__logo-wrap">
+              <div class="tool-card__logo" style="background:var(--cat-letras-bg);color:var(--cat-letras);">📝</div>
+              <div>
+                <div class="tool-card__name">ChatGPT</div>
+                <div class="tool-card__version">GPT-4o · OpenAI</div>
+              </div>
+            </div>
+            <span class="cat-badge cat-badge--letras">Letras</span>
+          </div>
+          <div class="tool-card__body">
+            <p class="tool-card__desc">El chatbot de IA más versátil. Escribí ensayos, analizá textos literarios,
+              estudiá historia y practicá idiomas de forma interactiva.</p>
+            <div class="tool-card__meta">
+              <div class="tool-card__rating">
+                <div class="stars"><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg></div>
+                <span class="tool-card__rating-value">4.7</span><span class="tool-card__reviews">(8.5k)</span>
+              </div>
+              <div class="tool-card__price-quality"><span class="tool-card__pq-label">P/C</span>
+                <div class="tool-card__pq-bar">
+                  <div class="tool-card__pq-dot filled"></div>
+                  <div class="tool-card__pq-dot filled"></div>
+                  <div class="tool-card__pq-dot filled"></div>
+                  <div class="tool-card__pq-dot filled"></div>
+                  <div class="tool-card__pq-dot filled"></div>
+                </div>
+              </div>
+            </div>
+            <div class="tool-card__pricing"><span class="tag tag--free">Gratis</span><span class="price">USD
+                $20</span><span class="period">/mes Plus</span></div>
+          </div>
+          <div class="tool-card__footer"><a href="#" class="btn btn--outline btn--sm">Ver Detalles</a><a href="#"
+              class="tool-card__video-btn" title="Ver Video"><svg viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="5,3 19,12 5,21" />
+              </svg></a></div>
+        </div>
+
+        <!-- 9: Perplexity — Letras -->
+        <div class="tool-card reveal reveal-d3" data-category="letras">
+          <div class="tool-card__strip"></div>
+          <div class="tool-card__header">
+            <div class="tool-card__logo-wrap">
+              <div class="tool-card__logo" style="background:var(--cat-letras-bg);color:var(--cat-letras);">🔍</div>
+              <div>
+                <div class="tool-card__name">Perplexity</div>
+                <div class="tool-card__version">Perplexity AI</div>
+              </div>
+            </div>
+            <span class="cat-badge cat-badge--letras">Letras</span>
+          </div>
+          <div class="tool-card__body">
+            <p class="tool-card__desc">Buscador con IA que cita fuentes. Investigá temas históricos, buscá referencias
+              académicas y obtené respuestas verificables al instante.</p>
+            <div class="tool-card__meta">
+              <div class="tool-card__rating">
+                <div class="stars"><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg><svg viewBox="0 0 24 24" class="empty">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg></div>
+                <span class="tool-card__rating-value">4.6</span><span class="tool-card__reviews">(2.3k)</span>
+              </div>
+              <div class="tool-card__price-quality"><span class="tool-card__pq-label">P/C</span>
+                <div class="tool-card__pq-bar">
+                  <div class="tool-card__pq-dot filled"></div>
+                  <div class="tool-card__pq-dot filled"></div>
+                  <div class="tool-card__pq-dot filled"></div>
+                  <div class="tool-card__pq-dot filled"></div>
+                  <div class="tool-card__pq-dot filled"></div>
+                </div>
+              </div>
+            </div>
+            <div class="tool-card__pricing"><span class="tag tag--free">Gratis</span><span class="price">USD
+                $20</span><span class="period">/mes Pro</span></div>
+          </div>
+          <div class="tool-card__footer"><a href="#" class="btn btn--outline btn--sm">Ver Detalles</a><a href="#"
+              class="tool-card__video-btn" title="Ver Video"><svg viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="5,3 19,12 5,21" />
+              </svg></a></div>
+        </div>
+
+        <!-- 10: Gemini — Letras -->
+        <div class="tool-card reveal reveal-d4" data-category="letras">
+          <div class="tool-card__strip"></div>
+          <div class="tool-card__header">
+            <div class="tool-card__logo-wrap">
+              <div class="tool-card__logo" style="background:var(--cat-letras-bg);color:var(--cat-letras);">🌐</div>
+              <div>
+                <div class="tool-card__name">Gemini</div>
+                <div class="tool-card__version">Google DeepMind</div>
+              </div>
+            </div>
+            <span class="cat-badge cat-badge--letras">Letras</span>
+          </div>
+          <div class="tool-card__body">
+            <p class="tool-card__desc">IA multimodal de Google. Analizá documentos, resumí textos extensos, traducí
+              idiomas y explorá contenido educativo multimedia.</p>
+            <div class="tool-card__meta">
+              <div class="tool-card__rating">
+                <div class="stars"><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg></div>
+                <span class="tool-card__rating-value">4.8</span><span class="tool-card__reviews">(3.8k)</span>
+              </div>
+              <div class="tool-card__price-quality"><span class="tool-card__pq-label">P/C</span>
+                <div class="tool-card__pq-bar">
+                  <div class="tool-card__pq-dot filled"></div>
+                  <div class="tool-card__pq-dot filled"></div>
+                  <div class="tool-card__pq-dot filled"></div>
+                  <div class="tool-card__pq-dot filled"></div>
+                  <div class="tool-card__pq-dot filled"></div>
+                </div>
+              </div>
+            </div>
+            <div class="tool-card__pricing"><span class="tag tag--free">Gratis</span><span class="price">USD
+                $20</span><span class="period">/mes Advanced</span></div>
+          </div>
+          <div class="tool-card__footer"><a href="#" class="btn btn--outline btn--sm">Ver Detalles</a><a href="#"
+              class="tool-card__video-btn" title="Ver Video"><svg viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="5,3 19,12 5,21" />
+              </svg></a></div>
+        </div>
+
+        <!-- 11: Glass Health — Salud -->
+        <div class="tool-card reveal reveal-d5" data-category="salud">
+          <div class="tool-card__strip"></div>
+          <div class="tool-card__header">
+            <div class="tool-card__logo-wrap">
+              <div class="tool-card__logo" style="background:var(--cat-salud-bg);color:var(--cat-salud);">🩺</div>
+              <div>
+                <div class="tool-card__name">Glass Health</div>
+                <div class="tool-card__version">Glass Health AI</div>
+              </div>
+            </div>
+            <span class="cat-badge cat-badge--salud">Salud</span>
+          </div>
+          <div class="tool-card__body">
+            <p class="tool-card__desc">IA clínica para estudiantes de medicina. Genera diagnósticos diferenciales,
+              planes de tratamiento y resúmenes clínicos basados en síntomas.</p>
+            <div class="tool-card__meta">
+              <div class="tool-card__rating">
+                <div class="stars"><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg><svg viewBox="0 0 24 24" class="empty">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg></div>
+                <span class="tool-card__rating-value">4.4</span><span class="tool-card__reviews">(680)</span>
+              </div>
+              <div class="tool-card__price-quality"><span class="tool-card__pq-label">P/C</span>
+                <div class="tool-card__pq-bar">
+                  <div class="tool-card__pq-dot filled"></div>
+                  <div class="tool-card__pq-dot filled"></div>
+                  <div class="tool-card__pq-dot filled"></div>
+                  <div class="tool-card__pq-dot"></div>
+                  <div class="tool-card__pq-dot"></div>
+                </div>
+              </div>
+            </div>
+            <div class="tool-card__pricing"><span class="tag tag--free">Gratis</span><span
+                class="price">Gratis</span><span class="period">para estudiantes</span></div>
+          </div>
+          <div class="tool-card__footer"><a href="#" class="btn btn--outline btn--sm">Ver Detalles</a><a href="#"
+              class="tool-card__video-btn" title="Ver Video"><svg viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="5,3 19,12 5,21" />
+              </svg></a></div>
+        </div>
+
+        <!-- 12: AMBOSS — Salud -->
+        <div class="tool-card reveal reveal-d6" data-category="salud">
+          <div class="tool-card__strip"></div>
+          <div class="tool-card__header">
+            <div class="tool-card__logo-wrap">
+              <div class="tool-card__logo" style="background:var(--cat-salud-bg);color:var(--cat-salud);">💊</div>
+              <div>
+                <div class="tool-card__name">AMBOSS AI</div>
+                <div class="tool-card__version">AMBOSS</div>
+              </div>
+            </div>
+            <span class="cat-badge cat-badge--salud">Salud</span>
+          </div>
+          <div class="tool-card__body">
+            <p class="tool-card__desc">Biblioteca médica con IA. Buscá términos médicos, repasá para exámenes y accedé a
+              artículos clínicos con resúmenes inteligentes.</p>
+            <div class="tool-card__meta">
+              <div class="tool-card__rating">
+                <div class="stars"><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg><svg viewBox="0 0 24 24" class="filled">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg><svg viewBox="0 0 24 24" class="empty">
+                    <polygon points="12,2 15,9 23,9 17,14 19,22 12,17 5,22 7,14 1,9 9,9" />
+                  </svg></div>
+                <span class="tool-card__rating-value">4.5</span><span class="tool-card__reviews">(920)</span>
+              </div>
+              <div class="tool-card__price-quality"><span class="tool-card__pq-label">P/C</span>
+                <div class="tool-card__pq-bar">
+                  <div class="tool-card__pq-dot filled"></div>
+                  <div class="tool-card__pq-dot filled"></div>
+                  <div class="tool-card__pq-dot filled"></div>
+                  <div class="tool-card__pq-dot"></div>
+                  <div class="tool-card__pq-dot"></div>
+                </div>
+              </div>
+            </div>
+            <div class="tool-card__pricing"><span class="tag tag--paid">Pago</span><span class="price">USD
+                $15</span><span class="period">/mes Student</span></div>
+          </div>
+          <div class="tool-card__footer"><a href="#" class="btn btn--outline btn--sm">Ver Detalles</a><a href="#"
+              class="tool-card__video-btn" title="Ver Video"><svg viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="5,3 19,12 5,21" />
+              </svg></a></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="stats-bar" id="stats">
+    <div class="container">
+      <div class="stats-bar__grid reveal">
+        <div>
+          <div class="stats-bar__value" data-count="12" data-suffix="+">0</div>
+          <div class="stats-bar__label">Herramientas</div>
+        </div>
+        <div>
+          <div class="stats-bar__value" data-count="5">0</div>
+          <div class="stats-bar__label">Categorías</div>
+        </div>
+        <div>
+          <div class="stats-bar__value" data-count="200" data-suffix="+">0</div>
+          <div class="stats-bar__label">Videos</div>
+        </div>
+        <div>
+          <div class="stats-bar__value" data-count="15000" data-suffix="+">0</div>
+          <div class="stats-bar__label">Usuarios LATAM</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section section" id="contacto">
+    <div class="container">
+      <div class="cta__inner reveal">
+        <h2 class="cta__title">¿Listo para aprender con IA?</h2>
+        <p class="cta__desc">Unite a miles de estudiantes en Latinoamérica que están usando IA para potenciar su
+          educación.</p>
+        <div class="cta__actions">
+          <a href="#" class="btn btn--white btn--lg">Crear Cuenta Gratis</a>
+          <a href="#herramientas" class="btn btn--ghost">Explorar Herramientas</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div>
+          <div class="navbar__logo">
+            <div class="navbar__logo-icon">⚡</div>IA<span class="navbar__logo-accent">Studio</span>
+          </div>
+          <p class="footer__brand-desc">El directorio educativo #1 en Latinoamérica para descubrir y aprender sobre
+            herramientas de Inteligencia Artificial.</p>
+        </div>
+        <div>
+          <h4 class="footer__heading">Categorías</h4><a href="#" class="footer__link">🎨 Arte y Visual</a><a href="#"
+            class="footer__link">🧮 Matemáticas</a><a href="#" class="footer__link">💻 Programación</a><a href="#"
+            class="footer__link">📜 Letras e Historia</a><a href="#" class="footer__link">🩺 Salud</a>
+        </div>
+        <div>
+          <h4 class="footer__heading">Recursos</h4><a href="#" class="footer__link">Blog</a><a href="#"
+            class="footer__link">Tutoriales</a><a href="#" class="footer__link">Newsletter</a><a href="#"
+            class="footer__link">API</a>
+        </div>
+        <div>
+          <h4 class="footer__heading">Legal</h4><a href="#" class="footer__link">Términos</a><a href="#"
+            class="footer__link">Privacidad</a><a href="#" class="footer__link">Contacto</a>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <span class="footer__copyright">© 2026 IA Studio. Todos los derechos reservados.</span>
+        <div class="footer__socials">
+          <a href="#" class="footer__social" title="Twitter / X"><svg viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+            </svg></a>
+          <a href="#" class="footer__social" title="YouTube"><svg viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+            </svg></a>
+          <a href="#" class="footer__social" title="Instagram"><svg viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z" />
+            </svg></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="scripts/main.js"></script>
+</body>
+
+</html>
