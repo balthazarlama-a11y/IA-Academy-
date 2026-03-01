@@ -9,9 +9,13 @@ export async function registerRoutes(
   httpServer: Server,
   app: Express
 ): Promise<Server> {
-  // Setup Auth
-  await setupAuth(app);
-  registerAuthRoutes(app);
+  // Setup Auth (only on Replit — skip locally)
+  if (process.env.REPL_ID) {
+    await setupAuth(app);
+    registerAuthRoutes(app);
+  } else {
+    console.log("⚠️  Replit Auth not available — running without authentication");
+  }
 
   app.get(api.ais.list.path, async (req, res) => {
     const aiList = await storage.getAis();
@@ -35,7 +39,7 @@ export async function registerRoutes(
     try {
       const aiId = Number(req.params.aiId);
       const userId = req.user.claims.sub;
-      
+
       const input = api.reviews.create.input.parse(req.body);
       const review = await storage.createReview({
         ...input,
@@ -70,7 +74,7 @@ async function seedDatabase() {
       priceQuality: "Excelente. Ofrece un modelo gratuito muy capaz (GPT-4o mini) y una versión Plus ($20/mes) que incluye análisis de datos avanzados y acceso temprano a nuevos modelos.",
       logoUrl: "https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg"
     });
-    
+
     await storage.createAi({
       name: "Claude (Anthropic)",
       description: "Claude es el asistente de IA de próxima generación creado por Anthropic, diseñado para ser útil, honesto e inofensivo. Destaca en tareas de redacción y análisis de documentos largos.",
@@ -78,7 +82,7 @@ async function seedDatabase() {
       priceQuality: "Muy buena. Su modelo gratuito es increíblemente inteligente y la versión Pro ($20/mes) ofrece uso extensivo de Claude 3.5 Sonnet y Opus.",
       logoUrl: "https://upload.wikimedia.org/wikipedia/commons/f/ff/Anthropic_logo.svg"
     });
-    
+
     await storage.createAi({
       name: "Midjourney",
       description: "Midjourney es un laboratorio de investigación independiente y el nombre de su programa de IA generativa de imágenes a partir de texto. Es famoso por su calidad artística.",
