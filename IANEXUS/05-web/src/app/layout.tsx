@@ -2,9 +2,14 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "IA NEXUS",
+  title: "IA NEXUS — Comunidad IA para estudiantes",
   description:
-    "Comunidad informativa de IA con herramientas por área, planes gratuitos y flujos para el día a día.",
+    "Herramientas de IA verificadas, prompts para Gemini y comunidad activa por área.",
+  openGraph: {
+    title: "IA NEXUS",
+    description: "Herramientas de IA para estudiantes",
+    type: "website",
+  },
 };
 
 export default function RootLayout({

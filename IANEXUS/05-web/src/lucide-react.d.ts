@@ -1,6 +1,4 @@
 declare module 'lucide-react' {
-  import { ReactNode } from 'react';
-  
   export interface IconProps {
     className?: string;
     size?: number;
@@ -16,4 +14,12 @@ declare module 'lucide-react' {
   export const Instagram: React.FC<IconProps>;
   export const Youtube: React.FC<IconProps>;
   export const Linkedin: React.FC<IconProps>;
+  export const Rss: React.FC<IconProps>;
+  export const BadgeCheck: React.FC<IconProps>;
+  export const Clipboard: React.FC<IconProps>;
+  export const Users: React.FC<IconProps>;
+  export const Search: React.FC<IconProps>;
+  export const ArrowRight: React.FC<IconProps>;
+  export const Gem: React.FC<IconProps>;
+  export const Zap: React.FC<IconProps>;
 }

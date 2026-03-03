@@ -1,86 +1,36 @@
-import React from "react";
 import Link from "next/link";
-import { BookOpen, Instagram, Youtube, Linkedin } from "lucide-react";
-
-interface SocialLink {
-  icon: React.ComponentType<{ className: string }> | (() => React.JSX.Element);
-  href: string;
-  label: string;
-}
-
-// X (Twitter) Icon as SVG component
-const TwitterXIcon = ({ className }: { className: string }) => (
-  <svg
-    className={className}
-    fill="currentColor"
-    viewBox="0 0 24 24"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24h-6.6l-5.165-6.75-5.91 6.75h-3.308l7.73-8.835L2.56 2.25h6.6l4.686 6.186 5.608-6.186zM17.474 20.451h1.823L6.369 3.863H4.462l13.012 16.588z" />
-  </svg>
-);
-
-const SOCIAL_LINKS: SocialLink[] = [
-  {
-    icon: TwitterXIcon,
-    href: "https://x.com",
-    label: "Twitter/X",
-  },
-  {
-    icon: Instagram,
-    href: "https://instagram.com",
-    label: "Instagram",
-  },
-  {
-    icon: Youtube,
-    href: "https://youtube.com",
-    label: "YouTube",
-  },
-  {
-    icon: Linkedin,
-    href: "https://linkedin.com",
-    label: "LinkedIn",
-  },
-];
 
 export default function Footer() {
   return (
-    <footer
-      className="relative z-50 rounded-2xl mx-auto max-w-6xl mt-auto mb-4 mt-12"
-      style={{
-        background: "rgba(255, 255, 255, 0.06)",
-        backdropFilter: "blur(24px) saturate(180%)",
-        border: "1px solid rgba(255, 255, 255, 0.12)",
-        boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.15)",
-      }}
-    >
-      <div className="flex items-center justify-between px-6 py-5">
-        {/* Logo */}
-        <div className="flex items-center gap-3">
-          <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-gradient-to-br from-blue-500 to-violet-600 text-white">
-            <BookOpen className="h-4 w-4" />
-          </div>
-          <span className="text-xs font-semibold text-white">IA NEXUS</span>
-        </div>
-
-        {/* Social Icons */}
-        <div className="flex items-center gap-4">
-          {SOCIAL_LINKS.map((social) => {
-            const Icon = social.icon as React.ComponentType<{ className: string }>;
-            return (
-              <Link
-                key={social.label}
-                href={social.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={social.label}
-                className="text-white/50 hover:text-white transition-colors duration-200"
-              >
-                <Icon className="h-5 w-5" />
-              </Link>
-            );
-          })}
-        </div>
+    <footer className="relative z-50 flex items-center justify-between px-8 py-4">
+      <span className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>
+        © 2025 IA NEXUS
+      </span>
+      <div className="flex items-center gap-5">
+        <Link href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram"
+          className="transition-opacity duration-200 hover:opacity-100"
+          style={{ color: "rgba(255,255,255,0.35)", opacity: 0.5 }}
+        >
+          <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+          </svg>
+        </Link>
+        <Link href="https://youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube"
+          className="transition-opacity duration-200 hover:opacity-100"
+          style={{ color: "rgba(255,255,255,0.35)", opacity: 0.5 }}
+        >
+          <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+          </svg>
+        </Link>
+        <Link href="https://x.com" target="_blank" rel="noopener noreferrer" aria-label="X"
+          className="transition-opacity duration-200 hover:opacity-100"
+          style={{ color: "rgba(255,255,255,0.35)", opacity: 0.5 }}
+        >
+          <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24h-6.6l-5.165-6.75-5.91 6.75H3.45l7.73-8.835L2.56 2.25h6.6l4.686 6.186 5.608-6.186zM17.474 20.451h1.823L6.369 3.863H4.462z" />
+          </svg>
+        </Link>
       </div>
     </footer>
   );
