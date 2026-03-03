@@ -1,127 +1,102 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="IA Studio: portal inmersivo para descubrir IAs por área, planes gratis para estudiantes y entrar a la comunidad de WhatsApp." />
-  <title>IA Studio — Immersive Community Portal</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700;800&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta name="description"
+    content="IA NEXUS — One-page académica y minimalista para descubrir IAs útiles, planes gratis y entrar a la comunidad WhatsApp." />
+  <title>IA NEXUS — Comunidad IA Académica</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&family=Spectral:wght@500;600;700&display=swap"
+    rel="stylesheet" />
+
   <link rel="stylesheet" href="assets/css/styles.css" />
 </head>
+
 <body class="theme-student">
-  <div class="bg-mesh" aria-hidden="true"></div>
-  <div class="bg-noise" aria-hidden="true"></div>
+  <div class="app-shell">
+    <header class="topbar container" aria-label="Navegación principal">
+      <a class="brand" href="#" aria-label="Inicio IA NEXUS">
+        <span class="brand__mark">N</span>
+        <span class="brand__text">IA <strong>NEXUS</strong></span>
+      </a>
 
-  <header class="topbar container">
-    <a href="#" class="brand" aria-label="IA Studio inicio">
-      <span class="brand__mark">⚡</span>
-      <span class="brand__text">IA<span>Studio</span></span>
-    </a>
-    <nav class="topbar__actions">
-      <a class="chip" href="#feed">Tendencias</a>
-      <a class="chip" href="#prompts">Prompts mágicos</a>
-      <a class="btn btn--ghost" href="https://chat.whatsapp.com/tu-enlace-general" target="_blank" rel="noopener noreferrer">Entrar a Comunidad</a>
-    </nav>
-  </header>
+      <nav class="pillar-nav" role="tablist" aria-label="Pilares principales">
+        <button class="pill is-active" role="tab" aria-selected="true" data-pillar="student">Gratis para
+          Estudiantes</button>
+        <button class="pill" role="tab" aria-selected="false" data-pillar="daily">Facilidades del Día a Día</button>
+        <button class="pill" role="tab" aria-selected="false" data-pillar="directory">Directorio Maestro</button>
+      </nav>
 
-  <main class="container stage">
-    <section class="hero">
-      <p class="eyebrow">Comunidad IA para estudiantes y profesionales</p>
-      <h1>Aprende las <span>IAs del momento</span> y entra al grupo correcto en WhatsApp.</h1>
-      <p class="hero__lead">Nada de humo. Solo herramientas útiles, planes gratis, prompts accionables y updates semanales por área.</p>
+      <a class="btn btn--primary" href="https://chat.whatsapp.com/tu-enlace-general" target="_blank" rel="noopener noreferrer">Entrar a la comunidad</a>
+    </header>
 
-      <div class="pillars" role="tablist" aria-label="Pilares IA Studio">
-        <button class="pillar-card is-active" role="tab" aria-selected="true" data-pillar="student">
-          <small>Pilar 01</small>
-          <h3>Gratis para Estudiantes 🎓</h3>
-          <p>Planes edu, validación institucional y herramientas pro sin costo.</p>
-        </button>
+    <main class="container stage" role="main">
+      <section class="hero" aria-labelledby="hero-title">
+        <p class="hero__kicker" id="hero-kicker">Comunidad IA para aprender sin ruido</p>
+        <h1 id="hero-title">Aprende las IAs que sí importan para tu área.</h1>
+        <p class="hero__lead" id="hero-lead">
+          Una experiencia académica, limpia y enfocada. Descubre herramientas verificadas, planes gratis para estudiantes y
+          prompts prácticos para producir mejores resultados desde hoy.
+        </p>
 
-        <button class="pillar-card" role="tab" aria-selected="false" data-pillar="daily">
-          <small>Pilar 02</small>
-          <h3>Facilidades del Día a Día ⚡</h3>
-          <p>Micro-tareas, automatización simple y productividad real.</p>
-        </button>
+        <div class="hero__meta" aria-label="Beneficios clave">
+          <article class="meta-card">
+            <h3>Curación semanal</h3>
+            <p>Noticias y cambios relevantes, resumidos en minutos.</p>
+          </article>
+          <article class="meta-card">
+            <h3>Prompts accionables</h3>
+            <p>Listos para copiar, con enfoque por disciplina.</p>
+          </article>
+          <article class="meta-card">
+            <h3>Comunidad activa</h3>
+            <p>Grupos WhatsApp por interés, no un chat caótico.</p>
+          </article>
+        </div>
+      </section>
 
-        <button class="pillar-card" role="tab" aria-selected="false" data-pillar="directory">
-          <small>Pilar 03</small>
-          <h3>Directorio Maestro 🌎</h3>
-          <p>Todas las IAs por especialidad: salud, código, diseño, finanzas y más.</p>
-        </button>
-      </div>
-    </section>
+      <aside class="context-panel" aria-live="polite" aria-label="Detalle del pilar seleccionado">
+        <p class="context-panel__kicker" id="panel-kicker">Ruta sugerida</p>
+        <h2 id="panel-title">Empieza con planes educativos que sí están activos</h2>
+        <p class="context-panel__desc" id="panel-desc">Te mostramos herramientas con planes gratis reales para .edu,
+          cómo validarlas y cómo aprovecharlas por carrera.</p>
 
-    <aside class="insight" aria-live="polite">
-      <div class="insight__head">
-        <p class="insight__kicker" id="panel-kicker">Ruta recomendada</p>
-        <h2 id="panel-title">Empieza por planes gratuitos verificados para estudiantes</h2>
-      </div>
+        <ul class="context-panel__list" id="panel-list">
+          <li>Comparativa por dificultad y curva de aprendizaje.</li>
+          <li>Guía de activación del beneficio estudiantil.</li>
+          <li>Selección por ingeniería, salud, diseño y humanidades.</li>
+        </ul>
 
-      <p class="insight__desc" id="panel-desc">Ahorra tiempo y dinero con herramientas que sí tienen plan educativo activo. Incluye guía de validación por plataforma y nivel de dificultad.</p>
+        <div class="context-panel__blocks">
+          <div class="mini-block">
+            <p class="mini-block__label">Novedad de la semana</p>
+            <p class="mini-block__value" id="panel-news">Nuevos beneficios .edu en tools de productividad.</p>
+          </div>
+          <div class="mini-block">
+            <p class="mini-block__label">Prompt recomendado</p>
+            <p class="mini-block__value" id="panel-prompt">"Enséñame este tema en 3 niveles: básico, examen, aplicación real."</p>
+          </div>
+        </div>
 
-      <ul class="insight__list" id="panel-points">
-        <li>GitHub Student Pack, Notion Education, herramientas con free tier serio.</li>
-        <li>Checklist para validar correo institucional y evitar bloqueos.</li>
-        <li>Selección por carrera: ingeniería, medicina, diseño, humanidades.</li>
-      </ul>
+        <div class="context-panel__actions">
+          <a class="btn btn--primary" id="panel-cta" href="https://chat.whatsapp.com/tu-enlace-estudiantes" target="_blank" rel="noopener noreferrer">Unirme al grupo de Estudiantes</a>
+          <a class="btn btn--outline" href="https://chat.whatsapp.com/tu-enlace-general" target="_blank" rel="noopener noreferrer">Ver comunidad general</a>
+        </div>
+      </aside>
+    </main>
 
-      <div class="insight__cta" id="panel-cta-wrap">
-        <a id="panel-cta" class="btn btn--primary" href="https://chat.whatsapp.com/tu-enlace-estudiantes" target="_blank" rel="noopener noreferrer">Unirme al grupo Estudiantes</a>
-        <a class="btn btn--outline" href="#prompts">Ver prompts de esta área</a>
-      </div>
-    </aside>
-  </main>
-
-  <section class="container feed" id="feed">
-    <article class="feed-card feed-card--hot">
-      <p class="feed-card__tag">IA del día</p>
-      <h3>Cursor + Claude Code para debug guiado</h3>
-      <p>Setup mínimo para estudiantes que empiezan en programación sin perderse en prompts largos.</p>
-    </article>
-
-    <article class="feed-card">
-      <p class="feed-card__tag">Tendencia</p>
-      <h3>Más tools con plan educativo en 2026</h3>
-      <p>Se están abriendo beneficios para .edu en herramientas de productividad y generación visual.</p>
-    </article>
-
-    <article class="feed-card">
-      <p class="feed-card__tag">Comunidad</p>
-      <h3>Nuevo grupo: IA para Salud y Medicina</h3>
-      <p>Prompts clínicos no diagnósticos, búsqueda científica y study workflows.</p>
-    </article>
-  </section>
-
-  <section class="container prompts" id="prompts">
-    <div class="prompts__header">
-      <p class="eyebrow">Biblioteca inicial</p>
-      <h2>Prompts mágicos por área</h2>
-    </div>
-
-    <div class="prompt-grid">
-      <article class="prompt-card">
-        <h4>Programación</h4>
-        <p>"Explícame este error como si fuera mi primer día y dame 3 fixes posibles con pros/contras."</p>
-      </article>
-      <article class="prompt-card">
-        <h4>Ingeniería / Matemáticas</h4>
-        <p>"Resuelve este problema paso a paso, verificando unidades y supuestos al final."</p>
-      </article>
-      <article class="prompt-card">
-        <h4>Letras / Historia</h4>
-        <p>"Resume este texto con contexto histórico, tesis central y 5 preguntas para debate."</p>
-      </article>
-      <article class="prompt-card">
-        <h4>Diseño</h4>
-        <p>"Dame 3 conceptos visuales distintos para esta idea, con paleta, tipografía y composición."</p>
-      </article>
-    </div>
-  </section>
-
-  <a class="floating-wa" href="https://chat.whatsapp.com/tu-enlace-general" target="_blank" rel="noopener noreferrer" aria-label="Unirme a la comunidad WhatsApp">💬 Comunidad WhatsApp</a>
+    <footer class="container footer-strip" aria-label="Resumen IA NEXUS">
+      <p><strong>Modelo IA NEXUS:</strong> informar mejor, aprender más rápido, crecer en comunidad.</p>
+      <p class="footer-strip__hint">One-page académica · sin ruido visual · foco en valor real.</p>
+    </footer>
+  </div>
 
   <script src="assets/js/main.js"></script>
 </body>
+
 </html>

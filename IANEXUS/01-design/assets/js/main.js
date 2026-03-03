@@ -1,86 +1,96 @@
-const DATA = {
+const PILLAR_DATA = {
   student: {
     theme: 'theme-student',
-    kicker: 'Ruta recomendada',
-    title: 'Empieza por planes gratuitos verificados para estudiantes',
-    desc: 'Ahorra tiempo y dinero con herramientas que sí tienen plan educativo activo. Incluye guía de validación por plataforma y nivel de dificultad.',
-    points: [
-      'GitHub Student Pack, Notion Education y herramientas con free tier serio.',
-      'Checklist para validar correo institucional y evitar bloqueos.',
-      'Selección por carrera: ingeniería, medicina, diseño y humanidades.'
+    kicker: 'Ruta sugerida',
+    title: 'Empieza con planes educativos que sí están activos',
+    desc: 'Te mostramos herramientas con planes gratis reales para .edu, cómo validarlas y cómo aprovecharlas según tu carrera.',
+    list: [
+      'Comparativa por dificultad y curva de aprendizaje.',
+      'Guía de activación del beneficio estudiantil.',
+      'Selección por ingeniería, salud, diseño y humanidades.'
     ],
+    news: 'GitHub Student Pack amplió beneficios para desarrollo y cloud.',
+    prompt: '"Enséñame este tema en 3 niveles: básico, examen, aplicación real."',
     cta: {
-      label: 'Unirme al grupo Estudiantes',
+      text: 'Unirme al grupo de Estudiantes',
       href: 'https://chat.whatsapp.com/tu-enlace-estudiantes'
     }
   },
   daily: {
     theme: 'theme-daily',
-    kicker: 'Flujo diario',
-    title: 'Reduce horas de tareas repetitivas con IA práctica',
-    desc: 'Casos rápidos para estudio y trabajo: resumir documentos, organizar tareas, preparar presentaciones y automatizar mini procesos.',
-    points: [
-      'OpenClaw/agentes para research rápido y tareas pequeñas.',
-      'Codex para automatización simple sin volverte programador full.',
-      'Claude Agent para análisis profundo con tono humano.'
+    kicker: 'Productividad diaria',
+    title: 'Optimiza tareas repetitivas sin complejidad técnica',
+    desc: 'Este pilar está pensado para resultados rápidos: resumir, organizar, escribir mejor y automatizar micro-flujos.',
+    list: [
+      'Prompts cortos para correos, resúmenes y planificación semanal.',
+      'Guías para OpenClaw, Codex y asistentes de productividad.',
+      'Ranking por facilidad de uso para principiantes.'
     ],
+    news: 'Subió el interés en “IA para estudio” y “automatización sin código”.',
+    prompt: '"Resume este documento en bullets accionables y una lista de pendientes."',
     cta: {
-      label: 'Entrar al grupo Productividad IA',
+      text: 'Entrar al grupo de Productividad IA',
       href: 'https://chat.whatsapp.com/tu-enlace-productividad'
     }
   },
   directory: {
     theme: 'theme-directory',
-    kicker: 'Mapa completo',
+    kicker: 'Mapa IA por especialidad',
     title: 'Explora el Directorio Maestro por área y objetivo',
-    desc: 'Encuentra IA por especialidad: salud, programación, ingeniería, letras, economía, fitness y diseño. Con filtros por nivel y plan.',
-    points: [
-      'Incluye herramientas del momento + fundamentales que no fallan.',
-      'Recomendaciones por perfil: principiante, intermedio, avanzado.',
-      'Actualizaciones semanales para mantener el directorio vivo.'
+    desc: 'Encuentra herramientas por salud, programación, ingeniería, letras, economía, fitness y diseño con contexto real.',
+    list: [
+      'Clasificación por área + nivel de experiencia.',
+      'Indicador de plan: gratis, freemium, estudiante o pago.',
+      'Actualización continua con tendencias y fundamentales.'
     ],
+    news: 'Nuevas herramientas de diseño y presentación entraron al top mensual.',
+    prompt: '"Dame 3 opciones de herramientas para [área] según nivel y presupuesto."',
     cta: {
-      label: 'Ir al grupo Directorio y Tendencias',
+      text: 'Unirme al grupo de Directorio y Tendencias',
       href: 'https://chat.whatsapp.com/tu-enlace-directorio'
     }
   }
 };
 
-const cards = [...document.querySelectorAll('.pillar-card')];
+const tabs = [...document.querySelectorAll('.pill')];
 const panelKicker = document.getElementById('panel-kicker');
 const panelTitle = document.getElementById('panel-title');
 const panelDesc = document.getElementById('panel-desc');
-const panelPoints = document.getElementById('panel-points');
+const panelList = document.getElementById('panel-list');
+const panelNews = document.getElementById('panel-news');
+const panelPrompt = document.getElementById('panel-prompt');
 const panelCta = document.getElementById('panel-cta');
 
-function activatePillar(key) {
-  const state = DATA[key];
-  if (!state) return;
+function renderPillar(key) {
+  const data = PILLAR_DATA[key];
+  if (!data) return;
 
-  cards.forEach((card) => {
-    const isActive = card.dataset.pillar === key;
-    card.classList.toggle('is-active', isActive);
-    card.setAttribute('aria-selected', String(isActive));
+  tabs.forEach((tab) => {
+    const active = tab.dataset.pillar === key;
+    tab.classList.toggle('is-active', active);
+    tab.setAttribute('aria-selected', String(active));
   });
 
   document.body.classList.remove('theme-student', 'theme-daily', 'theme-directory');
-  document.body.classList.add(state.theme);
+  document.body.classList.add(data.theme);
 
-  panelKicker.textContent = state.kicker;
-  panelTitle.textContent = state.title;
-  panelDesc.textContent = state.desc;
+  panelKicker.textContent = data.kicker;
+  panelTitle.textContent = data.title;
+  panelDesc.textContent = data.desc;
 
-  panelPoints.innerHTML = '';
-  state.points.forEach((point) => {
+  panelList.innerHTML = '';
+  data.list.forEach((item) => {
     const li = document.createElement('li');
-    li.textContent = point;
-    panelPoints.appendChild(li);
+    li.textContent = item;
+    panelList.appendChild(li);
   });
 
-  panelCta.textContent = state.cta.label;
-  panelCta.href = state.cta.href;
+  panelNews.textContent = data.news;
+  panelPrompt.textContent = data.prompt;
+  panelCta.textContent = data.cta.text;
+  panelCta.href = data.cta.href;
 }
 
-cards.forEach((card) => {
-  card.addEventListener('click', () => activatePillar(card.dataset.pillar));
+tabs.forEach((tab) => {
+  tab.addEventListener('click', () => renderPillar(tab.dataset.pillar));
 });
