@@ -37,9 +37,9 @@ export default function PillarCards() {
           <Link
             key={pillar.title}
             href={pillar.href}
-            className="group relative overflow-hidden flex flex-col items-start justify-between rounded-[28px] p-7 transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]"
+            className="group relative overflow-hidden flex flex-col items-start justify-between rounded-[28px] p-6 transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]"
             style={{
-              minHeight: "220px",
+              minHeight: "180px",
               border: "1px solid rgba(255, 255, 255, 0.45)",
               boxShadow: `0 8px 40px ${pillar.glow}, 0 2px 8px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.65)`,
             }}
@@ -74,9 +74,9 @@ export default function PillarCards() {
 
             {/* Icon — top left */}
             <div
-              className={`relative z-30 flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br ${pillar.gradient} shadow-lg transition-transform duration-300 group-hover:scale-110`}
+              className={`relative z-30 flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-br ${pillar.gradient} shadow-lg transition-transform duration-300 group-hover:scale-110`}
             >
-              <Icon className="h-7 w-7 text-white" />
+              <Icon className="h-6 w-6 text-white" />
             </div>
 
             {/* Text + arrow — pinned to bottom */}

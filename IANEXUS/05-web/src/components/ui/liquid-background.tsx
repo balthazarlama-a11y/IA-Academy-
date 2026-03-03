@@ -2,7 +2,7 @@
 
 export default function LiquidBackground() {
   return (
-    <div className="fixed inset-0 -z-10 overflow-hidden bg-[#09090f]">
+    <div className="fixed inset-0 -z-10 overflow-hidden bg-[#09090f]" style={{ contain: "strict", willChange: "auto" }}>
       {/* Blob 1 - Electric Blue */}
       <div
         style={{
@@ -13,9 +13,11 @@ export default function LiquidBackground() {
           height: "700px",
           background: "radial-gradient(circle, #3b82f6 0%, transparent 70%)",
           borderRadius: "60% 40% 30% 70% / 60% 30% 70% 40%",
-          filter: "blur(120px)",
+          filter: "blur(80px)",
           opacity: 0.45,
-          animation: "blob-1 22s infinite alternate",
+          animation: "blob-1 22s ease-in-out infinite alternate",
+          willChange: "transform",
+          transform: "translateZ(0)",
         }}
       />
 
@@ -29,9 +31,11 @@ export default function LiquidBackground() {
           height: "600px",
           background: "radial-gradient(circle, #8b5cf6 0%, transparent 70%)",
           borderRadius: "40% 60% 70% 30% / 40% 70% 30% 60%",
-          filter: "blur(100px)",
+          filter: "blur(70px)",
           opacity: 0.4,
-          animation: "blob-2 26s infinite alternate 1.5s",
+          animation: "blob-2 26s ease-in-out infinite alternate 1.5s",
+          willChange: "transform",
+          transform: "translateZ(0)",
         }}
       />
 
@@ -45,9 +49,11 @@ export default function LiquidBackground() {
           height: "550px",
           background: "radial-gradient(circle, #10b981 0%, transparent 70%)",
           borderRadius: "50% 50% 30% 70% / 30% 60% 40% 70%",
-          filter: "blur(110px)",
+          filter: "blur(75px)",
           opacity: 0.35,
-          animation: "blob-3 20s infinite alternate 3s",
+          animation: "blob-3 20s ease-in-out infinite alternate 3s",
+          willChange: "transform",
+          transform: "translateZ(0)",
         }}
       />
 
@@ -61,9 +67,11 @@ export default function LiquidBackground() {
           height: "580px",
           background: "radial-gradient(circle, #ec4899 0%, transparent 70%)",
           borderRadius: "70% 30% 60% 40% / 50% 40% 60% 30%",
-          filter: "blur(100px)",
+          filter: "blur(70px)",
           opacity: 0.38,
-          animation: "blob-4 28s infinite alternate 0.5s",
+          animation: "blob-4 28s ease-in-out infinite alternate 0.5s",
+          willChange: "transform",
+          transform: "translateZ(0)",
         }}
       />
     </div>

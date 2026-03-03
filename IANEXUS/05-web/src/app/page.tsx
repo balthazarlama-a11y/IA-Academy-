@@ -13,11 +13,11 @@ export default function Home() {
       <Header />
 
       {/* CENTER — hero + pilares */}
-      <section className="flex-1 flex flex-col items-center justify-center gap-8 px-6 text-center">
+      <section className="flex-1 flex flex-col items-center justify-center gap-6 px-6 text-center min-h-0">
         {/* Hero */}
         <div className="flex flex-col items-center gap-3">
           <h1
-            className="text-5xl md:text-7xl font-bold max-w-2xl leading-tight tracking-tight"
+            className="text-4xl md:text-6xl font-bold max-w-2xl leading-tight tracking-tight"
             style={{ color: "rgba(255, 255, 255, 0.95)" }}
           >
             Descubre las IAs<br />que importan.
