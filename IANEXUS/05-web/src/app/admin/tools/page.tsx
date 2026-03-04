@@ -1,4 +1,4 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import { Wrench } from "lucide-react";
 import { getCurrentUser } from "@/lib/auth/session";
 import { getSupabaseServerAuthClient } from "@/lib/supabase/server";
@@ -67,14 +67,19 @@ export default async function AdminToolsPage({
 }: {
   searchParams: Promise<{ ok?: string; err?: string }>;
 }) {
-  await ensureStaffUser();
+  const user = await ensureStaffUser();
   const supabase = await getSupabaseServerAuthClient();
 
   const params = await searchParams;
   const successMessage = params.ok ?? "";
   const errorMessage = params.err ?? "";
 
-  const [{ data: toolsData }, { data: categoriesData }] = await Promise.all([
+  // Debug: log user info (solo en desarrollo)
+  if (process.env.NODE_ENV === "development") {
+    console.log("[AdminTools] User:", user.id, "Role:", user.role);
+  }
+
+  const [{ data: toolsData, error: toolsError }, { data: categoriesData, error: categoriesError }] = await Promise.all([
     supabase
       .from("tools")
       .select("id, name, slug, description, url, cover_image_url, plan, level, ia_type, category_id, verified, edu_verified, featured, status, sort_order, updated_at, tool_categories(name, slug)")
@@ -86,6 +91,15 @@ export default async function AdminToolsPage({
       .order("sort_order", { ascending: true })
       .order("name", { ascending: true }),
   ]);
+
+  // Manejo de errores de base de datos
+  const dbError = toolsError?.message || categoriesError?.message;
+  if (toolsError) {
+    console.error("[AdminTools] Error cargando tools:", toolsError);
+  }
+  if (categoriesError) {
+    console.error("[AdminTools] Error cargando categorias:", categoriesError);
+  }
 
   const tools = ((toolsData ?? []) as unknown as AdminToolRow[]);
   const categories = ((categoriesData ?? []) as ToolCategory[]);
@@ -117,12 +131,18 @@ export default async function AdminToolsPage({
         </div>
       ) : null}
 
+      {dbError ? (
+        <div className="rounded-xl border border-amber-300/30 bg-amber-400/10 px-4 py-3 text-sm text-amber-700">
+          <strong>Error de conexión:</strong> {dbError}. Verifica tu sesión y permisos.
+        </div>
+      ) : null}
+
       <section
         className="rounded-2xl p-5"
         style={{ background: "rgba(255, 255, 255, 0.88)", border: "1px solid rgba(148, 163, 184, 0.32)" }}
       >
         <h3 className="mb-4 text-lg font-medium text-slate-900">Nueva tool</h3>
-        <form action={createToolAction} encType="multipart/form-data" className="grid grid-cols-1 gap-3 md:grid-cols-2">
+        <form action={createToolAction} className="grid grid-cols-1 gap-3 md:grid-cols-2">
           <input name="name" required placeholder="Nombre" className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none" />
           <input name="slug" placeholder="slug-opcional" className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none" />
           <input name="url" required placeholder="https://..." className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none md:col-span-2" />
@@ -175,8 +195,23 @@ export default async function AdminToolsPage({
         <h3 className="text-lg font-medium text-slate-900">Tools existentes ({tools.length})</h3>
 
         {tools.length === 0 ? (
-          <div className="rounded-xl border border-slate-200 bg-white p-8 text-center text-sm text-slate-500">
-            No hay tools todavía.
+          <div className="rounded-xl border border-slate-200 bg-white p-8 text-center">
+            <p className="text-sm text-slate-500 mb-2">No hay tools todavía.</p>
+            {categories.length === 0 ? (
+              <p className="text-xs text-amber-600">
+                ⚠️ No se encontraron categorías. Verifica que existan categorías en la tabla tool_categories.
+              </p>
+            ) : null}
+            {dbError ? (
+              <p className="text-xs text-red-500 mt-2">
+                Error de base de datos: {dbError}
+              </p>
+            ) : null}
+            {!dbError && categories.length > 0 ? (
+              <p className="text-xs text-slate-400 mt-2">
+                Crea tu primera tool usando el formulario de arriba.
+              </p>
+            ) : null}
           </div>
         ) : (
           tools.map((tool) => (
@@ -252,4 +287,3 @@ export default async function AdminToolsPage({
     </div>
   );
 }
-
