@@ -43,6 +43,13 @@ function normalizeUrl(value: string) {
   return `https://${trimmed}`;
 }
 
+function isNextNavigationError(error: unknown): boolean {
+  if (typeof error !== "object" || error === null) return false;
+  const e = error as Record<string, unknown>;
+  const digest = typeof e.digest === "string" ? e.digest : "";
+  return digest.startsWith("NEXT_REDIRECT") || digest.startsWith("NEXT_NOT_FOUND");
+}
+
 export async function createToolAction(formData: FormData) {
   try {
     await ensureStaffUser();
@@ -102,8 +109,7 @@ export async function createToolAction(formData: FormData) {
     revalidatePath("/admin/tools");
     redirect("/admin/tools?ok=Tool%20creada%20correctamente");
   } catch (err: unknown) {
-    // Re-throw Next.js internal redirect/notFound errors
-    if (typeof err === "object" && err !== null && "digest" in err) throw err;
+    if (isNextNavigationError(err)) throw err;
     redirect("/admin/tools?err=No%20fue%20posible%20crear%20la%20tool");
   }
 }
@@ -171,7 +177,7 @@ export async function updateToolAction(formData: FormData) {
     revalidatePath("/admin/tools");
     redirect("/admin/tools?ok=Tool%20actualizada%20correctamente");
   } catch (err: unknown) {
-    if (typeof err === "object" && err !== null && "digest" in err) throw err;
+    if (isNextNavigationError(err)) throw err;
     redirect("/admin/tools?err=No%20fue%20posible%20actualizar%20la%20tool");
   }
 }

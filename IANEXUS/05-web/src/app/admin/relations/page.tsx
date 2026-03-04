@@ -31,14 +31,11 @@ async function ensureStaffUser() {
  * Verifica si un error es un redirect error de Next.js.
  * Los redirect errors NO deben ser tratados como errores reales.
  */
-function isNextRedirectError(error: unknown): boolean {
+function isNextNavigationError(error: unknown): boolean {
   if (typeof error !== "object" || error === null) return false;
   const e = error as Record<string, unknown>;
-  // Next.js redirect errors tienen estas características
-  return (
-    e.message === "NEXT_REDIRECT" ||
-    (typeof e.digest === "string" && e.digest.startsWith("NEXT_REDIRECT"))
-  );
+  const digest = typeof e.digest === "string" ? e.digest : "";
+  return digest.startsWith("NEXT_REDIRECT") || digest.startsWith("NEXT_NOT_FOUND");
 }
 
 async function linkRelationAction(formData: FormData) {
@@ -72,13 +69,13 @@ async function linkRelationAction(formData: FormData) {
     redirect("/admin/relations?ok=Relacion%20guardada%20correctamente");
   } catch (error) {
     // NO capturar errores de redirect de Next.js - son parte del flujo normal
-    if (isNextRedirectError(error)) {
+    if (isNextNavigationError(error)) {
       throw error;
     }
 
     // Solo capturar errores reales (DB, auth, etc.)
     const message = error instanceof Error ? error.message : "Error desconocido";
-    console.error("[linkRelationAction] Error real:", message);
+    console.error("[linkRelationAction] Error:", message);
     redirect(`/admin/relations?err=${encodeURIComponent("No fue posible guardar la relacion: " + message)}`);
   }
 }
@@ -111,13 +108,13 @@ async function unlinkRelationAction(formData: FormData) {
     redirect("/admin/relations?ok=Relacion%20eliminada%20correctamente");
   } catch (error) {
     // NO capturar errores de redirect de Next.js - son parte del flujo normal
-    if (isNextRedirectError(error)) {
+    if (isNextNavigationError(error)) {
       throw error;
     }
 
     // Solo capturar errores reales
     const message = error instanceof Error ? error.message : "Error desconocido";
-    console.error("[unlinkRelationAction] Error real:", message);
+    console.error("[unlinkRelationAction] Error:", message);
     redirect(`/admin/relations?err=${encodeURIComponent("No fue posible eliminar la relacion: " + message)}`);
   }
 }

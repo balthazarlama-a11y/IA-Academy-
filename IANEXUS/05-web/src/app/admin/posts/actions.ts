@@ -35,6 +35,13 @@ function normalizeNullableText(value: FormDataEntryValue | null) {
   return normalized.length > 0 ? normalized : null;
 }
 
+function isNextNavigationError(error: unknown): boolean {
+  if (typeof error !== "object" || error === null) return false;
+  const e = error as Record<string, unknown>;
+  const digest = typeof e.digest === "string" ? e.digest : "";
+  return digest.startsWith("NEXT_REDIRECT") || digest.startsWith("NEXT_NOT_FOUND");
+}
+
 export async function createPostAction(formData: FormData) {
   try {
     const user = await ensureStaffUser();
@@ -92,7 +99,7 @@ export async function createPostAction(formData: FormData) {
     revalidatePath("/admin/posts");
     redirect("/admin/posts?ok=Post%20creado%20correctamente");
   } catch (err: unknown) {
-    if (typeof err === "object" && err !== null && "digest" in err) throw err;
+    if (isNextNavigationError(err)) throw err;
     redirect("/admin/posts?err=No%20fue%20posible%20crear%20el%20post");
   }
 }
@@ -158,7 +165,7 @@ export async function updatePostAction(formData: FormData) {
     revalidatePath("/admin/posts");
     redirect("/admin/posts?ok=Post%20actualizado%20correctamente");
   } catch (err: unknown) {
-    if (typeof err === "object" && err !== null && "digest" in err) throw err;
+    if (isNextNavigationError(err)) throw err;
     redirect("/admin/posts?err=No%20fue%20posible%20actualizar%20el%20post");
   }
 }

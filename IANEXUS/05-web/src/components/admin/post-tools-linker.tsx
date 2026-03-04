@@ -139,7 +139,7 @@ export function PostToolsLinker({
                   Guardando...
                 </>
               ) : (
-                "Guardar relacion"
+                "Guardar relación"
               )}
             </button>
           </div>
