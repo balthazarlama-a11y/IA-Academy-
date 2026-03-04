@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 import { Wrench } from "lucide-react";
 import { getCurrentUser } from "@/lib/auth/session";
 import { getSupabaseServerAuthClient } from "@/lib/supabase/server";
+import { uploadMediaFile } from "@/lib/supabase/admin-storage";
+import UploadImageField from "@/components/admin/upload-image-field";
 
 export const metadata = {
   title: "Tools - Admin IA NEXUS",
@@ -15,6 +17,7 @@ type AdminToolRow = {
   slug: string;
   description: string | null;
   url: string;
+  cover_image_url: string | null;
   plan: "free" | "freemium" | "paid" | "edu_free";
   level: "beginner" | "intermediate" | "advanced" | "all";
   ia_type: string | null;
@@ -109,11 +112,23 @@ async function createToolAction(formData: FormData) {
       redirect("/admin/tools?err=Completa%20nombre%2C%20slug%2C%20url%20y%20categoria");
     }
 
+    // Handle image upload
+    let coverImageUrl = normalizeNullableText(formData.get("cover_image_url"));
+    const fileInput = formData.get("cover_image_file");
+    if (fileInput instanceof File && fileInput.size > 0) {
+      const { url: uploadedUrl, error: uploadErr } = await uploadMediaFile(fileInput, "tools");
+      if (uploadErr) {
+        redirect(`/admin/tools?err=${encodeURIComponent("Error subiendo imagen: " + uploadErr)}`);
+      }
+      coverImageUrl = uploadedUrl;
+    }
+
     const { error } = await supabase.from("tools").insert({
       name,
       slug,
       description,
       url,
+      ...(coverImageUrl ? { cover_image_url: coverImageUrl } : {}),
       plan,
       level,
       ia_type: iaType,
@@ -164,6 +179,17 @@ async function updateToolAction(formData: FormData) {
       redirect("/admin/tools?err=Faltan%20datos%20obligatorios%20para%20actualizar");
     }
 
+    // Handle image upload
+    let coverImageUrl = normalizeNullableText(formData.get("cover_image_url"));
+    const fileInput = formData.get("cover_image_file");
+    if (fileInput instanceof File && fileInput.size > 0) {
+      const { url: uploadedUrl, error: uploadErr } = await uploadMediaFile(fileInput, "tools");
+      if (uploadErr) {
+        redirect(`/admin/tools?err=${encodeURIComponent("Error subiendo imagen: " + uploadErr)}`);
+      }
+      coverImageUrl = uploadedUrl;
+    }
+
     const { error } = await supabase
       .from("tools")
       .update({
@@ -171,6 +197,7 @@ async function updateToolAction(formData: FormData) {
         slug,
         description,
         url,
+        ...(coverImageUrl !== undefined ? { cover_image_url: coverImageUrl } : {}),
         plan,
         level,
         ia_type: iaType,
@@ -212,7 +239,7 @@ export default async function AdminToolsPage({
   const [{ data: toolsData }, { data: categoriesData }] = await Promise.all([
     supabase
       .from("tools")
-      .select("id, name, slug, description, url, plan, level, ia_type, category_id, verified, edu_verified, featured, status, sort_order, updated_at, tool_categories(name, slug)")
+      .select("id, name, slug, description, url, cover_image_url, plan, level, ia_type, category_id, verified, edu_verified, featured, status, sort_order, updated_at, tool_categories(name, slug)")
       .order("updated_at", { ascending: false })
       .limit(150),
     supabase
@@ -257,11 +284,12 @@ export default async function AdminToolsPage({
         style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)" }}
       >
         <h3 className="mb-4 text-lg font-medium text-white/90">Nueva tool</h3>
-        <form action={createToolAction} className="grid grid-cols-1 gap-3 md:grid-cols-2">
+        <form action={createToolAction} encType="multipart/form-data" className="grid grid-cols-1 gap-3 md:grid-cols-2">
           <input name="name" required placeholder="Nombre" className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none" />
           <input name="slug" placeholder="slug-opcional" className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none" />
           <input name="url" required placeholder="https://..." className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none md:col-span-2" />
           <textarea name="description" rows={2} placeholder="Descripcion" className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none md:col-span-2" />
+          <UploadImageField fileInputName="cover_image_file" urlInputName="cover_image_url" label="Imagen / logo" colSpan="md:col-span-2" />
           <select name="category_id" required className="rounded-lg border border-white/15 bg-[#11111a] px-3 py-2 text-sm text-white outline-none">
             <option value="">Selecciona categoria</option>
             {categories.map((category) => (
@@ -326,12 +354,13 @@ export default async function AdminToolsPage({
               </summary>
 
               <div className="border-t border-white/10 p-4">
-                <form action={updateToolAction} className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                <form action={updateToolAction} encType="multipart/form-data" className="grid grid-cols-1 gap-3 md:grid-cols-2">
                   <input type="hidden" name="id" value={tool.id} />
                   <input name="name" required defaultValue={tool.name} className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none" />
                   <input name="slug" required defaultValue={tool.slug} className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none" />
                   <input name="url" required defaultValue={tool.url} className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none md:col-span-2" />
                   <textarea name="description" rows={2} defaultValue={tool.description ?? ""} className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none md:col-span-2" />
+                  <UploadImageField fileInputName="cover_image_file" urlInputName="cover_image_url" existingUrl={tool.cover_image_url} label="Imagen / logo" colSpan="md:col-span-2" />
                   <select name="category_id" defaultValue={tool.category_id} required className="rounded-lg border border-white/15 bg-[#11111a] px-3 py-2 text-sm text-white outline-none">
                     {categories.map((category) => (
                       <option key={category.id} value={category.id}>{category.name}</option>

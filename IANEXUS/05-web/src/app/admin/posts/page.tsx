@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 import { FileText } from "lucide-react";
 import { getCurrentUser } from "@/lib/auth/session";
 import { getSupabaseServerAuthClient } from "@/lib/supabase/server";
+import { uploadMediaFile } from "@/lib/supabase/admin-storage";
+import UploadImageField from "@/components/admin/upload-image-field";
 
 export const metadata = {
   title: "Posts - Admin IA NEXUS",
@@ -82,7 +84,6 @@ async function createPostAction(formData: FormData) {
     const slug = slugify(providedSlug || title);
     const excerpt = normalizeNullableText(formData.get("excerpt"));
     const content = (formData.get("content_md")?.toString() ?? "").trim();
-    const coverImage = normalizeNullableText(formData.get("cover_image_url"));
     const iaType = normalizeNullableText(formData.get("ia_type"));
     const postKind = (formData.get("post_kind")?.toString() ?? "blog") as AdminPostRow["post_kind"];
     const status = (formData.get("status")?.toString() ?? "draft") as AdminPostRow["status"];
@@ -90,6 +91,17 @@ async function createPostAction(formData: FormData) {
 
     if (!title || !slug || !content) {
       redirect("/admin/posts?err=Completa%20titulo%2C%20slug%20y%20contenido");
+    }
+
+    // Handle image upload (file takes priority over URL)
+    let coverImage = normalizeNullableText(formData.get("cover_image_url"));
+    const fileInput = formData.get("cover_image_file");
+    if (fileInput instanceof File && fileInput.size > 0) {
+      const { url: uploadedUrl, error: uploadErr } = await uploadMediaFile(fileInput, "posts");
+      if (uploadErr) {
+        redirect(`/admin/posts?err=${encodeURIComponent("Error subiendo imagen: " + uploadErr)}`);
+      }
+      coverImage = uploadedUrl;
     }
 
     const publishedAt =
@@ -137,7 +149,6 @@ async function updatePostAction(formData: FormData) {
     const slug = slugify(providedSlug || title);
     const excerpt = normalizeNullableText(formData.get("excerpt"));
     const content = (formData.get("content_md")?.toString() ?? "").trim();
-    const coverImage = normalizeNullableText(formData.get("cover_image_url"));
     const iaType = normalizeNullableText(formData.get("ia_type"));
     const postKind = (formData.get("post_kind")?.toString() ?? "blog") as AdminPostRow["post_kind"];
     const status = (formData.get("status")?.toString() ?? "draft") as AdminPostRow["status"];
@@ -145,6 +156,17 @@ async function updatePostAction(formData: FormData) {
 
     if (!id || !title || !slug || !content) {
       redirect("/admin/posts?err=Faltan%20datos%20obligatorios%20para%20actualizar");
+    }
+
+    // Handle image upload (file takes priority over existing URL)
+    let coverImage = normalizeNullableText(formData.get("cover_image_url"));
+    const fileInput = formData.get("cover_image_file");
+    if (fileInput instanceof File && fileInput.size > 0) {
+      const { url: uploadedUrl, error: uploadErr } = await uploadMediaFile(fileInput, "posts");
+      if (uploadErr) {
+        redirect(`/admin/posts?err=${encodeURIComponent("Error subiendo imagen: " + uploadErr)}`);
+      }
+      coverImage = uploadedUrl;
     }
 
     const publishedAt =
@@ -234,10 +256,10 @@ export default async function AdminPostsPage({
         style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)" }}
       >
         <h3 className="mb-4 text-lg font-medium text-white/90">Nuevo post</h3>
-        <form action={createPostAction} className="grid grid-cols-1 gap-3 md:grid-cols-2">
+        <form action={createPostAction} encType="multipart/form-data" className="grid grid-cols-1 gap-3 md:grid-cols-2">
           <input name="title" required placeholder="Titulo" className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none" />
           <input name="slug" placeholder="slug-opcional" className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none" />
-          <input name="cover_image_url" placeholder="URL imagen portada (opcional)" className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none md:col-span-2" />
+          <UploadImageField fileInputName="cover_image_file" urlInputName="cover_image_url" label="Imagen de portada" colSpan="md:col-span-2" />
           <input name="ia_type" placeholder="Tipo IA (opcional)" className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none" />
           <select name="post_kind" defaultValue="blog" className="rounded-lg border border-white/15 bg-[#11111a] px-3 py-2 text-sm text-white outline-none">
             <option value="blog">Blog</option>
@@ -290,11 +312,11 @@ export default async function AdminPostsPage({
               </summary>
 
               <div className="border-t border-white/10 p-4">
-                <form action={updatePostAction} className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                <form action={updatePostAction} encType="multipart/form-data" className="grid grid-cols-1 gap-3 md:grid-cols-2">
                   <input type="hidden" name="id" value={post.id} />
                   <input name="title" required defaultValue={post.title} className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none" />
                   <input name="slug" required defaultValue={post.slug} className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none" />
-                  <input name="cover_image_url" defaultValue={post.cover_image_url ?? ""} placeholder="URL imagen portada" className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none md:col-span-2" />
+                  <UploadImageField fileInputName="cover_image_file" urlInputName="cover_image_url" existingUrl={post.cover_image_url} label="Imagen de portada" colSpan="md:col-span-2" />
                   <input name="ia_type" defaultValue={post.ia_type ?? ""} placeholder="Tipo IA" className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none" />
                   <select name="post_kind" defaultValue={post.post_kind} className="rounded-lg border border-white/15 bg-[#11111a] px-3 py-2 text-sm text-white outline-none">
                     <option value="blog">Blog</option>
