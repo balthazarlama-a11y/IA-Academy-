@@ -9,6 +9,8 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.9.0",
+    "@supabase/supabase-js": "^2.98.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.542.0",
     "next": "16.1.6",
@@ -17,6 +19,7 @@
     "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
+    "@next/swc-win32-x64-msvc": "^16.1.6",
     "@tailwindcss/oxide-win32-x64-msvc": "^4.2.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
@@ -24,8 +27,10 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
+    "hermes-parser": "^0.25.1",
     "lightningcss-win32-x64-msvc": "^1.31.1",
     "tailwindcss": "^4",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5"
   }
 }

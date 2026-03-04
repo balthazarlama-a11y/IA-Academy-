@@ -1,57 +1,68 @@
-import GlassFilter from "@/components/ui/glass-filter";
-import LiquidBackground from "@/components/ui/liquid-background";
-import Header from "@/components/ui/header";
-import PillarCards from "@/components/ui/pillar-cards";
-import Footer from "@/components/ui/footer";
+import LiquidBackground from "@/components/backgrounds/liquid-background";
+import Header from "@/components/layout/header";
+import PillarCards from "@/components/home/pillar-cards";
+import Footer from "@/components/layout/footer";
+import TypewriterTitle from "@/components/home/typewriter-title";
 
 export default function Home() {
   return (
-    <main className="relative h-screen flex flex-col overflow-hidden">
-      <GlassFilter />
-      <LiquidBackground />
+    <main className="relative min-h-screen grid grid-rows-[auto_1fr_auto] overflow-hidden">
+      <LiquidBackground performanceMode="lite" />
 
-      <Header />
+      <div className="row-start-1">
+        <Header />
+      </div>
 
-      {/* CENTER — hero + pilares */}
-      <section className="flex-1 flex flex-col items-center justify-center gap-6 px-6 text-center min-h-0">
-        {/* Hero */}
-        <div className="flex flex-col items-center gap-3">
-          <h1
-            className="text-4xl md:text-6xl font-bold max-w-2xl leading-tight tracking-tight"
-            style={{ color: "rgba(255, 255, 255, 0.95)" }}
-          >
-            Descubre las IAs<br />que importan.
-          </h1>
-          <p
-            className="text-base md:text-lg max-w-sm"
-            style={{ color: "rgba(255, 255, 255, 0.55)" }}
-          >
-            Herramientas verificadas y comunidad para estudiantes.
-          </p>
+      <section className="row-start-2 flex items-center px-6 py-4 md:py-6">
+        <div className="mx-auto grid w-full max-w-5xl items-center gap-8 lg:grid-cols-[1.05fr_0.95fr]">
+          <div className="order-1 text-center lg:text-left">
+            <TypewriterTitle
+              text="Descubre las IAs que importan"
+              className="text-4xl md:text-5xl lg:text-6xl font-semibold leading-tight tracking-tight"
+            />
+
+            <p
+              className="mt-3 max-w-xl text-base md:text-lg mx-auto lg:mx-0"
+              style={{ color: "rgba(255,255,255,0.62)" }}
+            >
+              Herramientas verificadas, planes gratis y comunidad para tu area.
+            </p>
+
+            <div className="mt-6 flex justify-center lg:justify-start">
+              <a
+                href="https://chat.whatsapp.com/tu-enlace-general"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-3 px-10 py-4 rounded-full text-base md:text-lg font-semibold text-white transition-colors duration-150"
+                style={{
+                  background: "linear-gradient(135deg, #3b82f6, #8b5cf6)",
+                  boxShadow: "0 8px 24px rgba(59,130,246,0.42)",
+                  touchAction: "manipulation",
+                }}
+              >
+                Entrar a la Comunidad
+                <svg width="18" height="18" viewBox="0 0 14 14" fill="none">
+                  <path
+                    d="M2 7h10M7 2l5 5-5 5"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          <div className="order-2 w-full flex justify-center lg:justify-end">
+            <PillarCards variant="stacked" />
+          </div>
         </div>
-
-        {/* 3 Pilares */}
-        <PillarCards />
-
-        {/* CTA único */}
-        <a
-          href="https://chat.whatsapp.com/tu-enlace-general"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold text-white transition-all duration-300 hover:scale-105 hover:brightness-110"
-          style={{
-            background: "linear-gradient(135deg, #3b82f6, #8b5cf6)",
-            boxShadow: "0 4px 20px rgba(139, 92, 246, 0.40)",
-          }}
-        >
-          Entrar a la Comunidad
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-            <path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </a>
       </section>
 
-      <Footer />
+      <div className="row-start-3">
+        <Footer />
+      </div>
     </main>
   );
 }

@@ -1,0 +1,97 @@
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { Suspense } from "react";
+import Header from "@/components/layout/header";
+import Footer from "@/components/layout/footer";
+import { PostContent } from "@/components/blog/post-content";
+import { getCurrentUser } from "@/lib/auth/session";
+import { fetchPublishedPostBySlug } from "@/lib/supabase/server";
+
+// Cache estático con ISR cada 5 minutos
+export const revalidate = 300;
+
+export async function generateStaticParams() {
+  // Pre-renderizar posts populares en build
+  return [];
+}
+
+function formatDate(value: string | null) {
+  if (!value) return "";
+  return new Intl.DateTimeFormat("es-ES", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  }).format(new Date(value));
+}
+
+interface PageProps {
+  params: Promise<{ slug: string }>;
+}
+
+export default async function BlogPostPage({ params }: PageProps) {
+  const { slug } = await params;
+  const decodedSlug = decodeURIComponent(slug);
+
+  // Fetch en paralelo
+  const [post, viewer] = await Promise.all([
+    fetchPublishedPostBySlug(decodedSlug),
+    getCurrentUser(),
+  ]);
+
+  if (!post) {
+    notFound();
+  }
+
+  const isLoggedIn = Boolean(viewer);
+  const date = formatDate(post.published_at || post.created_at);
+
+  return (
+    <main className="relative min-h-screen flex flex-col">
+      <Header />
+
+      <section className="flex-1 w-full px-6 py-8 md:py-10">
+        <article className="mx-auto w-full max-w-3xl rounded-2xl border border-white/10 bg-white/[0.04] p-6 md:p-10">
+          <Link
+            href="/blog"
+            className="inline-flex text-sm text-white/50 hover:text-white/80 transition-colors"
+          >
+            ← Volver al blog
+          </Link>
+
+          <header className="mt-6">
+            <h1 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-white leading-tight">
+              {post.title}
+            </h1>
+            {date && (
+              <div className="mt-2 text-sm text-white/40">
+                {date}
+              </div>
+            )}
+            {post.excerpt ? (
+              <p className="mt-4 text-white/60 text-base leading-relaxed">{post.excerpt}</p>
+            ) : null}
+          </header>
+
+          <Suspense fallback={<ContentSkeleton />}>
+            <PostContent content={post.content_md} isLoggedIn={isLoggedIn} slug={post.slug} />
+          </Suspense>
+        </article>
+      </section>
+
+      <Footer />
+    </main>
+  );
+}
+
+function ContentSkeleton() {
+  return (
+    <div className="mt-8 space-y-4 animate-pulse">
+      <div className="h-4 w-full rounded bg-white/10" />
+      <div className="h-4 w-5/6 rounded bg-white/10" />
+      <div className="h-4 w-4/6 rounded bg-white/10" />
+      <div className="h-6 w-2/3 rounded bg-white/10 mt-6" />
+      <div className="h-4 w-full rounded bg-white/10" />
+      <div className="h-4 w-5/6 rounded bg-white/10" />
+    </div>
+  );
+}
