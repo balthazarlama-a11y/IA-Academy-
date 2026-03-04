@@ -367,7 +367,7 @@ export default function AreasToolbar({
   const hasFilters = Boolean(activeArea) || freeOnly || searchText.trim().length > 0;
 
   return (
-    <div className="w-full max-w-5xl flex flex-col gap-5">
+    <div className="w-full flex flex-col gap-5">
       <div className="flex flex-col gap-3">
         <div className="relative">
           <input
