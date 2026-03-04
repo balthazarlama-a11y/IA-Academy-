@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useRef, useState, useTransition } from "react";
 import { uploadImageAction } from "@/app/admin/upload-actions";
@@ -88,7 +88,7 @@ export default function UploadImageInline({
         type="button"
         onClick={() => fileRef.current?.click()}
         disabled={isPending}
-        className="inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-white/5 px-3 py-1.5 text-xs text-white/70 transition hover:bg-white/10 disabled:opacity-50"
+        className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs text-slate-700 transition hover:bg-slate-50 disabled:opacity-50"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -120,3 +120,4 @@ export default function UploadImageInline({
     </div>
   );
 }
+

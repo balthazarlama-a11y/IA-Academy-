@@ -47,15 +47,15 @@ export function AdminHeader({ user }: AdminHeaderProps) {
     <header
       className="sticky top-0 z-40 px-6 py-4"
       style={{
-        borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
-        background: "rgba(9, 9, 15, 0.80)",
+        borderBottom: "1px solid rgba(148, 163, 184, 0.30)",
+        background: "rgba(255, 255, 255, 0.86)",
         backdropFilter: "blur(12px)",
       }}
     >
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-lg font-semibold text-white/90">Panel de Administración</h1>
-          <p className="text-sm text-white/40">Gestiona contenido, usuarios y configuración</p>
+          <h1 className="text-lg font-semibold text-slate-900">Panel de Administración</h1>
+          <p className="text-sm text-slate-500">Gestiona contenido, usuarios y configuración</p>
         </div>
 
         <div className="flex items-center gap-3">
@@ -67,8 +67,8 @@ export function AdminHeader({ user }: AdminHeaderProps) {
               router.replace("/");
               router.refresh();
             }}
-            className="px-3 py-2 rounded-lg text-xs text-white/70 border border-white/12 hover:bg-white/[0.07] transition-colors"
-            style={{ background: "rgba(255,255,255,0.03)" }}
+            className="px-3 py-2 rounded-lg text-xs text-slate-700 border border-slate-200 hover:bg-white transition-colors"
+            style={{ background: "rgba(248,250,252,0.9)" }}
           >
             Cerrar sesión
           </button>
@@ -76,8 +76,8 @@ export function AdminHeader({ user }: AdminHeaderProps) {
           <div
             className="flex items-center gap-3 px-4 py-2 rounded-xl"
             style={{
-              background: "rgba(255, 255, 255, 0.05)",
-              border: "1px solid rgba(255, 255, 255, 0.08)",
+              background: "rgba(248, 250, 252, 0.92)",
+              border: "1px solid rgba(148, 163, 184, 0.25)",
             }}
           >
             <div
@@ -99,10 +99,10 @@ export function AdminHeader({ user }: AdminHeaderProps) {
             </div>
 
             <div className="hidden md:block">
-              <p className="text-sm font-medium text-white/90">
+              <p className="text-sm font-medium text-slate-900">
                 {user?.fullName || user?.email?.split("@")[0] || "Administrador"}
               </p>
-              <p className="text-xs text-white/40">{user?.email || "Sin email"}</p>
+              <p className="text-xs text-slate-500">{user?.email || "Sin email"}</p>
             </div>
 
             <div className="hidden sm:block">{roleBadge}</div>
@@ -112,3 +112,4 @@ export function AdminHeader({ user }: AdminHeaderProps) {
     </header>
   );
 }
+

@@ -1,4 +1,4 @@
-import Footer from "@/components/layout/footer";
+﻿import Footer from "@/components/layout/footer";
 import Header from "@/components/layout/header";
 import FundamentalsHero from "@/components/fundamentals/fundamentals-hero";
 import FundamentalsPostCard from "@/components/fundamentals/fundamentals-post-card";
@@ -11,7 +11,7 @@ export default async function FundamentalsPage() {
   const { posts, tools } = await fetchFundamentalsFeed();
 
   return (
-    <main className="min-h-screen bg-[#09090f] text-white">
+    <main className="min-h-screen bg-[#f5f7fb] text-slate-900">
       <Header />
 
       <section className="mx-auto w-full max-w-6xl px-6 py-10 md:py-14">
@@ -20,7 +20,7 @@ export default async function FundamentalsPage() {
         <div className="mt-8 grid gap-8 lg:grid-cols-2">
           <section>
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-2xl font-semibold text-white">Lo nuevo en blogs</h2>
+              <h2 className="text-2xl font-semibold text-slate-900">Lo nuevo en blogs</h2>
             </div>
             {posts.length > 0 ? (
               <div className="grid gap-4">
@@ -29,15 +29,15 @@ export default async function FundamentalsPage() {
                 ))}
               </div>
             ) : (
-              <div className="rounded-2xl border border-white/12 bg-white/[0.04] p-5 text-sm text-white/60">
-                Aun no hay publicaciones recientes.
+              <div className="rounded-2xl border border-slate-200 bg-white p-5 text-sm text-slate-600">
+                Aún no hay publicaciones recientes.
               </div>
             )}
           </section>
 
           <section>
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-2xl font-semibold text-white">Tools recomendadas del dia</h2>
+              <h2 className="text-2xl font-semibold text-slate-900">Tools recomendadas del día</h2>
             </div>
             {tools.length > 0 ? (
               <div className="grid gap-4">
@@ -46,8 +46,8 @@ export default async function FundamentalsPage() {
                 ))}
               </div>
             ) : (
-              <div className="rounded-2xl border border-white/12 bg-white/[0.04] p-5 text-sm text-white/60">
-                Aun no hay tools recomendadas para hoy.
+              <div className="rounded-2xl border border-slate-200 bg-white p-5 text-sm text-slate-600">
+                Aún no hay tools recomendadas para hoy.
               </div>
             )}
           </section>
@@ -58,3 +58,4 @@ export default async function FundamentalsPage() {
     </main>
   );
 }
+

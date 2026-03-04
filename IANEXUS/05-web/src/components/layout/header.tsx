@@ -23,8 +23,8 @@ const HEADER_SESSION_CACHE_KEY = "ianexus:header-session:v1";
 const HEADER_CACHE_TTL_MS = 120_000;
 const NAV_LINKS = [
   { href: "/estudiantes", label: "Estudiantes" },
-  { href: "/areas", label: "Areas" },
-  { href: "/dia-a-dia", label: "Dia a Dia" },
+  { href: "/areas", label: "Áreas" },
+  { href: "/dia-a-dia", label: "Día a Día" },
   { href: "/blog", label: "Blog" },
 ] as const;
 
@@ -160,9 +160,9 @@ export default function Header() {
         <div
           className="relative overflow-hidden rounded-full"
           style={{
-            border: "1px solid rgba(255, 255, 255, 0.20)",
+            border: "1px solid rgba(148, 163, 184, 0.35)",
             boxShadow:
-              "0 4px 24px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.35)",
+              "0 12px 28px rgba(15,23,42,0.10), inset 0 1px 0 rgba(255,255,255,0.85)",
           }}
         >
           <div
@@ -175,24 +175,24 @@ export default function Header() {
           />
           <div
             className="absolute inset-0 z-10 rounded-[inherit]"
-            style={{ background: "rgba(255, 255, 255, 0.10)" }}
+            style={{ background: "rgba(255, 255, 255, 0.82)" }}
           />
           <div
             className="absolute inset-0 z-20 rounded-[inherit]"
             style={{
               boxShadow:
-                "inset 1px 1px 0 rgba(255,255,255,0.35), inset -1px -1px 0 rgba(255,255,255,0.10)",
+                "inset 1px 1px 0 rgba(255,255,255,0.78), inset -1px -1px 0 rgba(148,163,184,0.20)",
             }}
           />
 
           <div className="relative z-30 flex items-center justify-between gap-3 px-4 py-3 md:px-5">
             <Link href="/" className="flex items-center gap-3 flex-none" onClick={() => setMobileMenuOpen(false)}>
-              <div className="flex items-center justify-center h-10 w-10 rounded-xl bg-gradient-to-br from-blue-500 to-violet-600 text-white flex-shrink-0">
+              <div className="flex items-center justify-center h-10 w-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white flex-shrink-0">
                 <BookOpen className="h-5 w-5" />
               </div>
               <span
                 className="text-base font-semibold tracking-tight"
-                style={{ color: "rgba(255,255,255,0.92)" }}
+                style={{ color: "rgba(15,23,42,0.92)" }}
               >
                 IA NEXUS
               </span>
@@ -204,7 +204,7 @@ export default function Header() {
                   key={item.href}
                   href={item.href}
                   className="text-sm font-medium transition-colors hover:opacity-100"
-                  style={{ color: "rgba(255,255,255,0.70)" }}
+                  style={{ color: "rgba(51,65,85,0.82)" }}
                 >
                   {item.label}
                 </Link>
@@ -213,14 +213,14 @@ export default function Header() {
 
             <div className="hidden md:flex items-center gap-2 flex-none">
               {isLoading ? (
-                <div className="h-9 w-24 rounded-full bg-white/15 animate-pulse" />
+                <div className="h-9 w-24 rounded-full bg-slate-200 animate-pulse" />
               ) : !session ? (
                 <Link
                   href={loginHref}
-                  className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold text-white transition-opacity duration-200 hover:opacity-80"
+                  className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold text-white transition-opacity duration-200 hover:opacity-90"
                   style={{
-                    background: "rgba(9, 9, 15, 0.80)",
-                    border: "1px solid rgba(255,255,255,0.15)",
+                    background: "linear-gradient(135deg, #2563eb, #7c3aed)",
+                    border: "1px solid rgba(99,102,241,0.30)",
                     touchAction: "manipulation",
                   }}
                 >
@@ -232,22 +232,22 @@ export default function Header() {
                   <div
                     className="hidden lg:flex items-center gap-2 rounded-full px-3 py-1.5"
                     style={{
-                      background: "rgba(255,255,255,0.14)",
-                      border: "1px solid rgba(255,255,255,0.18)",
+                      background: "rgba(241,245,249,0.92)",
+                      border: "1px solid rgba(148,163,184,0.30)",
                     }}
                   >
-                    {isStaff ? <Shield className="h-3.5 w-3.5 text-blue-200" /> : null}
-                    <span className="text-xs text-white/90">{displayName}</span>
+                    {isStaff ? <Shield className="h-3.5 w-3.5 text-blue-700" /> : null}
+                    <span className="text-xs text-slate-700">{displayName}</span>
                   </div>
 
                   {isStaff ? (
                     <>
                       <Link
                         href="/admin/tools"
-                        className="inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-semibold text-white transition-opacity hover:opacity-80"
+                        className="inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-semibold text-emerald-700 transition-opacity hover:opacity-90"
                         style={{
-                          background: "rgba(16,185,129,0.25)",
-                          border: "1px solid rgba(110,231,183,0.40)",
+                          background: "rgba(16,185,129,0.14)",
+                          border: "1px solid rgba(16,185,129,0.34)",
                           touchAction: "manipulation",
                         }}
                         title="Añadir Tool"
@@ -257,10 +257,10 @@ export default function Header() {
                       </Link>
                       <Link
                         href="/admin/posts"
-                        className="inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-semibold text-white transition-opacity hover:opacity-80"
+                        className="inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-semibold text-violet-700 transition-opacity hover:opacity-90"
                         style={{
-                          background: "rgba(139,92,246,0.28)",
-                          border: "1px solid rgba(196,181,253,0.40)",
+                          background: "rgba(124,58,237,0.14)",
+                          border: "1px solid rgba(124,58,237,0.30)",
                           touchAction: "manipulation",
                         }}
                         title="Subir Post"
@@ -270,10 +270,10 @@ export default function Header() {
                       </Link>
                       <Link
                         href="/admin"
-                        className="inline-flex items-center gap-1 rounded-full px-3 py-2 text-xs font-semibold text-white"
+                        className="inline-flex items-center gap-1 rounded-full px-3 py-2 text-xs font-semibold text-blue-700"
                         style={{
-                          background: "rgba(59,130,246,0.35)",
-                          border: "1px solid rgba(147,197,253,0.45)",
+                          background: "rgba(37,99,235,0.14)",
+                          border: "1px solid rgba(37,99,235,0.32)",
                         }}
                       >
                         Admin
@@ -289,10 +289,10 @@ export default function Header() {
                       writeCachedHeaderSession(null);
                       router.refresh();
                     }}
-                    className="inline-flex items-center gap-1 rounded-full px-3 py-2 text-xs font-semibold text-white/90"
+                    className="inline-flex items-center gap-1 rounded-full px-3 py-2 text-xs font-semibold text-slate-700"
                     style={{
-                      background: "rgba(255,255,255,0.12)",
-                      border: "1px solid rgba(255,255,255,0.20)",
+                      background: "rgba(241,245,249,0.92)",
+                      border: "1px solid rgba(148,163,184,0.30)",
                     }}
                   >
                     <LogOut className="h-3.5 w-3.5" />
@@ -308,7 +308,7 @@ export default function Header() {
                 onClick={() => setMobileMenuOpen((v) => !v)}
                 aria-label={mobileMenuOpen ? "Cerrar menu" : "Abrir menu"}
                 aria-expanded={mobileMenuOpen}
-                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white/90"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-700"
               >
                 {mobileMenuOpen ? (
                   <X className="h-5 w-5" />
@@ -324,8 +324,8 @@ export default function Header() {
 
         {mobileMenuOpen ? (
           <div
-            className="mt-2 rounded-2xl border border-white/15 bg-white/10 p-3 backdrop-blur-xl md:hidden"
-            style={{ boxShadow: "0 8px 24px rgba(0,0,0,0.2)" }}
+            className="mt-2 rounded-2xl border border-slate-200 bg-white/95 p-3 backdrop-blur-xl md:hidden"
+            style={{ boxShadow: "0 12px 30px rgba(15,23,42,0.12)" }}
           >
             <nav className="flex flex-col gap-1">
               {NAV_LINKS.map((item) => (
@@ -333,7 +333,7 @@ export default function Header() {
                   key={item.href}
                   href={item.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="rounded-xl px-3 py-2.5 text-sm font-medium text-white/85 transition-colors hover:bg-white/10"
+                  className="rounded-xl px-3 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100"
                 >
                   {item.label}
                 </Link>
@@ -341,40 +341,40 @@ export default function Header() {
             </nav>
 
             {isStaff ? (
-              <div className="mt-2 flex flex-col gap-1 border-t border-white/10 pt-2">
-                <p className="px-3 pb-1 text-[10px] font-semibold uppercase tracking-widest text-white/35">
+              <div className="mt-2 flex flex-col gap-1 border-t border-slate-200 pt-2">
+                <p className="px-3 pb-1 text-[10px] font-semibold uppercase tracking-widest text-slate-400">
                   Acciones rápidas
                 </p>
                 <Link
                   href="/admin/tools"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-white/85 transition-colors hover:bg-white/10"
+                  className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100"
                 >
-                  <Wrench className="h-4 w-4 text-emerald-300" />
+                  <Wrench className="h-4 w-4 text-emerald-600" />
                   Añadir Tool
                 </Link>
                 <Link
                   href="/admin/posts"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-white/85 transition-colors hover:bg-white/10"
+                  className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100"
                 >
-                  <PenSquare className="h-4 w-4 text-violet-300" />
+                  <PenSquare className="h-4 w-4 text-violet-700" />
                   Subir Post
                 </Link>
               </div>
             ) : null}
 
-            <div className="mt-3 border-t border-white/10 pt-3">
+            <div className="mt-3 border-t border-slate-200 pt-3">
               {isLoading ? (
-                <div className="h-9 w-24 rounded-full bg-white/15 animate-pulse" />
+                <div className="h-9 w-24 rounded-full bg-slate-200 animate-pulse" />
               ) : !session ? (
                 <Link
                   href={loginHref}
                   onClick={() => setMobileMenuOpen(false)}
                   className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold text-white"
                   style={{
-                    background: "rgba(9, 9, 15, 0.80)",
-                    border: "1px solid rgba(255,255,255,0.15)",
+                    background: "linear-gradient(135deg, #2563eb, #7c3aed)",
+                    border: "1px solid rgba(99,102,241,0.30)",
                   }}
                 >
                   <LogIn className="h-4 w-4" />
@@ -382,16 +382,16 @@ export default function Header() {
                 </Link>
               ) : (
                 <div className="flex items-center justify-between gap-3">
-                  <div className="text-sm text-white/80 truncate">{displayName}</div>
+                  <div className="text-sm text-slate-700 truncate">{displayName}</div>
                   <div className="flex items-center gap-2">
                     {isStaff ? (
                       <Link
                         href="/admin"
                         onClick={() => setMobileMenuOpen(false)}
-                        className="inline-flex items-center rounded-full px-3 py-2 text-xs font-semibold text-white"
+                        className="inline-flex items-center rounded-full px-3 py-2 text-xs font-semibold text-blue-700"
                         style={{
-                          background: "rgba(59,130,246,0.35)",
-                          border: "1px solid rgba(147,197,253,0.45)",
+                          background: "rgba(37,99,235,0.14)",
+                          border: "1px solid rgba(37,99,235,0.32)",
                         }}
                       >
                         Admin
@@ -406,10 +406,10 @@ export default function Header() {
                         setMobileMenuOpen(false);
                         router.refresh();
                       }}
-                      className="inline-flex items-center gap-1 rounded-full px-3 py-2 text-xs font-semibold text-white/90"
+                      className="inline-flex items-center gap-1 rounded-full px-3 py-2 text-xs font-semibold text-slate-700"
                       style={{
-                        background: "rgba(255,255,255,0.12)",
-                        border: "1px solid rgba(255,255,255,0.20)",
+                        background: "rgba(241,245,249,0.92)",
+                        border: "1px solid rgba(148,163,184,0.30)",
                       }}
                     >
                       <LogOut className="h-3.5 w-3.5" />
@@ -425,3 +425,4 @@ export default function Header() {
     </header>
   );
 }
+

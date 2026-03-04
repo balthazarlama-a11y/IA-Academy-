@@ -1,4 +1,4 @@
-import { redirect } from "next/navigation";
+﻿import { redirect } from "next/navigation";
 import { AdminSidebar } from "@/components/admin/sidebar";
 import { AdminHeader } from "@/components/admin/header";
 import { getCurrentUser } from "@/lib/auth/session";
@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Admin - IA NEXUS",
-  description: "Panel de administracion de IA NEXUS",
+  description: "Panel de administración de IA NEXUS",
 };
 
 export default async function AdminLayout({
@@ -26,7 +26,7 @@ export default async function AdminLayout({
   return (
     <div
       className="min-h-screen flex"
-      style={{ background: "#09090f", color: "rgba(255, 255, 255, 0.95)" }}
+      style={{ background: "#f4f7fb", color: "rgba(15, 23, 42, 0.96)" }}
     >
       <AdminSidebar userRole={role} />
 
@@ -40,3 +40,4 @@ export default async function AdminLayout({
     </div>
   );
 }
+

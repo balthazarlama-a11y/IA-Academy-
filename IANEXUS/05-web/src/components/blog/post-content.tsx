@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 
@@ -13,7 +13,7 @@ function renderBlock(block: string, index: number) {
   
   if (trimmed.startsWith("### ")) {
     return (
-      <h3 key={index} className="text-lg font-semibold text-white mt-5">
+      <h3 key={index} className="text-lg font-semibold text-slate-900 mt-5">
         {trimmed.replace(/^###\s+/, "")}
       </h3>
     );
@@ -21,7 +21,7 @@ function renderBlock(block: string, index: number) {
 
   if (trimmed.startsWith("## ")) {
     return (
-      <h2 key={index} className="text-xl font-semibold text-white mt-6">
+      <h2 key={index} className="text-xl font-semibold text-slate-900 mt-6">
         {trimmed.replace(/^##\s+/, "")}
       </h2>
     );
@@ -29,7 +29,7 @@ function renderBlock(block: string, index: number) {
 
   if (trimmed.startsWith("# ")) {
     return (
-      <h2 key={index} className="text-xl font-semibold text-white mt-6">
+      <h2 key={index} className="text-xl font-semibold text-slate-900 mt-6">
         {trimmed.replace(/^#\s+/, "")}
       </h2>
     );
@@ -40,7 +40,7 @@ function renderBlock(block: string, index: number) {
 
   if (isBulletList) {
     return (
-      <ul key={index} className="list-disc pl-5 space-y-1.5 text-white/75">
+      <ul key={index} className="list-disc pl-5 space-y-1.5 text-slate-700">
         {lines.map((line, lineIndex) => (
           <li key={`${index}-${lineIndex}`}>{line.replace(/^- /, "")}</li>
         ))}
@@ -49,7 +49,7 @@ function renderBlock(block: string, index: number) {
   }
 
   return (
-    <p key={index} className="text-white/75 leading-7">
+    <p key={index} className="text-slate-700 leading-7">
       {trimmed}
     </p>
   );
@@ -78,23 +78,23 @@ export function PostContent({ content, isLoggedIn, slug }: PostContentProps) {
       </div>
 
       <div className="mt-8 rounded-xl border border-violet-300/25 bg-violet-400/8 p-5">
-        <h2 className="text-base font-semibold text-white">
+        <h2 className="text-base font-semibold text-slate-900">
           Desbloquea la guia completa
         </h2>
-        <p className="mt-2 text-white/65 text-sm leading-relaxed">
-          Inicia sesion para ver todos los pasos, recomendaciones y el
+        <p className="mt-2 text-slate-600 text-sm leading-relaxed">
+          Inicia sesión para ver todos los pasos, recomendaciones y el
           catalogo completo de herramientas relacionadas.
         </p>
         <div className="mt-4 flex flex-wrap gap-3">
           <Link
             href={`/login?next=${encodeURIComponent(`/blog/${slug}`)}`}
-            className="inline-flex rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white hover:bg-white/15 transition-colors"
+            className="inline-flex rounded-full border border-slate-300 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-900 hover:bg-slate-100 transition-colors"
           >
-            Iniciar sesion
+            Iniciar sesión
           </Link>
           <Link
             href="/estudiantes"
-            className="inline-flex rounded-full border border-white/10 bg-transparent px-4 py-2 text-sm font-medium text-white/70 hover:text-white transition-colors"
+            className="inline-flex rounded-full border border-slate-200 bg-transparent px-4 py-2 text-sm font-medium text-slate-700 hover:text-slate-900 transition-colors"
           >
             Ver catalogo
           </Link>
@@ -103,3 +103,4 @@ export function PostContent({ content, isLoggedIn, slug }: PostContentProps) {
     </>
   );
 }
+

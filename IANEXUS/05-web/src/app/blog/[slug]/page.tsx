@@ -53,25 +53,25 @@ export default async function BlogPostPage({ params }: PageProps) {
       <Header />
 
       <section className="flex-1 w-full px-6 py-8 md:py-10">
-        <article className="mx-auto w-full max-w-3xl rounded-2xl border border-white/10 bg-white/[0.04] p-6 md:p-10">
+        <article className="mx-auto w-full max-w-3xl rounded-2xl border border-slate-200 bg-white p-6 md:p-10">
           <Link
             href="/blog"
-            className="inline-flex text-sm text-white/50 hover:text-white/80 transition-colors"
+            className="inline-flex text-sm text-slate-500 hover:text-slate-700 transition-colors"
           >
             ← Volver al blog
           </Link>
 
           <header className="mt-6">
-            <h1 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-white leading-tight">
+            <h1 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-slate-900 leading-tight">
               {post.title}
             </h1>
             {date && (
-              <div className="mt-2 text-sm text-white/40">
+              <div className="mt-2 text-sm text-slate-500">
                 {date}
               </div>
             )}
             {post.excerpt ? (
-              <p className="mt-4 text-white/60 text-base leading-relaxed">{post.excerpt}</p>
+              <p className="mt-4 text-slate-600 text-base leading-relaxed">{post.excerpt}</p>
             ) : null}
           </header>
 
@@ -91,12 +91,12 @@ export default async function BlogPostPage({ params }: PageProps) {
 function ContentSkeleton() {
   return (
     <div className="mt-8 space-y-4 animate-pulse">
-      <div className="h-4 w-full rounded bg-white/10" />
-      <div className="h-4 w-5/6 rounded bg-white/10" />
-      <div className="h-4 w-4/6 rounded bg-white/10" />
-      <div className="h-6 w-2/3 rounded bg-white/10 mt-6" />
-      <div className="h-4 w-full rounded bg-white/10" />
-      <div className="h-4 w-5/6 rounded bg-white/10" />
+      <div className="h-4 w-full rounded bg-slate-50" />
+      <div className="h-4 w-5/6 rounded bg-slate-50" />
+      <div className="h-4 w-4/6 rounded bg-slate-50" />
+      <div className="h-6 w-2/3 rounded bg-slate-50 mt-6" />
+      <div className="h-4 w-full rounded bg-slate-50" />
+      <div className="h-4 w-5/6 rounded bg-slate-50" />
     </div>
   );
 }

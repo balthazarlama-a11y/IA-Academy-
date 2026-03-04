@@ -22,9 +22,9 @@ function AreaToolCard({ tool }: { tool: Tool }) {
   const accentColor = tool.category.color_accent ?? "#6366f1";
 
   return (
-    <article className="group relative flex flex-col overflow-hidden rounded-3xl border border-white/15 p-6 transition-colors duration-150 hover:border-white/25 hover:bg-white/[0.08] shadow-[0_8px_24px_rgba(0,0,0,0.25)]"
+    <article className="group relative flex flex-col overflow-hidden rounded-3xl border border-slate-200 p-6 transition-colors duration-150 hover:border-slate-300 hover:bg-white shadow-[0_14px_26px_rgba(15,23,42,0.10)]"
       style={{
-        background: "linear-gradient(180deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.04) 100%)",
+        background: "linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(248,250,252,0.9) 100%)",
         contain: "layout style paint",
       }}
     >
@@ -38,7 +38,7 @@ function AreaToolCard({ tool }: { tool: Tool }) {
 
         {/* Nombre + badge plan */}
         <div className="flex items-start justify-between gap-3">
-          <h3 className="text-lg font-semibold text-white leading-snug transition-colors duration-150 group-hover:text-white/90">
+          <h3 className="text-lg font-semibold text-slate-900 leading-snug transition-colors duration-150 group-hover:text-slate-900">
             {tool.name}
           </h3>
           <span
@@ -61,28 +61,28 @@ function AreaToolCard({ tool }: { tool: Tool }) {
           >
             {tool.category.name}
           </span>
-          <span className="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium text-white/55 border border-white/10">
+          <span className="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium text-slate-600 border border-slate-200">
             {LEVEL_LABEL[tool.level]}
           </span>
         </div>
 
         {/* Descripción */}
         {tool.description && (
-          <p className="text-sm text-white/60 line-clamp-3 leading-relaxed">
+          <p className="text-sm text-slate-600 line-clamp-3 leading-relaxed">
             {tool.description}
           </p>
         )}
 
         {/* Badges verificación */}
-        <div className="flex items-center gap-4 mt-auto pt-5 border-t border-white/10">
+        <div className="flex items-center gap-4 mt-auto pt-5 border-t border-slate-200">
           {tool.verified && (
-            <span className="inline-flex items-center gap-1.5 text-xs text-emerald-400/85">
+            <span className="inline-flex items-center gap-1.5 text-xs text-emerald-600">
               <BadgeCheck className="h-4 w-4" />
               Verificada
             </span>
           )}
           {tool.edu_verified && (
-            <span className="inline-flex items-center gap-1.5 text-xs text-cyan-400/85">
+            <span className="inline-flex items-center gap-1.5 text-xs text-cyan-600">
               <GraduationCap className="h-4 w-4" />
               Plan .edu
             </span>
@@ -107,8 +107,8 @@ function AreaToolCard({ tool }: { tool: Tool }) {
             href={tool.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center justify-center gap-1.5 rounded-xl px-3.5 py-2.5 text-sm font-semibold text-white/60 transition-colors duration-150 hover:text-white"
-            style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)" }}
+            className="inline-flex items-center justify-center gap-1.5 rounded-xl px-3.5 py-2.5 text-sm font-semibold text-slate-600 transition-colors duration-150 hover:text-slate-900"
+            style={{ background: "rgba(241,245,249,0.92)", border: "1px solid rgba(148, 163, 184, 0.30)" }}
           >
             <ExternalLink className="h-4 w-4" />
           </a>
@@ -119,3 +119,4 @@ function AreaToolCard({ tool }: { tool: Tool }) {
 }
 
 export default memo(AreaToolCard);
+

@@ -7,6 +7,14 @@ import RelatedPosts from "@/components/tools/related-posts";
 import { getRelatedPostsByToolSlug } from "@/lib/repositories/post-tools-repo";
 import { getToolBySlug } from "@/lib/repositories/tools-repo";
 
+// ISR cada 5 minutos
+export const revalidate = 300;
+
+export async function generateStaticParams() {
+  // Pre-render vacío - las páginas se generan bajo demanda con ISR
+  return [];
+}
+
 export default async function ToolDetailPage({
   params,
 }: {
@@ -31,18 +39,18 @@ export default async function ToolDetailPage({
       <section className="flex-1 px-6 py-10">
         <div className="mx-auto w-full max-w-4xl mb-4">
           <div className="flex items-center gap-3 text-sm">
-            <Link href="/areas" className="text-white/50 hover:text-white/80 transition-colors">
+            <Link href="/areas" className="text-slate-500 hover:text-slate-700 transition-colors">
               Areas
             </Link>
-            <span className="text-white/30">/</span>
+            <span className="text-slate-400">/</span>
             <Link
               href={`/areas?category=${encodeURIComponent(tool.category.slug)}`}
-              className="text-white/50 hover:text-white/80 transition-colors"
+              className="text-slate-500 hover:text-slate-700 transition-colors"
             >
               {tool.category.name}
             </Link>
-            <span className="text-white/30">/</span>
-            <span className="text-white/80">{tool.name}</span>
+            <span className="text-slate-400">/</span>
+            <span className="text-slate-700">{tool.name}</span>
           </div>
         </div>
 

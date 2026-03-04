@@ -1,4 +1,4 @@
-import Image from "next/image";
+﻿import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, Sparkles } from "lucide-react";
 import type { Post } from "@/lib/supabase/server";
@@ -18,7 +18,7 @@ export default function BlogPostCard({ post }: { post: Post }) {
     <Link
       href={`/blog/${post.slug}`}
       prefetch={true}
-      className="group block rounded-2xl border border-white/10 bg-white/[0.04] p-5 transition-colors duration-150 hover:border-white/15 hover:bg-white/[0.06]"
+      className="group block rounded-2xl border border-slate-200 bg-white p-5 transition-colors duration-150 hover:border-slate-200 hover:bg-white"
     >
       {/* Cover image - sin efectos hover que causen lag */}
       {post.cover_image_url ? (
@@ -38,27 +38,27 @@ export default function BlogPostCard({ post }: { post: Post }) {
 
       <div className="flex flex-col">
         <div className="flex items-start justify-between gap-3">
-          <span className="inline-flex items-center gap-1 rounded-full border border-white/15 bg-white/5 px-2 py-0.5 text-[10px] uppercase tracking-[0.12em] text-white/60">
+          <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white px-2 py-0.5 text-[10px] uppercase tracking-[0.12em] text-slate-600">
             <Sparkles className="h-2.5 w-2.5" />
             Post
           </span>
-          <ArrowUpRight className="h-4 w-4 text-white/40" />
+          <ArrowUpRight className="h-4 w-4 text-slate-500" />
         </div>
 
-        <h2 className="mt-3 text-lg font-medium leading-snug text-white">
+        <h2 className="mt-3 text-lg font-medium leading-snug text-slate-900">
           {post.title}
         </h2>
 
         {post.excerpt ? (
-          <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-white/55">
+          <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-slate-600">
             {post.excerpt}
           </p>
         ) : null}
 
-        <div className="mt-4 flex items-center justify-between border-t border-white/10 pt-3">
-          <time className="text-xs text-white/40">{formatDate(post.published_at)}</time>
+        <div className="mt-4 flex items-center justify-between border-t border-slate-200 pt-3">
+          <time className="text-xs text-slate-500">{formatDate(post.published_at)}</time>
           {post.ia_type ? (
-            <span className="inline-flex items-center rounded-full border border-white/15 bg-white/5 px-2 py-0.5 text-[11px] text-white/60">
+            <span className="inline-flex items-center rounded-full border border-slate-200 bg-white px-2 py-0.5 text-[11px] text-slate-600">
               {post.ia_type}
             </span>
           ) : null}
@@ -67,3 +67,4 @@ export default function BlogPostCard({ post }: { post: Post }) {
     </Link>
   );
 }
+

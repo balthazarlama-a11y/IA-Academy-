@@ -151,7 +151,7 @@ export function PostToolsLinker({
 
         {relations.length === 0 ? (
           <div className="rounded-xl border border-slate-200 bg-white p-8 text-center text-sm text-slate-500">
-            No hay relaciones creadas todavia.
+            No hay relaciones creadas todavía.
           </div>
         ) : (
           <div className="space-y-3">

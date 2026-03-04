@@ -1,4 +1,4 @@
-import { memo } from "react";
+﻿import { memo } from "react";
 import type { Tool } from "@/lib/types/tool";
 import AreaToolCard from "./area-tool-card";
 
@@ -35,7 +35,7 @@ function AreaToolsGrid({
             type="button"
             onClick={onLoadMore}
             disabled={isLoadingMore}
-            className="inline-flex items-center rounded-full border border-white/20 bg-white/10 px-5 py-2.5 text-sm font-medium text-white/85 transition hover:bg-white/15 disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex items-center rounded-full border border-slate-300 bg-slate-50 px-5 py-2.5 text-sm font-medium text-slate-800 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {isLoadingMore ? "Cargando..." : "Cargar 50 más"}
           </button>
@@ -46,3 +46,4 @@ function AreaToolsGrid({
 }
 
 export default memo(AreaToolsGrid);
+

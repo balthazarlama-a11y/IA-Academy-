@@ -1,4 +1,4 @@
-type BlobConfig = {
+﻿type BlobConfig = {
   top?: string;
   right?: string;
   bottom?: string;
@@ -22,10 +22,10 @@ const FULL_BLOBS: BlobConfig[] = [
     left: "-8%",
     width: 680,
     height: 680,
-    background: "radial-gradient(circle, #a78bfa 0%, transparent 68%)",
+    background: "radial-gradient(circle, #93c5fd 0%, transparent 68%)",
     borderRadius: "60% 40% 30% 70% / 60% 30% 70% 40%",
     filter: "blur(90px)",
-    opacity: 0.28,
+    opacity: 0.18,
     animation: "blob-1 26s ease-in-out infinite alternate",
   },
   {
@@ -33,10 +33,10 @@ const FULL_BLOBS: BlobConfig[] = [
     right: "-8%",
     width: 560,
     height: 560,
-    background: "radial-gradient(circle, #f472b6 0%, transparent 68%)",
+    background: "radial-gradient(circle, #c4b5fd 0%, transparent 68%)",
     borderRadius: "40% 60% 70% 30% / 40% 70% 30% 60%",
     filter: "blur(85px)",
-    opacity: 0.24,
+    opacity: 0.16,
     animation: "blob-2 30s ease-in-out infinite alternate 2s",
   },
   {
@@ -44,10 +44,10 @@ const FULL_BLOBS: BlobConfig[] = [
     left: "8%",
     width: 520,
     height: 520,
-    background: "radial-gradient(circle, #22d3ee 0%, transparent 68%)",
+    background: "radial-gradient(circle, #67e8f9 0%, transparent 68%)",
     borderRadius: "50% 50% 30% 70% / 30% 60% 40% 70%",
     filter: "blur(90px)",
-    opacity: 0.2,
+    opacity: 0.14,
     animation: "blob-3 22s ease-in-out infinite alternate 4s",
   },
   {
@@ -55,10 +55,10 @@ const FULL_BLOBS: BlobConfig[] = [
     right: "2%",
     width: 540,
     height: 540,
-    background: "radial-gradient(circle, #fbbf24 0%, transparent 68%)",
+    background: "radial-gradient(circle, #bfdbfe 0%, transparent 68%)",
     borderRadius: "70% 30% 60% 40% / 50% 40% 60% 30%",
     filter: "blur(85px)",
-    opacity: 0.18,
+    opacity: 0.14,
     animation: "blob-4 32s ease-in-out infinite alternate 1s",
   },
 ];
@@ -70,20 +70,20 @@ const LITE_BLOBS: BlobConfig[] = [
     left: "-5%",
     width: 400,
     height: 400,
-    background: "radial-gradient(circle, #a78bfa 0%, transparent 70%)",
+    background: "radial-gradient(circle, #93c5fd 0%, transparent 70%)",
     borderRadius: "60% 40% 30% 70% / 60% 30% 70% 40%",
     filter: "blur(60px)",
-    opacity: 0.15,
+    opacity: 0.12,
   },
   {
     bottom: "-5%",
     right: "-5%",
     width: 380,
     height: 380,
-    background: "radial-gradient(circle, #3b82f6 0%, transparent 70%)",
+    background: "radial-gradient(circle, #a5b4fc 0%, transparent 70%)",
     borderRadius: "40% 60% 70% 30% / 40% 70% 30% 60%",
     filter: "blur(55px)",
-    opacity: 0.12,
+    opacity: 0.1,
   },
 ];
 
@@ -94,20 +94,20 @@ const MINIMAL_BLOBS: BlobConfig[] = [
     left: "20%",
     width: 600,
     height: 400,
-    background: "radial-gradient(ellipse at center, rgba(139,92,246,0.15) 0%, transparent 60%)",
+    background: "radial-gradient(ellipse at center, rgba(99,102,241,0.10) 0%, transparent 60%)",
     borderRadius: "50%",
     filter: "blur(40px)",
-    opacity: 0.5,
+    opacity: 0.42,
   },
   {
     bottom: "0%",
     right: "10%",
     width: 500,
     height: 350,
-    background: "radial-gradient(ellipse at center, rgba(59,130,246,0.12) 0%, transparent 60%)",
+    background: "radial-gradient(ellipse at center, rgba(14,165,233,0.10) 0%, transparent 60%)",
     borderRadius: "50%",
     filter: "blur(40px)",
-    opacity: 0.5,
+    opacity: 0.42,
   },
 ];
 
@@ -122,10 +122,10 @@ export default function LiquidBackground({
         : FULL_BLOBS;
   const baseColor =
     performanceMode === "minimal"
-      ? "#09090f"
+      ? "#fbfcff"
       : performanceMode === "lite"
-        ? "#0a0a10"
-        : "#09090f";
+        ? "#f7f9fd"
+        : "#f4f7fb";
 
   return (
     <div
@@ -160,3 +160,4 @@ export default function LiquidBackground({
     </div>
   );
 }
+

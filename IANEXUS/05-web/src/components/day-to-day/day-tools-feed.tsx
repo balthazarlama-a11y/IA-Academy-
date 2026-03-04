@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { ExternalLink, BadgeCheck, GraduationCap } from "lucide-react";
@@ -56,16 +56,16 @@ export default function DayToolsFeed({ tools, filters }: DayToolsFeedProps) {
 
   if (filteredTools.length === 0) {
     return (
-      <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-8 text-center">
-        <ExternalLink className="mx-auto h-8 w-8 text-white/20 mb-3" />
-        <p className="text-sm text-white/50">No se encontraron herramientas</p>
+      <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center">
+        <ExternalLink className="mx-auto h-8 w-8 text-slate-300 mb-3" />
+        <p className="text-sm text-slate-500">No se encontraron herramientas</p>
       </div>
     );
   }
 
   return (
     <div className="flex flex-col gap-4">
-      <h2 className="text-sm font-medium uppercase tracking-[0.12em] text-white/50 px-1">
+      <h2 className="text-sm font-medium uppercase tracking-[0.12em] text-slate-500 px-1">
         Herramientas ({filteredTools.length})
       </h2>
 
@@ -77,11 +77,11 @@ export default function DayToolsFeed({ tools, filters }: DayToolsFeedProps) {
           return (
             <article
               key={tool.id}
-              className="group rounded-2xl border border-white/10 bg-white/[0.04] p-4 transition-colors duration-150 hover:border-white/20 hover:bg-white/[0.06]"
+              className="group rounded-2xl border border-slate-200 bg-white p-4 transition-colors duration-150 hover:border-slate-300 hover:bg-white"
             >
               {/* Header */}
               <div className="flex items-start justify-between gap-3">
-                <h3 className="text-sm font-medium text-white">{tool.name}</h3>
+                <h3 className="text-sm font-medium text-slate-900">{tool.name}</h3>
                 <span
                   className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-medium"
                   style={{ color: plan.color, background: plan.bg }}
@@ -102,20 +102,20 @@ export default function DayToolsFeed({ tools, filters }: DayToolsFeedProps) {
                 >
                   {tool.category.name}
                 </span>
-                <span className="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[10px] text-white/45">
+                <span className="inline-flex items-center rounded-full border border-slate-200 bg-white px-2 py-0.5 text-[10px] text-slate-500">
                   {LEVEL_LABEL[tool.level]}
                 </span>
               </div>
 
               {/* Description */}
               {tool.description && (
-                <p className="mt-2 line-clamp-2 text-xs text-white/50">
+                <p className="mt-2 line-clamp-2 text-xs text-slate-500">
                   {tool.description}
                 </p>
               )}
 
               {/* Footer */}
-              <div className="mt-3 flex items-center justify-between border-t border-white/10 pt-3">
+              <div className="mt-3 flex items-center justify-between border-t border-slate-200 pt-3">
                 <div className="flex items-center gap-3">
                   {tool.verified && (
                     <span className="inline-flex items-center gap-1 text-[10px] text-emerald-400/80">
@@ -134,7 +134,7 @@ export default function DayToolsFeed({ tools, filters }: DayToolsFeedProps) {
                 <div className="flex items-center gap-2">
                   <Link
                     href={`/herramientas/${tool.slug}`}
-                    className="inline-flex items-center rounded-lg border border-white/15 bg-white/5 px-2.5 py-1 text-[11px] font-medium text-white/70 transition hover:bg-white/10"
+                    className="inline-flex items-center rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-[11px] font-medium text-slate-700 transition hover:bg-slate-50"
                   >
                     Detalle
                   </Link>
@@ -142,7 +142,7 @@ export default function DayToolsFeed({ tools, filters }: DayToolsFeedProps) {
                     href={tool.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center rounded-lg border border-white/15 bg-white/5 px-2 py-1 text-white/50 transition hover:text-white"
+                    className="inline-flex items-center rounded-lg border border-slate-200 bg-white px-2 py-1 text-slate-500 transition hover:text-slate-900"
                   >
                     <ExternalLink className="h-3 w-3" />
                   </a>
@@ -155,3 +155,4 @@ export default function DayToolsFeed({ tools, filters }: DayToolsFeedProps) {
     </div>
   );
 }
+

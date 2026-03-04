@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -42,16 +42,16 @@ export default function DayBlogFeed({ posts, filters }: DayBlogFeedProps) {
 
   if (filteredPosts.length === 0) {
     return (
-      <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-8 text-center">
-        <Sparkles className="mx-auto h-8 w-8 text-white/20 mb-3" />
-        <p className="text-sm text-white/50">No se encontraron posts</p>
+      <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center">
+        <Sparkles className="mx-auto h-8 w-8 text-slate-300 mb-3" />
+        <p className="text-sm text-slate-500">No se encontraron posts</p>
       </div>
     );
   }
 
   return (
     <div className="flex flex-col gap-4">
-      <h2 className="text-sm font-medium uppercase tracking-[0.12em] text-white/50 px-1">
+      <h2 className="text-sm font-medium uppercase tracking-[0.12em] text-slate-500 px-1">
         Posts ({filteredPosts.length})
       </h2>
 
@@ -61,7 +61,7 @@ export default function DayBlogFeed({ posts, filters }: DayBlogFeedProps) {
             key={post.id}
             href={`/blog/${post.slug}`}
             prefetch={true}
-            className="group flex gap-4 rounded-2xl border border-white/10 bg-white/[0.04] p-4 transition-colors duration-150 hover:border-white/20 hover:bg-white/[0.06]"
+            className="group flex gap-4 rounded-2xl border border-slate-200 bg-white p-4 transition-colors duration-150 hover:border-slate-300 hover:bg-white"
           >
             {/* Thumbnail */}
             {post.cover_image_url ? (
@@ -76,32 +76,32 @@ export default function DayBlogFeed({ posts, filters }: DayBlogFeedProps) {
                 />
               </div>
             ) : (
-              <div className="flex h-20 w-20 flex-shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/[0.05]">
-                <Sparkles className="h-6 w-6 text-white/20" />
+              <div className="flex h-20 w-20 flex-shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-white">
+                <Sparkles className="h-6 w-6 text-slate-300" />
               </div>
             )}
 
             {/* Content */}
             <div className="flex min-w-0 flex-1 flex-col">
               <div className="flex items-start justify-between gap-2">
-                <h3 className="line-clamp-2 text-sm font-medium leading-snug text-white">
+                <h3 className="line-clamp-2 text-sm font-medium leading-snug text-slate-900">
                   {post.title}
                 </h3>
-                <ArrowUpRight className="h-4 w-4 flex-shrink-0 text-white/30" />
+                <ArrowUpRight className="h-4 w-4 flex-shrink-0 text-slate-400" />
               </div>
 
               {post.excerpt && (
-                <p className="mt-1 line-clamp-2 text-xs text-white/50">
+                <p className="mt-1 line-clamp-2 text-xs text-slate-500">
                   {post.excerpt}
                 </p>
               )}
 
               <div className="mt-auto flex items-center gap-2 pt-2">
-                <time className="text-[10px] text-white/35">
+                <time className="text-[10px] text-slate-400">
                   {formatDate(post.published_at)}
                 </time>
                 {post.ia_type && (
-                  <span className="rounded-full border border-white/10 bg-white/5 px-1.5 py-0.5 text-[10px] text-white/50">
+                  <span className="rounded-full border border-slate-200 bg-white px-1.5 py-0.5 text-[10px] text-slate-500">
                     {post.ia_type}
                   </span>
                 )}
@@ -113,3 +113,4 @@ export default function DayBlogFeed({ posts, filters }: DayBlogFeedProps) {
     </div>
   );
 }
+

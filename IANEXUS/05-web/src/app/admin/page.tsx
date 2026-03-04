@@ -86,13 +86,13 @@ export default async function AdminDashboardPage() {
     <div className="space-y-8">
       {/* Welcome */}
       <section>
-        <h2 className="text-2xl font-bold text-white/90 mb-1">Bienvenido al Panel</h2>
-        <p className="text-white/50 text-sm">Gestiona el contenido de IA NEXUS desde aquí.</p>
+        <h2 className="text-2xl font-bold text-slate-900 mb-1">Bienvenido al Panel</h2>
+        <p className="text-slate-500 text-sm">Gestiona el contenido de IA NEXUS desde aquí.</p>
       </section>
 
       {/* Stats Grid */}
       <section>
-        <h3 className="text-xs font-semibold text-white/35 uppercase tracking-widest mb-4">
+        <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-4">
           Métricas
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -102,16 +102,16 @@ export default async function AdminDashboardPage() {
               className="p-5 rounded-xl"
               style={{
                 background: card.accent,
-                border: "1px solid rgba(255,255,255,0.08)",
+                border: "1px solid rgba(148, 163, 184, 0.28)",
               }}
             >
               <div className="flex items-start justify-between gap-2">
                 <div>
-                  <p className="text-xs text-white/45 mb-1">{card.name}</p>
-                  <p className="text-3xl font-bold text-white/90 tabular-nums">{card.value}</p>
-                  <p className="text-xs text-white/35 mt-1">{card.sub}</p>
+                  <p className="text-xs text-slate-500 mb-1">{card.name}</p>
+                  <p className="text-3xl font-bold text-slate-900 tabular-nums">{card.value}</p>
+                  <p className="text-xs text-slate-400 mt-1">{card.sub}</p>
                 </div>
-                <div className="p-2 rounded-lg" style={{ background: "rgba(255,255,255,0.06)" }}>
+                <div className="p-2 rounded-lg" style={{ background: "rgba(241,245,249,0.92)" }}>
                   <card.icon className={`h-5 w-5 ${card.iconColor}`} />
                 </div>
               </div>
@@ -122,14 +122,14 @@ export default async function AdminDashboardPage() {
 
       {/* Quick Actions */}
       <section>
-        <h3 className="text-xs font-semibold text-white/35 uppercase tracking-widest mb-4">
+        <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-4">
           Acciones Rápidas
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Link
             href="/admin/posts"
-            className="group p-6 rounded-xl transition-all duration-200 hover:bg-white/[0.06] block"
-            style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}
+            className="group p-6 rounded-xl transition-all duration-200 hover:bg-white block"
+            style={{ background: "rgba(255, 255, 255, 0.88)", border: "1px solid rgba(148, 163, 184, 0.28)" }}
           >
             <div
               className="h-12 w-12 rounded-xl flex items-center justify-center mb-4"
@@ -137,10 +137,10 @@ export default async function AdminDashboardPage() {
             >
               <FileText className="h-6 w-6 text-blue-400" />
             </div>
-            <h4 className="text-lg font-semibold text-white/90 mb-1 group-hover:text-white transition-colors">
+            <h4 className="text-lg font-semibold text-slate-900 mb-1 group-hover:text-slate-900 transition-colors">
               Gestionar Posts
             </h4>
-            <p className="text-sm text-white/40">
+            <p className="text-sm text-slate-500">
               {stats.totalPosts === 0
                 ? "Aún no hay posts. Crea el primero."
                 : `${stats.totalPosts} posts · ${stats.publishedPosts} publicados`}
@@ -149,8 +149,8 @@ export default async function AdminDashboardPage() {
 
           <Link
             href="/admin/tools"
-            className="group p-6 rounded-xl transition-all duration-200 hover:bg-white/[0.06] block"
-            style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}
+            className="group p-6 rounded-xl transition-all duration-200 hover:bg-white block"
+            style={{ background: "rgba(255, 255, 255, 0.88)", border: "1px solid rgba(148, 163, 184, 0.28)" }}
           >
             <div
               className="h-12 w-12 rounded-xl flex items-center justify-center mb-4"
@@ -158,10 +158,10 @@ export default async function AdminDashboardPage() {
             >
               <Wrench className="h-6 w-6 text-emerald-400" />
             </div>
-            <h4 className="text-lg font-semibold text-white/90 mb-1 group-hover:text-white transition-colors">
+            <h4 className="text-lg font-semibold text-slate-900 mb-1 group-hover:text-slate-900 transition-colors">
               Gestionar Tools
             </h4>
-            <p className="text-sm text-white/40">
+            <p className="text-sm text-slate-500">
               {stats.totalTools === 0
                 ? "Aún no hay tools. Añade la primera."
                 : `${stats.totalTools} tools · ${stats.publishedTools} publicadas`}
@@ -172,3 +172,4 @@ export default async function AdminDashboardPage() {
     </div>
   );
 }
+

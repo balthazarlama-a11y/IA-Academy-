@@ -1,4 +1,4 @@
-import Footer from "@/components/layout/footer";
+﻿import Footer from "@/components/layout/footer";
 import Header from "@/components/layout/header";
 import StudentsToolbar from "@/components/students/students-toolbar";
 import { getToolsPage } from "@/lib/repositories/tools-repo";
@@ -14,14 +14,14 @@ export default async function EstudiantesPage() {
 
       <section className="flex-1 w-full px-6 py-10 md:py-14">
         <div className="mx-auto w-full max-w-7xl">
-          <header className="rounded-3xl border border-white/15 bg-white/[0.07] p-6 md:p-8 backdrop-blur-2xl">
-            <p className="inline-flex items-center rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs uppercase tracking-[0.14em] text-white/65">
+          <header className="rounded-3xl border border-slate-200 bg-white p-6 md:p-8">
+            <p className="inline-flex items-center rounded-full border border-slate-300 bg-slate-50 px-3 py-1 text-xs uppercase tracking-[0.14em] text-slate-600">
               Estudiantes
             </p>
             <h1
               className="mt-4 text-4xl font-semibold leading-tight md:text-5xl"
               style={{
-                backgroundImage: "linear-gradient(to right, #00d9ff, #a78bfa)",
+                backgroundImage: "linear-gradient(to right, #2563eb, #7c3aed)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",
@@ -29,9 +29,9 @@ export default async function EstudiantesPage() {
             >
               Oportunidades gratis para tu carrera
             </h1>
-            <p className="mt-3 max-w-3xl text-base text-white/65 md:text-lg">
+            <p className="mt-3 max-w-3xl text-base text-slate-600 md:text-lg">
               Encuentra herramientas con plan gratis o beneficios educativos. Activa
-              freemium solo cuando quieras ampliar la busqueda.
+              freemium solo cuando quieras ampliar la búsqueda.
             </p>
           </header>
 
@@ -47,3 +47,4 @@ export default async function EstudiantesPage() {
     </main>
   );
 }
+

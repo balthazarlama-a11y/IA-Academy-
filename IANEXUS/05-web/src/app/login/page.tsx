@@ -22,10 +22,10 @@ export default async function LoginPage({
       <Header />
 
       <section className="flex-1 flex items-center justify-center px-6 py-10">
-        <div className="w-full max-w-md rounded-3xl border border-white/15 bg-white/5 backdrop-blur-xl p-7">
-          <h1 className="text-2xl font-semibold text-white">Accede a IA NEXUS</h1>
-          <p className="mt-2 text-white/60 text-sm">
-            Inicia sesion o crea tu cuenta para ver contenido completo, herramientas
+        <div className="w-full max-w-md rounded-3xl border border-slate-200 bg-white backdrop-blur-xl p-7">
+          <h1 className="text-2xl font-semibold text-slate-900">Accede a IA NEXUS</h1>
+          <p className="mt-2 text-slate-600 text-sm">
+            Inicia sesión o crea tu cuenta para ver contenido completo, herramientas
             y tu panel si tienes rol admin o master.
           </p>
 
@@ -33,9 +33,9 @@ export default async function LoginPage({
             <LoginForm nextPath={nextPath} />
           </div>
 
-          <div className="mt-6 pt-4 border-t border-white/10 text-sm text-white/55">
+          <div className="mt-6 pt-4 border-t border-slate-200 text-sm text-slate-600">
             Puedes volver al{" "}
-            <Link href="/" className="text-blue-300 hover:text-blue-200">
+            <Link href="/" className="text-blue-600 hover:text-blue-700">
               inicio
             </Link>
             en cualquier momento.
@@ -47,3 +47,4 @@ export default async function LoginPage({
     </main>
   );
 }
+

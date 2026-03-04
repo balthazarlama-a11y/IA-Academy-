@@ -16,7 +16,7 @@ interface UploadImageFieldProps {
 }
 
 const INPUT_CLASSES =
-  "rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none";
+  "rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none";
 
 /**
  * UploadImageField
@@ -78,11 +78,11 @@ export default function UploadImageField({
 
   return (
     <div className={`flex flex-col gap-2 ${colSpan}`}>
-      <span className="text-xs font-medium text-white/50">{label}</span>
+      <span className="text-xs font-medium text-slate-500">{label}</span>
 
       {/* Image preview */}
       {preview ? (
-        <div className="relative h-32 w-full overflow-hidden rounded-lg border border-white/15">
+        <div className="relative h-32 w-full overflow-hidden rounded-lg border border-slate-200">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={preview}
@@ -93,10 +93,10 @@ export default function UploadImageField({
           <button
             type="button"
             onClick={handleClear}
-            className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-black/70 text-white/90 text-xs hover:bg-black/90"
+            className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-slate-800/80 text-white text-xs hover:bg-slate-900"
             aria-label="Quitar imagen"
           >
-            ✕
+            x
           </button>
         </div>
       ) : null}
@@ -107,11 +107,11 @@ export default function UploadImageField({
           type="button"
           onClick={() => fileRef.current?.click()}
           className={`${INPUT_CLASSES} cursor-pointer inline-flex items-center gap-2 px-4`}
-          style={{ border: "1px solid rgba(255,255,255,0.20)" }}
+          style={{ border: "1px solid rgba(148, 163, 184, 0.36)" }}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-4 w-4 text-white/60"
+            className="h-4 w-4 text-slate-600"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -128,13 +128,13 @@ export default function UploadImageField({
         </button>
 
         {fileName ? (
-          <span className="text-xs text-white/50 truncate max-w-[200px]">{fileName}</span>
+          <span className="text-xs text-slate-500 truncate max-w-[200px]">{fileName}</span>
         ) : null}
       </div>
 
       {/* Error message */}
       {error ? (
-        <p className="text-xs text-red-300">{error}</p>
+        <p className="text-xs text-red-700">{error}</p>
       ) : null}
 
       {/* Hidden file input (actually submitted) */}
@@ -158,3 +158,4 @@ export default function UploadImageField({
     </div>
   );
 }
+

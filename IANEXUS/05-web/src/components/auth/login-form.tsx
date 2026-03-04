@@ -45,13 +45,13 @@ export default function LoginForm({ nextPath }: LoginFormProps) {
 
     if (mode === "signup") {
       if (password.length < 8) {
-        setErrorMessage("La contrasena debe tener al menos 8 caracteres.");
+        setErrorMessage("La contraseña debe tener al menos 8 caracteres.");
         setIsLoading(false);
         return;
       }
 
       if (password !== confirmPassword) {
-        setErrorMessage("Las contrasenas no coinciden.");
+        setErrorMessage("Las contraseñas no coinciden.");
         setIsLoading(false);
         return;
       }
@@ -83,7 +83,7 @@ export default function LoginForm({ nextPath }: LoginFormProps) {
       }
 
       setSuccessMessage(
-        "Cuenta creada. Revisa tu email para confirmar y luego iniciar sesion.",
+        "Cuenta creada. Revisa tu email para confirmar y luego iniciar sesión.",
       );
       setMode("signin");
       setPassword("");
@@ -109,7 +109,7 @@ export default function LoginForm({ nextPath }: LoginFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="grid grid-cols-2 gap-2 rounded-xl border border-white/15 bg-white/5 p-1">
+      <div className="grid grid-cols-2 gap-2 rounded-xl border border-slate-200 bg-white p-1">
         <button
           type="button"
           onClick={() => switchMode("signin")}
@@ -117,14 +117,14 @@ export default function LoginForm({ nextPath }: LoginFormProps) {
           style={
             mode === "signin"
               ? {
-                  background: "rgba(59,130,246,0.24)",
-                  border: "1px solid rgba(96,165,250,0.5)",
-                  color: "rgba(255,255,255,0.95)",
+                  background: "rgba(59,130,246,0.16)",
+                  border: "1px solid rgba(59,130,246,0.38)",
+                  color: "rgba(30,64,175,0.95)",
                 }
-              : { color: "rgba(255,255,255,0.65)" }
+              : { color: "rgba(71,85,105,0.85)" }
           }
         >
-          Iniciar sesion
+          Iniciar sesión
         </button>
         <button
           type="button"
@@ -133,11 +133,11 @@ export default function LoginForm({ nextPath }: LoginFormProps) {
           style={
             mode === "signup"
               ? {
-                  background: "rgba(139,92,246,0.24)",
-                  border: "1px solid rgba(167,139,250,0.5)",
-                  color: "rgba(255,255,255,0.95)",
+                  background: "rgba(124,58,237,0.14)",
+                  border: "1px solid rgba(124,58,237,0.34)",
+                  color: "rgba(109,40,217,0.95)",
                 }
-              : { color: "rgba(255,255,255,0.65)" }
+              : { color: "rgba(71,85,105,0.85)" }
           }
         >
           Crear cuenta
@@ -146,7 +146,7 @@ export default function LoginForm({ nextPath }: LoginFormProps) {
 
       {mode === "signup" ? (
         <div>
-          <label htmlFor="full_name" className="block text-sm text-white/70 mb-1.5">
+          <label htmlFor="full_name" className="block text-sm text-slate-700 mb-1.5">
             Nombre
           </label>
           <input
@@ -155,14 +155,14 @@ export default function LoginForm({ nextPath }: LoginFormProps) {
             autoComplete="name"
             value={fullName}
             onChange={(event) => setFullName(event.target.value)}
-            className="w-full rounded-xl bg-white/5 border border-white/15 px-3.5 py-2.5 text-white outline-none focus:border-blue-400/60"
+            className="w-full rounded-xl bg-white border border-slate-200 px-3.5 py-2.5 text-slate-900 outline-none focus:border-blue-400/60"
             placeholder="Tu nombre"
           />
         </div>
       ) : null}
 
       <div>
-        <label htmlFor="email" className="block text-sm text-white/70 mb-1.5">
+        <label htmlFor="email" className="block text-sm text-slate-700 mb-1.5">
           Email
         </label>
         <input
@@ -172,7 +172,7 @@ export default function LoginForm({ nextPath }: LoginFormProps) {
           autoComplete="email"
           value={email}
           onChange={(event) => setEmail(event.target.value)}
-          className="w-full rounded-xl bg-white/5 border border-white/15 px-3.5 py-2.5 text-white outline-none focus:border-blue-400/60"
+          className="w-full rounded-xl bg-white border border-slate-200 px-3.5 py-2.5 text-slate-900 outline-none focus:border-blue-400/60"
           placeholder="tu-email@dominio.com"
         />
       </div>
@@ -180,7 +180,7 @@ export default function LoginForm({ nextPath }: LoginFormProps) {
       <div>
         <label
           htmlFor="password"
-          className="block text-sm text-white/70 mb-1.5"
+          className="block text-sm text-slate-700 mb-1.5"
         >
           Password
         </label>
@@ -191,7 +191,7 @@ export default function LoginForm({ nextPath }: LoginFormProps) {
           autoComplete="current-password"
           value={password}
           onChange={(event) => setPassword(event.target.value)}
-          className="w-full rounded-xl bg-white/5 border border-white/15 px-3.5 py-2.5 text-white outline-none focus:border-blue-400/60"
+          className="w-full rounded-xl bg-white border border-slate-200 px-3.5 py-2.5 text-slate-900 outline-none focus:border-blue-400/60"
           placeholder="Tu password"
         />
       </div>
@@ -200,7 +200,7 @@ export default function LoginForm({ nextPath }: LoginFormProps) {
         <div>
           <label
             htmlFor="confirm_password"
-            className="block text-sm text-white/70 mb-1.5"
+            className="block text-sm text-slate-700 mb-1.5"
           >
             Confirmar password
           </label>
@@ -211,20 +211,20 @@ export default function LoginForm({ nextPath }: LoginFormProps) {
             autoComplete="new-password"
             value={confirmPassword}
             onChange={(event) => setConfirmPassword(event.target.value)}
-            className="w-full rounded-xl bg-white/5 border border-white/15 px-3.5 py-2.5 text-white outline-none focus:border-blue-400/60"
+            className="w-full rounded-xl bg-white border border-slate-200 px-3.5 py-2.5 text-slate-900 outline-none focus:border-blue-400/60"
             placeholder="Repite tu password"
           />
         </div>
       ) : null}
 
       {errorMessage ? (
-        <p className="text-sm text-red-300 bg-red-500/10 border border-red-400/25 rounded-xl px-3 py-2">
+        <p className="text-sm text-red-700 bg-red-500/10 border border-red-400/30 rounded-xl px-3 py-2">
           {errorMessage}
         </p>
       ) : null}
 
       {successMessage ? (
-        <p className="text-sm text-emerald-200 bg-emerald-500/10 border border-emerald-400/25 rounded-xl px-3 py-2">
+        <p className="text-sm text-emerald-700 bg-emerald-500/10 border border-emerald-400/30 rounded-xl px-3 py-2">
           {successMessage}
         </p>
       ) : null}
@@ -234,8 +234,8 @@ export default function LoginForm({ nextPath }: LoginFormProps) {
         disabled={isLoading}
         className="w-full rounded-xl px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-60"
         style={{
-          background: "linear-gradient(135deg, #3b82f6, #8b5cf6)",
-          boxShadow: "0 8px 24px rgba(59,130,246,0.25)",
+          background: "linear-gradient(135deg, #2563eb, #7c3aed)",
+          boxShadow: "0 10px 22px rgba(59,130,246,0.24)",
         }}
       >
         {isLoading
@@ -243,9 +243,10 @@ export default function LoginForm({ nextPath }: LoginFormProps) {
             ? "Entrando..."
             : "Creando cuenta..."
           : mode === "signin"
-            ? "Iniciar sesion"
+            ? "Iniciar sesión"
             : "Crear cuenta"}
       </button>
     </form>
   );
 }
+

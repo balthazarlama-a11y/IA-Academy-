@@ -510,11 +510,11 @@ export default function AreasToolbar({
         placeholder="Buscar herramienta..."
         value={searchText}
         onChange={(event) => onSearchChange(event.target.value)}
-        className="w-full rounded-2xl border border-white/15 bg-white/8 px-4 py-3 text-sm text-white placeholder-white/35 outline-none transition-all focus:ring-1 focus:ring-white/25"
+        className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 outline-none transition-all focus:ring-2 focus:ring-blue-200"
       />
 
-      <div className="rounded-2xl border border-white/12 bg-white/[0.03] p-4">
-        <p className="mb-3 text-xs font-medium uppercase tracking-[0.14em] text-white/45">Areas</p>
+      <div className="rounded-2xl border border-slate-200 bg-white p-4">
+        <p className="mb-3 text-xs font-medium uppercase tracking-[0.14em] text-slate-500">Areas</p>
         <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
           {AREA_OPTIONS.map((area) => {
             const checked = selectedAreas.includes(area.slug);
@@ -523,16 +523,16 @@ export default function AreasToolbar({
                 key={area.slug}
                 className="flex cursor-pointer items-center gap-2 rounded-xl border px-3 py-2 text-sm transition-colors"
                 style={{
-                  borderColor: checked ? `${area.accent}66` : "rgba(255,255,255,0.12)",
-                  background: checked ? `${area.accent}18` : "rgba(255,255,255,0.03)",
-                  color: checked ? area.accent : "rgba(255,255,255,0.75)",
+                  borderColor: checked ? `${area.accent}66` : "rgba(148,163,184,0.32)",
+                  background: checked ? `${area.accent}18` : "rgba(248,250,252,0.9)",
+                  color: checked ? area.accent : "rgba(51,65,85,0.88)",
                 }}
               >
                 <input
                   type="checkbox"
                   checked={checked}
                   onChange={() => onToggleArea(area.slug)}
-                  className="h-4 w-4 accent-white"
+                  className="h-4 w-4 accent-blue-600"
                 />
                 <span>{area.label}</span>
               </label>
@@ -542,21 +542,21 @@ export default function AreasToolbar({
       </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <div className="rounded-2xl border border-white/12 bg-white/[0.03] p-4">
-          <p className="mb-3 text-xs font-medium uppercase tracking-[0.14em] text-white/45">Plan</p>
+        <div className="rounded-2xl border border-slate-200 bg-white p-4">
+          <p className="mb-3 text-xs font-medium uppercase tracking-[0.14em] text-slate-500">Plan</p>
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             {PLAN_OPTIONS.map((plan) => {
               const checked = selectedPlans.includes(plan.value);
               return (
                 <label
                   key={plan.value}
-                  className="flex cursor-pointer items-center gap-2 rounded-xl border border-white/12 bg-white/[0.03] px-3 py-2 text-sm text-white/75"
+                  className="flex cursor-pointer items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700"
                 >
                   <input
                     type="checkbox"
                     checked={checked}
                     onChange={() => onTogglePlan(plan.value)}
-                    className="h-4 w-4 accent-white"
+                    className="h-4 w-4 accent-blue-600"
                   />
                   <span>{plan.label}</span>
                 </label>
@@ -565,21 +565,21 @@ export default function AreasToolbar({
           </div>
         </div>
 
-        <div className="rounded-2xl border border-white/12 bg-white/[0.03] p-4">
-          <p className="mb-3 text-xs font-medium uppercase tracking-[0.14em] text-white/45">Nivel</p>
+        <div className="rounded-2xl border border-slate-200 bg-white p-4">
+          <p className="mb-3 text-xs font-medium uppercase tracking-[0.14em] text-slate-500">Nivel</p>
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             {LEVEL_OPTIONS.map((level) => {
               const checked = selectedLevels.includes(level.value);
               return (
                 <label
                   key={level.value}
-                  className="flex cursor-pointer items-center gap-2 rounded-xl border border-white/12 bg-white/[0.03] px-3 py-2 text-sm text-white/75"
+                  className="flex cursor-pointer items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700"
                 >
                   <input
                     type="checkbox"
                     checked={checked}
                     onChange={() => onToggleLevel(level.value)}
-                    className="h-4 w-4 accent-white"
+                    className="h-4 w-4 accent-blue-600"
                   />
                   <span>{level.label}</span>
                 </label>
@@ -590,14 +590,14 @@ export default function AreasToolbar({
       </div>
 
       <div className="flex items-center justify-between gap-3">
-        <p className="text-xs text-white/45">
-          Mostrando <span className="text-white/65">{tools.length}{hasMore ? "+" : ""}</span> herramientas
+        <p className="text-xs text-slate-500">
+          Mostrando <span className="text-slate-600">{tools.length}{hasMore ? "+" : ""}</span> herramientas
         </p>
         {hasFilters ? (
           <button
             type="button"
             onClick={onReset}
-            className="rounded-lg border border-white/15 bg-white/7 px-3 py-1.5 text-xs text-white/70 transition hover:bg-white/12"
+            className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs text-slate-700 transition hover:bg-slate-50"
           >
             Limpiar filtros
           </button>
@@ -605,13 +605,13 @@ export default function AreasToolbar({
       </div>
 
       {errorMessage ? (
-        <div className="rounded-2xl border border-red-300/35 bg-red-400/10 px-4 py-3 text-sm text-red-100">
+        <div className="rounded-2xl border border-red-300/35 bg-red-400/10 px-4 py-3 text-sm text-red-700">
           {errorMessage}
         </div>
       ) : null}
 
       {isLoading && tools.length === 0 ? (
-        <div className="rounded-3xl border border-white/15 bg-white/[0.05] px-6 py-10 text-center text-white/70">
+        <div className="rounded-3xl border border-slate-200 bg-white px-6 py-10 text-center text-slate-700">
           Cargando herramientas...
         </div>
       ) : tools.length > 0 ? (
@@ -628,3 +628,4 @@ export default function AreasToolbar({
     </div>
   );
 }
+

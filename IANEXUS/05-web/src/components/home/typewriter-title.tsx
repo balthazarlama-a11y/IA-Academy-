@@ -56,11 +56,11 @@ export default function TypewriterTitle({
   const shownText = text.slice(0, visibleCount);
 
   return (
-    <h1 className={className} style={{ color: "rgba(255,255,255,0.95)" }}>
+    <h1 className={className} style={{ color: "rgba(15,23,42,0.96)" }}>
       {shownText}
       <span
         aria-hidden="true"
-        className="ml-1 inline-block h-[0.95em] w-[2px] translate-y-[2px] animate-pulse bg-white/90 align-middle"
+        className="ml-1 inline-block h-[0.95em] w-[2px] translate-y-[2px] animate-pulse bg-blue-500/80 align-middle"
       />
     </h1>
   );

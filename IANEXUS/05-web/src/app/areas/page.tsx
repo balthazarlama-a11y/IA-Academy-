@@ -1,4 +1,4 @@
-import Header from "@/components/layout/header";
+﻿import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import AreasToolbar from "@/components/areas/areas-toolbar";
 import { getAreasPage } from "@/lib/repositories/areas-repo";
@@ -50,13 +50,13 @@ export default async function AreasPage({ searchParams }: PageProps) {
 
           {/* Hero */}
           <div className="w-full text-center">
-            <p className="inline-flex items-center rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs uppercase tracking-[0.14em] text-white/65">
+            <p className="inline-flex items-center rounded-full border border-slate-300 bg-slate-50 px-3 py-1 text-xs uppercase tracking-[0.14em] text-slate-600">
               Áreas
             </p>
             <h1
               className="mt-4 text-4xl md:text-5xl lg:text-6xl font-semibold leading-tight"
               style={{
-                backgroundImage: "linear-gradient(to right, #8b5cf6, #ec4899)",
+                backgroundImage: "linear-gradient(to right, #4f46e5, #0f766e)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",
@@ -64,7 +64,7 @@ export default async function AreasPage({ searchParams }: PageProps) {
             >
               Herramientas por área
             </h1>
-            <p className="mt-4 text-lg md:text-xl text-white/60 max-w-2xl mx-auto">
+            <p className="mt-4 text-lg md:text-xl text-slate-600 max-w-2xl mx-auto">
               Filtra por especialidad y encuentra las IAs más útiles para tu campo.
             </p>
           </div>
@@ -84,4 +84,5 @@ export default async function AreasPage({ searchParams }: PageProps) {
     </main>
   );
 }
+
 

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useCallback } from "react";
 
@@ -63,11 +63,11 @@ export default function DayFilterBar({ onFilterChange, categories }: DayFilterBa
   }, [onFilterChange]);
 
   return (
-    <div className="w-full rounded-2xl border border-white/10 bg-white/[0.04] p-4 md:p-5">
+    <div className="w-full rounded-2xl border border-slate-200 bg-white p-4 md:p-5">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-12">
         {/* Search */}
         <div className="md:col-span-4">
-          <label className="mb-1.5 block text-xs uppercase tracking-[0.12em] text-white/50">
+          <label className="mb-1.5 block text-xs uppercase tracking-[0.12em] text-slate-500">
             Buscar
           </label>
           <input
@@ -75,19 +75,19 @@ export default function DayFilterBar({ onFilterChange, categories }: DayFilterBa
             placeholder="Nombre, tipo de IA..."
             value={filters.search}
             onChange={(e) => updateFilter("search", e.target.value)}
-            className="w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-white/30 outline-none transition focus:border-cyan-300/50"
+            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-cyan-300/50"
           />
         </div>
 
         {/* Plan */}
         <div className="md:col-span-3">
-          <label className="mb-1.5 block text-xs uppercase tracking-[0.12em] text-white/50">
+          <label className="mb-1.5 block text-xs uppercase tracking-[0.12em] text-slate-500">
             Plan
           </label>
           <select
             value={filters.plan}
             onChange={(e) => updateFilter("plan", e.target.value as FilterState["plan"])}
-            className="w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none transition focus:border-cyan-300/50"
+            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-cyan-300/50"
           >
             {PLAN_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value} className="bg-[#0f0f16]">
@@ -99,13 +99,13 @@ export default function DayFilterBar({ onFilterChange, categories }: DayFilterBa
 
         {/* Category */}
         <div className="md:col-span-3">
-          <label className="mb-1.5 block text-xs uppercase tracking-[0.12em] text-white/50">
+          <label className="mb-1.5 block text-xs uppercase tracking-[0.12em] text-slate-500">
             Categoría
           </label>
           <select
             value={filters.category}
             onChange={(e) => updateFilter("category", e.target.value)}
-            className="w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none transition focus:border-cyan-300/50"
+            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-cyan-300/50"
           >
             <option value="" className="bg-[#0f0f16]">
               Todas
@@ -120,13 +120,13 @@ export default function DayFilterBar({ onFilterChange, categories }: DayFilterBa
 
         {/* Level */}
         <div className="md:col-span-2">
-          <label className="mb-1.5 block text-xs uppercase tracking-[0.12em] text-white/50">
+          <label className="mb-1.5 block text-xs uppercase tracking-[0.12em] text-slate-500">
             Nivel
           </label>
           <select
             value={filters.level}
             onChange={(e) => updateFilter("level", e.target.value as FilterState["level"])}
-            className="w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none transition focus:border-cyan-300/50"
+            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-cyan-300/50"
           >
             {LEVEL_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value} className="bg-[#0f0f16]">
@@ -139,10 +139,10 @@ export default function DayFilterBar({ onFilterChange, categories }: DayFilterBa
 
       {/* Clear filters */}
       {hasActiveFilters && (
-        <div className="mt-4 flex justify-end border-t border-white/10 pt-3">
+        <div className="mt-4 flex justify-end border-t border-slate-200 pt-3">
           <button
             onClick={clearFilters}
-            className="text-xs text-white/50 hover:text-white/80 transition-colors"
+            className="text-xs text-slate-500 hover:text-slate-700 transition-colors"
           >
             Limpiar filtros
           </button>
@@ -153,3 +153,4 @@ export default function DayFilterBar({ onFilterChange, categories }: DayFilterBa
 }
 
 export type { FilterState };
+

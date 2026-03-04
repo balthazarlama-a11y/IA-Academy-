@@ -47,7 +47,7 @@ type CacheEntry = {
 };
 
 const PAGE_SIZE = 50;
-const SEARCH_DEBOUNCE_MS = 250;
+const SEARCH_DEBOUNCE_MS = 400;
 const CACHE_TTL_MS = 90_000;
 const TOOL_SELECT =
   "id, name, slug, description, url, logo_url, plan, ia_type, edu_verified, featured, sort_order, created_at";
@@ -327,6 +327,7 @@ export default function StudentsToolbar({
   }
 
   function handleScopeChange(nextScope: "all_free" | "student_pack") {
+    if (nextScope === scopeValue) return;
     clearSearchTimer();
     setScopeValue(nextScope);
     const nextFilters = buildFilters({ scope: nextScope });
@@ -334,6 +335,7 @@ export default function StudentsToolbar({
   }
 
   function handleFreemiumChange(nextFreemium: boolean) {
+    if (nextFreemium === includeFreemiumValue) return;
     clearSearchTimer();
     setIncludeFreemiumValue(nextFreemium);
     const nextFilters = buildFilters({ includeFreemium: nextFreemium });
@@ -341,6 +343,7 @@ export default function StudentsToolbar({
   }
 
   function handleIaTypeChange(nextIaType: string) {
+    if (nextIaType === iaTypeValue) return;
     clearSearchTimer();
     setIaTypeValue(nextIaType);
     const nextFilters = buildFilters({ iaType: nextIaType });
@@ -380,12 +383,12 @@ export default function StudentsToolbar({
 
   return (
     <>
-      <section className="mt-8 rounded-3xl border border-white/15 bg-white/[0.06] p-5 backdrop-blur-2xl md:p-6">
+      <section className="mt-8 rounded-3xl border border-slate-200 bg-white p-5 md:p-6">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-12">
           <div className="md:col-span-5">
             <label
               htmlFor="q"
-              className="mb-2 block text-xs uppercase tracking-[0.12em] text-white/55"
+              className="mb-2 block text-xs uppercase tracking-[0.12em] text-slate-600"
             >
               Buscador
             </label>
@@ -394,16 +397,16 @@ export default function StudentsToolbar({
               value={searchInput}
               onChange={(event) => handleSearchChange(event.target.value)}
               placeholder="Ej: chatgpt, notion, github copilot..."
-              className="w-full rounded-xl border border-white/20 bg-[#0f0f1b]/70 px-3 py-2.5 text-sm text-white placeholder:text-white/35 outline-none transition focus:border-cyan-300/60"
+              className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-blue-300/60"
             />
           </div>
 
           <div className="md:col-span-4">
-            <p className="mb-2 block text-xs uppercase tracking-[0.12em] text-white/55">
+            <p className="mb-2 block text-xs uppercase tracking-[0.12em] text-slate-600">
               Filtros
             </p>
             <div className="flex flex-wrap gap-2">
-              <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs text-white/75">
+              <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-slate-300 bg-slate-50 px-3 py-1.5 text-xs text-slate-700">
                 <input
                   type="radio"
                   name="scope"
@@ -413,7 +416,7 @@ export default function StudentsToolbar({
                 />
                 Gratis total
               </label>
-              <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs text-white/75">
+              <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-slate-300 bg-slate-50 px-3 py-1.5 text-xs text-slate-700">
                 <input
                   type="radio"
                   name="scope"
@@ -423,7 +426,7 @@ export default function StudentsToolbar({
                 />
                 Pack estudiante
               </label>
-              <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-emerald-300/30 bg-emerald-400/10 px-3 py-1.5 text-xs text-emerald-100">
+              <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-emerald-300/30 bg-emerald-400/10 px-3 py-1.5 text-xs text-emerald-700">
                 <input
                   type="checkbox"
                   checked={includeFreemiumValue}
@@ -437,7 +440,7 @@ export default function StudentsToolbar({
           <div className="md:col-span-3">
             <label
               htmlFor="ia_type"
-              className="mb-2 block text-xs uppercase tracking-[0.12em] text-white/55"
+              className="mb-2 block text-xs uppercase tracking-[0.12em] text-slate-600"
             >
               Tipo de IA
             </label>
@@ -445,7 +448,7 @@ export default function StudentsToolbar({
               id="ia_type"
               value={iaTypeValue}
               onChange={(event) => handleIaTypeChange(event.target.value)}
-              className="w-full rounded-xl border border-white/20 bg-[#0f0f1b]/70 px-3 py-2.5 text-sm text-white outline-none transition focus:border-cyan-300/60"
+              className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-blue-300/60"
             >
               <option value="">Todos</option>
               {iaTypeOptions.map((option) => (
@@ -456,15 +459,15 @@ export default function StudentsToolbar({
             </select>
           </div>
 
-          <div className="md:col-span-12 flex flex-col gap-3 border-t border-white/10 pt-4 md:flex-row md:items-center md:justify-between">
-            <p className="text-sm text-white/60">
-              Mostrando <span className="font-semibold text-white">{tools.length}</span>
+          <div className="md:col-span-12 flex flex-col gap-3 border-t border-slate-200 pt-4 md:flex-row md:items-center md:justify-between">
+            <p className="text-sm text-slate-600">
+              Mostrando <span className="font-semibold text-slate-900">{tools.length}</span>
               {hasMore ? "+" : ""} oportunidades para estudiantes.
             </p>
             <button
               type="button"
               onClick={handleClear}
-              className="inline-flex w-fit items-center rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm text-white/80 transition hover:bg-white/15"
+              className="inline-flex w-fit items-center rounded-full border border-slate-300 bg-slate-50 px-4 py-2 text-sm text-slate-700 transition hover:bg-slate-100"
             >
               Limpiar
             </button>
@@ -473,13 +476,13 @@ export default function StudentsToolbar({
       </section>
 
       {errorMessage ? (
-        <div className="mt-6 rounded-2xl border border-red-300/35 bg-red-400/10 px-4 py-3 text-sm text-red-100">
+        <div className="mt-6 rounded-2xl border border-red-300/35 bg-red-400/10 px-4 py-3 text-sm text-red-700">
           {errorMessage}
         </div>
       ) : null}
 
       {isLoading && tools.length === 0 ? (
-        <div className="mt-8 rounded-3xl border border-white/15 bg-white/[0.05] px-6 py-10 text-center text-white/70">
+        <div className="mt-8 rounded-3xl border border-slate-200 bg-white px-6 py-10 text-center text-slate-700">
           Cargando herramientas...
         </div>
       ) : tools.length > 0 ? (
@@ -502,12 +505,13 @@ export default function StudentsToolbar({
             type="button"
             onClick={handleLoadMore}
             disabled={isLoadingMore}
-            className="inline-flex items-center rounded-full border border-white/20 bg-white/10 px-5 py-2.5 text-sm font-medium text-white/85 transition hover:bg-white/15 disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex items-center rounded-full border border-slate-300 bg-slate-50 px-5 py-2.5 text-sm font-medium text-slate-800 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {isLoadingMore ? "Cargando..." : "Cargar 50 mas"}
+            {isLoadingMore ? "Cargando..." : "Cargar 50 más"}
           </button>
         </div>
       ) : null}
     </>
   );
 }
+

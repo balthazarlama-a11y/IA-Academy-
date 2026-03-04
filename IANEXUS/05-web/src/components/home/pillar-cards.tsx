@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { ArrowRight, GraduationCap, Layers3, Sparkles } from "lucide-react";
 
 const PILLARS = [
@@ -7,24 +7,24 @@ const PILLARS = [
     subtitle: "Herramientas verificadas sin costo",
     icon: GraduationCap,
     href: "/estudiantes",
-    gradient: "from-blue-400 to-cyan-400",
-    glow: "rgba(59, 130, 246, 0.30)",
+    gradient: "from-blue-600 to-sky-500",
+    glow: "rgba(37, 99, 235, 0.18)",
   },
   {
     title: "Areas y Especialidades",
     subtitle: "IA por carrera y disciplina",
     icon: Layers3,
     href: "/areas",
-    gradient: "from-violet-400 to-fuchsia-400",
-    glow: "rgba(139, 92, 246, 0.30)",
+    gradient: "from-indigo-600 to-violet-500",
+    glow: "rgba(99, 102, 241, 0.18)",
   },
   {
-    title: "IA del Dia a Dia",
+    title: "IA del Día a Día",
     subtitle: "Fundamentales para tareas variadas",
     icon: Sparkles,
     href: "/dia-a-dia",
-    gradient: "from-emerald-400 to-teal-400",
-    glow: "rgba(16, 185, 129, 0.30)",
+    gradient: "from-emerald-600 to-teal-500",
+    glow: "rgba(5, 150, 105, 0.18)",
   },
 ];
 
@@ -45,7 +45,7 @@ export default function PillarCards({ variant = "grid" }: PillarCardsProps) {
     variant === "stacked"
       ? "flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br"
       : "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br";
-  const titleClass = variant === "stacked" ? "font-semibold text-white leading-tight text-base md:text-lg" : "font-semibold text-white leading-tight text-sm md:text-base";
+  const titleClass = variant === "stacked" ? "font-semibold text-slate-900 leading-tight text-base md:text-lg" : "font-semibold text-slate-900 leading-tight text-sm md:text-base";
   const subtitleClass = variant === "stacked" ? "text-sm mt-1.5" : "text-xs mt-1";
   const iconSize = variant === "stacked" ? "h-6 w-6 text-white" : "h-5 w-5 text-white";
 
@@ -60,10 +60,10 @@ export default function PillarCards({ variant = "grid" }: PillarCardsProps) {
             href={pillar.href}
             className={cardClass}
             style={{
-              border: "1px solid rgba(255, 255, 255, 0.18)",
+              border: "1px solid rgba(148, 163, 184, 0.24)",
               background:
-                "linear-gradient(180deg, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0.05) 100%)",
-              boxShadow: `0 4px 16px rgba(0,0,0,0.2), 0 0 0 1px rgba(255,255,255,0.02), 0 0 12px ${pillar.glow}`,
+                "linear-gradient(180deg, rgba(255,255,255,0.94) 0%, rgba(248,250,252,0.92) 100%)",
+              boxShadow: `0 14px 24px rgba(15,23,42,0.08), 0 0 0 1px rgba(255,255,255,0.5), 0 0 12px ${pillar.glow}`,
               touchAction: "manipulation",
               contain: "layout paint style",
             }}
@@ -81,13 +81,13 @@ export default function PillarCards({ variant = "grid" }: PillarCardsProps) {
                 <p className={titleClass}>
                   {pillar.title}
                 </p>
-                <p className={subtitleClass} style={{ color: "rgba(255,255,255,0.6)" }}>
+                <p className={subtitleClass} style={{ color: "rgba(71,85,105,0.85)" }}>
                   {pillar.subtitle}
                 </p>
               </div>
 
               <div
-                className="ml-auto inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white/80"
+                className="ml-auto inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-300 bg-slate-50 text-slate-700"
                 aria-hidden="true"
               >
                 <ArrowRight className="h-4 w-4" />
@@ -99,3 +99,4 @@ export default function PillarCards({ variant = "grid" }: PillarCardsProps) {
     </div>
   );
 }
+
