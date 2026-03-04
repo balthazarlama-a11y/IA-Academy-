@@ -104,7 +104,7 @@ export default async function AdminPostsPage({
         style={{ background: "rgba(255, 255, 255, 0.88)", border: "1px solid rgba(148, 163, 184, 0.32)" }}
       >
         <h3 className="mb-4 text-lg font-medium text-slate-900">Nuevo post</h3>
-        <form action={createPostAction} encType="multipart/form-data" className="grid grid-cols-1 gap-3 md:grid-cols-2">
+        <form action={createPostAction} className="grid grid-cols-1 gap-3 md:grid-cols-2">
           <input name="title" required placeholder="Titulo" className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none" />
           <input name="slug" placeholder="slug-opcional" className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none" />
           <UploadImageField fileInputName="cover_image_file" urlInputName="cover_image_url" label="Imagen de portada" colSpan="md:col-span-2" />
@@ -163,7 +163,7 @@ export default async function AdminPostsPage({
               </summary>
 
               <div className="border-t border-slate-200 p-4">
-                <form action={updatePostAction} encType="multipart/form-data" className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                <form action={updatePostAction} className="grid grid-cols-1 gap-3 md:grid-cols-2">
                   <input type="hidden" name="id" value={post.id} />
                   <input name="title" required defaultValue={post.title} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none" />
                   <input name="slug" required defaultValue={post.slug} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none" />
