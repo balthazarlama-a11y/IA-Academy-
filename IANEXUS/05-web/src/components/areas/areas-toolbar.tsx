@@ -1,12 +1,15 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { Tool, ToolCategory, ToolLevel, ToolPlan } from "@/lib/types/tool";
+import { usePathname, useRouter } from "next/navigation";
+import type { ToolCategory, ToolLevel, ToolPlan } from "@/lib/types/tool";
+import type { AreaFilters as RepoAreaFilters } from "@/lib/repositories/areas-repo";
+import type { Tool } from "@/lib/types/tool";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
-import AreaToolCard from "./area-tool-card";
+import AreaToolsGrid from "./area-tools-grid";
 import AreasEmptyState from "./areas-empty-state";
 
-const AREAS = [
+const AREA_OPTIONS = [
   { slug: "programacion", label: "Programacion", accent: "#3b82f6" },
   { slug: "salud", label: "Salud", accent: "#10b981" },
   { slug: "investigacion", label: "Investigacion", accent: "#8b5cf6" },
@@ -14,18 +17,28 @@ const AREAS = [
   { slug: "escritura", label: "Escritura", accent: "#f97316" },
 ] as const;
 
-type AreaSlug = (typeof AREAS)[number]["slug"];
+const AREA_SLUGS = new Set<string>(AREA_OPTIONS.map((option) => option.slug));
+type AreaSlug = (typeof AREA_OPTIONS)[number]["slug"];
 
-type AreasToolbarProps = {
-  initialTools: Tool[];
-  initialHasMore: boolean;
-  initialNextOffset: number | null;
-};
+const PLAN_OPTIONS: Array<{ value: ToolPlan; label: string }> = [
+  { value: "free", label: "Gratis" },
+  { value: "edu_free", label: ".edu Gratis" },
+  { value: "freemium", label: "Freemium" },
+  { value: "paid", label: "Pago" },
+];
 
-type AreaFilters = {
+const LEVEL_OPTIONS: Array<{ value: ToolLevel; label: string }> = [
+  { value: "beginner", label: "Principiante" },
+  { value: "intermediate", label: "Intermedio" },
+  { value: "advanced", label: "Avanzado" },
+  { value: "all", label: "Universal" },
+];
+
+type LocalFilters = {
   search: string;
-  activeArea: AreaSlug | null;
-  freeOnly: boolean;
+  areaSlugs: AreaSlug[];
+  plans: ToolPlan[];
+  levels: ToolLevel[];
 };
 
 type RawCategoryRow = {
@@ -50,7 +63,13 @@ type RawToolRow = {
   verified: boolean;
   edu_verified: boolean;
   featured: boolean;
+  category_id: string;
   tool_categories: RawCategoryRow | null;
+};
+
+type CategoryMapRow = {
+  id: string;
+  slug: string;
 };
 
 type PageResult = {
@@ -65,11 +84,19 @@ type CacheEntry = {
   value: PageResult;
 };
 
+export type AreasToolbarProps = {
+  initialTools: Tool[];
+  initialHasMore: boolean;
+  initialNextOffset: number | null;
+  initialFilters: RepoAreaFilters;
+};
+
 const PAGE_SIZE = 50;
 const SEARCH_DEBOUNCE_MS = 250;
 const CACHE_TTL_MS = 90_000;
+
 const TOOL_SELECT = [
-  "id, name, slug, description, url, plan, level, ia_type, verified, edu_verified, featured",
+  "id, name, slug, description, url, plan, level, ia_type, verified, edu_verified, featured, category_id",
   "tool_categories(id, name, slug, description, color_accent, icon_name, sort_order)",
 ].join(", ");
 
@@ -114,17 +141,25 @@ function sanitizeSearch(value: string) {
   return value.trim().replaceAll(",", " ");
 }
 
-function buildKey(filters: AreaFilters, offset: number) {
-  return JSON.stringify({
-    search: sanitizeSearch(filters.search).toLowerCase(),
-    activeArea: filters.activeArea ?? "",
-    freeOnly: filters.freeOnly,
-    offset,
-    limit: PAGE_SIZE,
-  });
+function normalizeArray(values: string[]): string[] {
+  return [...new Set(values.map((value) => value.trim()).filter(Boolean))];
 }
 
-function mergeUniqueById(previous: Tool[], incoming: Tool[]) {
+function normalizeAreaSlugs(values: string[] | undefined): AreaSlug[] {
+  return normalizeArray(values ?? []).filter((value) => AREA_SLUGS.has(value)) as AreaSlug[];
+}
+
+function normalizePlans(values: string[] | undefined): ToolPlan[] {
+  const valid = new Set<ToolPlan>(PLAN_OPTIONS.map((option) => option.value));
+  return normalizeArray(values ?? []).filter((value) => valid.has(value as ToolPlan)) as ToolPlan[];
+}
+
+function normalizeLevels(values: string[] | undefined): ToolLevel[] {
+  const valid = new Set<ToolLevel>(LEVEL_OPTIONS.map((option) => option.value));
+  return normalizeArray(values ?? []).filter((value) => valid.has(value as ToolLevel)) as ToolLevel[];
+}
+
+function mergeUniqueById(previous: Tool[], incoming: Tool[]): Tool[] {
   const seen = new Set(previous.map((tool) => tool.id));
   const merged = [...previous];
 
@@ -138,23 +173,56 @@ function mergeUniqueById(previous: Tool[], incoming: Tool[]) {
   return merged;
 }
 
+function toggleItem<T extends string>(list: T[], value: T): T[] {
+  return list.includes(value) ? list.filter((item) => item !== value) : [...list, value];
+}
+
+function buildKey(filters: LocalFilters, offset: number): string {
+  return JSON.stringify({
+    search: sanitizeSearch(filters.search).toLowerCase(),
+    areaSlugs: [...filters.areaSlugs].sort(),
+    plans: [...filters.plans].sort(),
+    levels: [...filters.levels].sort(),
+    offset,
+    limit: PAGE_SIZE,
+  });
+}
+
+function hasActiveFilters(filters: LocalFilters): boolean {
+  return (
+    filters.search.trim().length > 0 ||
+    filters.areaSlugs.length > 0 ||
+    filters.plans.length > 0 ||
+    filters.levels.length > 0
+  );
+}
+
 export default function AreasToolbar({
   initialTools,
   initialHasMore,
   initialNextOffset,
+  initialFilters,
 }: AreasToolbarProps) {
   const supabase = useMemo(() => getSupabaseBrowserClient(), []);
+  const router = useRouter();
+  const pathname = usePathname();
 
-  const [searchText, setSearchText] = useState("");
-  const [activeArea, setActiveArea] = useState<AreaSlug | null>(null);
-  const [freeOnly, setFreeOnly] = useState(false);
+  const [searchText, setSearchText] = useState(initialFilters.search ?? "");
+  const [selectedAreas, setSelectedAreas] = useState<AreaSlug[]>(
+    normalizeAreaSlugs(initialFilters.categorySlugs),
+  );
+  const [selectedPlans, setSelectedPlans] = useState<ToolPlan[]>(
+    normalizePlans(initialFilters.plans),
+  );
+  const [selectedLevels, setSelectedLevels] = useState<ToolLevel[]>(
+    normalizeLevels(initialFilters.levels),
+  );
 
   const [tools, setTools] = useState<Tool[]>(initialTools);
   const [hasMore, setHasMore] = useState(initialHasMore);
   const [nextOffset, setNextOffset] = useState<number | null>(
     initialNextOffset ?? (initialHasMore ? initialTools.length : null),
   );
-
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -163,10 +231,27 @@ export default function AreasToolbar({
   const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const cacheRef = useRef<Map<string, CacheEntry>>(new Map());
   const inFlightRef = useRef<Map<string, Promise<PageResult>>>(new Map());
+  const categoryMapRef = useRef<Map<string, string> | null>(null);
+
+  const currentFilters = useMemo<LocalFilters>(
+    () => ({
+      search: searchText.trim(),
+      areaSlugs: selectedAreas,
+      plans: selectedPlans,
+      levels: selectedLevels,
+    }),
+    [searchText, selectedAreas, selectedPlans, selectedLevels],
+  );
 
   useEffect(() => {
-    const initialKey = buildKey({ search: "", activeArea: null, freeOnly: false }, 0);
-    cacheRef.current.set(initialKey, {
+    const initialSnapshot: LocalFilters = {
+      search: initialFilters.search ?? "",
+      areaSlugs: normalizeAreaSlugs(initialFilters.categorySlugs),
+      plans: normalizePlans(initialFilters.plans),
+      levels: normalizeLevels(initialFilters.levels),
+    };
+
+    cacheRef.current.set(buildKey(initialSnapshot, 0), {
       expiresAt: Date.now() + CACHE_TTL_MS,
       value: {
         tools: initialTools,
@@ -175,50 +260,78 @@ export default function AreasToolbar({
         error: null,
       },
     });
-  }, [initialHasMore, initialNextOffset, initialTools]);
+  }, [initialFilters, initialHasMore, initialNextOffset, initialTools]);
 
-  useEffect(
-    () => () => {
+  useEffect(() => {
+    return () => {
       if (searchTimerRef.current) {
         clearTimeout(searchTimerRef.current);
       }
+    };
+  }, []);
+
+  const pushUrl = useCallback(
+    (filters: LocalFilters) => {
+      const params = new URLSearchParams();
+
+      if (filters.search) params.set("q", filters.search);
+      for (const area of filters.areaSlugs) params.append("area", area);
+      for (const plan of filters.plans) params.append("plan", plan);
+      for (const level of filters.levels) params.append("level", level);
+
+      const queryString = params.toString();
+      router.replace(queryString ? `${pathname}?${queryString}` : pathname, { scroll: false });
     },
-    [],
+    [pathname, router],
   );
 
+  const ensureCategoryMap = useCallback(async (): Promise<Map<string, string>> => {
+    if (categoryMapRef.current) {
+      return categoryMapRef.current;
+    }
+
+    const { data, error } = await supabase
+      .from("tool_categories")
+      .select("id, slug")
+      .in("slug", [...AREA_SLUGS]);
+
+    if (error) {
+      return new Map();
+    }
+
+    const map = new Map<string, string>();
+    for (const category of (data ?? []) as CategoryMapRow[]) {
+      map.set(category.slug, category.id);
+    }
+
+    categoryMapRef.current = map;
+    return map;
+  }, [supabase]);
+
   const fetchPage = useCallback(
-    async (offset: number, append: boolean, filters: AreaFilters) => {
+    async (offset: number, append: boolean, filters: LocalFilters) => {
       const requestId = ++requestIdRef.current;
-      const requestKey = buildKey(filters, offset);
+      const cacheKey = buildKey(filters, offset);
 
-      if (append) {
-        setIsLoadingMore(true);
-      } else {
-        setIsLoading(true);
-      }
-
+      if (append) setIsLoadingMore(true);
+      else setIsLoading(true);
       setErrorMessage(null);
 
-      const cached = cacheRef.current.get(requestKey);
+      const cached = cacheRef.current.get(cacheKey);
       if (cached && cached.expiresAt > Date.now()) {
         if (requestId !== requestIdRef.current) return;
-
-        setTools((previous) =>
-          append ? mergeUniqueById(previous, cached.value.tools) : cached.value.tools,
-        );
+        setTools((prev) => (append ? mergeUniqueById(prev, cached.value.tools) : cached.value.tools));
         setHasMore(cached.value.hasMore);
         setNextOffset(cached.value.nextOffset);
         setIsLoading(false);
         setIsLoadingMore(false);
         return;
       }
-
-      if (cached && cached.expiresAt <= Date.now()) {
-        cacheRef.current.delete(requestKey);
+      if (cached) {
+        cacheRef.current.delete(cacheKey);
       }
 
-      const existing = inFlightRef.current.get(requestKey);
-
+      const existing = inFlightRef.current.get(cacheKey);
       const task =
         existing ??
         (async (): Promise<PageResult> => {
@@ -230,12 +343,25 @@ export default function AreasToolbar({
             .order("sort_order", { ascending: true })
             .order("created_at", { ascending: false });
 
-          if (filters.activeArea) {
-            query = query.eq("tool_categories.slug", filters.activeArea);
+          if (filters.areaSlugs.length > 0) {
+            const categoryMap = await ensureCategoryMap();
+            const categoryIds = filters.areaSlugs
+              .map((slug) => categoryMap.get(slug))
+              .filter((value): value is string => Boolean(value));
+
+            if (categoryIds.length === 0) {
+              return { tools: [], hasMore: false, nextOffset: null, error: null };
+            }
+
+            query = query.in("category_id", categoryIds);
           }
 
-          if (filters.freeOnly) {
-            query = query.in("plan", ["free", "edu_free"]);
+          if (filters.plans.length > 0) {
+            query = query.in("plan", filters.plans);
+          }
+
+          if (filters.levels.length > 0) {
+            query = query.in("level", filters.levels);
           }
 
           const safeSearch = sanitizeSearch(filters.search);
@@ -246,40 +372,36 @@ export default function AreasToolbar({
           }
 
           const { data, error } = await query.range(offset, offset + PAGE_SIZE - 1);
-
           if (error) {
             return {
               tools: [],
               hasMore: false,
               nextOffset: null,
-              error: "No se pudo cargar herramientas por area. Intenta de nuevo.",
+              error: "No se pudo cargar herramientas. Intenta de nuevo.",
             };
           }
 
           const rows = ((data ?? []) as unknown as RawToolRow[]).map(mapTool);
-          const more = rows.length === PAGE_SIZE;
-
+          const nextHasMore = rows.length === PAGE_SIZE;
           return {
             tools: rows,
-            hasMore: more,
-            nextOffset: more ? offset + PAGE_SIZE : null,
+            hasMore: nextHasMore,
+            nextOffset: nextHasMore ? offset + PAGE_SIZE : null,
             error: null,
           };
         })();
 
       if (!existing) {
-        inFlightRef.current.set(requestKey, task);
+        inFlightRef.current.set(cacheKey, task);
       }
 
       const result = await task;
 
       if (!existing) {
-        inFlightRef.current.delete(requestKey);
+        inFlightRef.current.delete(cacheKey);
       }
 
-      if (requestId !== requestIdRef.current) {
-        return;
-      }
+      if (requestId !== requestIdRef.current) return;
 
       if (result.error) {
         setErrorMessage(result.error);
@@ -288,169 +410,199 @@ export default function AreasToolbar({
         return;
       }
 
-      cacheRef.current.set(requestKey, {
+      cacheRef.current.set(cacheKey, {
         expiresAt: Date.now() + CACHE_TTL_MS,
         value: result,
       });
 
-      setTools((previous) => (append ? mergeUniqueById(previous, result.tools) : result.tools));
+      setTools((prev) => (append ? mergeUniqueById(prev, result.tools) : result.tools));
       setHasMore(result.hasMore);
       setNextOffset(result.nextOffset);
       setIsLoading(false);
       setIsLoadingMore(false);
     },
-    [supabase],
+    [ensureCategoryMap, supabase],
   );
 
-  function clearSearchTimer() {
-    if (searchTimerRef.current) {
-      clearTimeout(searchTimerRef.current);
-      searchTimerRef.current = null;
-    }
-  }
+  const applyFilters = useCallback(
+    (filters: LocalFilters) => {
+      pushUrl(filters);
+      void fetchPage(0, false, filters);
+    },
+    [fetchPage, pushUrl],
+  );
 
-  function buildFilters(overrides: Partial<AreaFilters> = {}): AreaFilters {
-    return {
-      search: searchText.trim(),
-      activeArea,
-      freeOnly,
-      ...overrides,
-    };
-  }
-
-  function handleSearchChange(value: string) {
+  const onSearchChange = (value: string) => {
     setSearchText(value);
-    clearSearchTimer();
-
+    if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
     searchTimerRef.current = setTimeout(() => {
-      const nextFilters = buildFilters({ search: value.trim() });
-      void fetchPage(0, false, nextFilters);
+      applyFilters({
+        search: value.trim(),
+        areaSlugs: selectedAreas,
+        plans: selectedPlans,
+        levels: selectedLevels,
+      });
     }, SEARCH_DEBOUNCE_MS);
-  }
+  };
 
-  function handleAreaToggle(area: AreaSlug) {
-    clearSearchTimer();
-    const nextArea = activeArea === area ? null : area;
-    setActiveArea(nextArea);
+  const onToggleArea = (slug: AreaSlug) => {
+    if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
+    const nextAreas = toggleItem(selectedAreas, slug);
+    setSelectedAreas(nextAreas);
+    applyFilters({
+      search: searchText.trim(),
+      areaSlugs: nextAreas,
+      plans: selectedPlans,
+      levels: selectedLevels,
+    });
+  };
 
-    const nextFilters = buildFilters({ activeArea: nextArea });
-    void fetchPage(0, false, nextFilters);
-  }
+  const onTogglePlan = (plan: ToolPlan) => {
+    if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
+    const nextPlans = toggleItem(selectedPlans, plan);
+    setSelectedPlans(nextPlans);
+    applyFilters({
+      search: searchText.trim(),
+      areaSlugs: selectedAreas,
+      plans: nextPlans,
+      levels: selectedLevels,
+    });
+  };
 
-  function handleFreeToggle() {
-    clearSearchTimer();
-    const nextFree = !freeOnly;
-    setFreeOnly(nextFree);
+  const onToggleLevel = (level: ToolLevel) => {
+    if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
+    const nextLevels = toggleItem(selectedLevels, level);
+    setSelectedLevels(nextLevels);
+    applyFilters({
+      search: searchText.trim(),
+      areaSlugs: selectedAreas,
+      plans: selectedPlans,
+      levels: nextLevels,
+    });
+  };
 
-    const nextFilters = buildFilters({ freeOnly: nextFree });
-    void fetchPage(0, false, nextFilters);
-  }
-
-  function resetFilters() {
-    clearSearchTimer();
-    setActiveArea(null);
-    setFreeOnly(false);
+  const onReset = () => {
+    if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
+    const empty: LocalFilters = { search: "", areaSlugs: [], plans: [], levels: [] };
     setSearchText("");
+    setSelectedAreas([]);
+    setSelectedPlans([]);
+    setSelectedLevels([]);
+    applyFilters(empty);
+  };
 
-    void fetchPage(0, false, { search: "", activeArea: null, freeOnly: false });
-  }
+  const onLoadMore = () => {
+    if (!hasMore || nextOffset === null || isLoadingMore) return;
+    void fetchPage(nextOffset, true, {
+      search: searchText.trim(),
+      areaSlugs: selectedAreas,
+      plans: selectedPlans,
+      levels: selectedLevels,
+    });
+  };
 
-  function handleLoadMore() {
-    if (!hasMore || nextOffset === null || isLoadingMore) {
-      return;
-    }
-
-    const nextFilters = buildFilters();
-    void fetchPage(nextOffset, true, nextFilters);
-  }
-
-  const hasFilters = Boolean(activeArea) || freeOnly || searchText.trim().length > 0;
+  const hasFilters = hasActiveFilters(currentFilters);
 
   return (
     <div className="w-full flex flex-col gap-5">
-      <div className="flex flex-col gap-3">
-        <div className="relative">
-          <input
-            type="text"
-            placeholder="Buscar herramienta..."
-            value={searchText}
-            onChange={(event) => handleSearchChange(event.target.value)}
-            className="w-full rounded-2xl px-4 py-3 text-sm text-white placeholder-white/35 outline-none transition-all focus:ring-1 focus:ring-white/20"
-            style={{
-              background: "rgba(255,255,255,0.06)",
-              border: "1px solid rgba(255,255,255,0.10)",
-              backdropFilter: "blur(16px)",
-            }}
-          />
-        </div>
+      <input
+        type="text"
+        placeholder="Buscar herramienta..."
+        value={searchText}
+        onChange={(event) => onSearchChange(event.target.value)}
+        className="w-full rounded-2xl border border-white/15 bg-white/8 px-4 py-3 text-sm text-white placeholder-white/35 outline-none transition-all focus:ring-1 focus:ring-white/25"
+      />
 
-        <div className="flex flex-wrap items-center gap-2">
-          {AREAS.map((area) => {
-            const isActive = activeArea === area.slug;
+      <div className="rounded-2xl border border-white/12 bg-white/[0.03] p-4">
+        <p className="mb-3 text-xs font-medium uppercase tracking-[0.14em] text-white/45">Areas</p>
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+          {AREA_OPTIONS.map((area) => {
+            const checked = selectedAreas.includes(area.slug);
             return (
-              <button
+              <label
                 key={area.slug}
-                type="button"
-                onClick={() => handleAreaToggle(area.slug)}
-                className="rounded-full px-4 py-1.5 text-sm font-medium transition-all"
-                style={
-                  isActive
-                    ? {
-                        background: `${area.accent}25`,
-                        border: `1px solid ${area.accent}60`,
-                        color: area.accent,
-                      }
-                    : {
-                        background: "rgba(255,255,255,0.06)",
-                        border: "1px solid rgba(255,255,255,0.10)",
-                        color: "rgba(255,255,255,0.55)",
-                      }
-                }
+                className="flex cursor-pointer items-center gap-2 rounded-xl border px-3 py-2 text-sm transition-colors"
+                style={{
+                  borderColor: checked ? `${area.accent}66` : "rgba(255,255,255,0.12)",
+                  background: checked ? `${area.accent}18` : "rgba(255,255,255,0.03)",
+                  color: checked ? area.accent : "rgba(255,255,255,0.75)",
+                }}
               >
-                {area.label}
-              </button>
+                <input
+                  type="checkbox"
+                  checked={checked}
+                  onChange={() => onToggleArea(area.slug)}
+                  className="h-4 w-4 accent-white"
+                />
+                <span>{area.label}</span>
+              </label>
             );
           })}
-
-          <span className="hidden sm:block h-5 w-px bg-white/15" />
-
-          <button
-            type="button"
-            onClick={handleFreeToggle}
-            className="rounded-full px-4 py-1.5 text-sm font-medium transition-all"
-            style={
-              freeOnly
-                ? {
-                    background: "rgba(52,211,153,0.18)",
-                    border: "1px solid rgba(52,211,153,0.45)",
-                    color: "rgba(52,211,153,0.95)",
-                  }
-                : {
-                    background: "rgba(255,255,255,0.06)",
-                    border: "1px solid rgba(255,255,255,0.10)",
-                    color: "rgba(255,255,255,0.55)",
-                  }
-            }
-          >
-            Solo gratis
-          </button>
-
-          {hasFilters ? (
-            <button
-              type="button"
-              onClick={resetFilters}
-              className="ml-auto text-xs text-white/40 hover:text-white/70 transition-colors"
-            >
-              Limpiar filtros
-            </button>
-          ) : null}
         </div>
       </div>
 
-      <p className="text-xs text-white/40">
-        Mostrando {tools.length}
-        {hasMore ? "+" : ""} herramientas
-      </p>
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <div className="rounded-2xl border border-white/12 bg-white/[0.03] p-4">
+          <p className="mb-3 text-xs font-medium uppercase tracking-[0.14em] text-white/45">Plan</p>
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+            {PLAN_OPTIONS.map((plan) => {
+              const checked = selectedPlans.includes(plan.value);
+              return (
+                <label
+                  key={plan.value}
+                  className="flex cursor-pointer items-center gap-2 rounded-xl border border-white/12 bg-white/[0.03] px-3 py-2 text-sm text-white/75"
+                >
+                  <input
+                    type="checkbox"
+                    checked={checked}
+                    onChange={() => onTogglePlan(plan.value)}
+                    className="h-4 w-4 accent-white"
+                  />
+                  <span>{plan.label}</span>
+                </label>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-white/12 bg-white/[0.03] p-4">
+          <p className="mb-3 text-xs font-medium uppercase tracking-[0.14em] text-white/45">Nivel</p>
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+            {LEVEL_OPTIONS.map((level) => {
+              const checked = selectedLevels.includes(level.value);
+              return (
+                <label
+                  key={level.value}
+                  className="flex cursor-pointer items-center gap-2 rounded-xl border border-white/12 bg-white/[0.03] px-3 py-2 text-sm text-white/75"
+                >
+                  <input
+                    type="checkbox"
+                    checked={checked}
+                    onChange={() => onToggleLevel(level.value)}
+                    className="h-4 w-4 accent-white"
+                  />
+                  <span>{level.label}</span>
+                </label>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-xs text-white/45">
+          Mostrando <span className="text-white/65">{tools.length}{hasMore ? "+" : ""}</span> herramientas
+        </p>
+        {hasFilters ? (
+          <button
+            type="button"
+            onClick={onReset}
+            className="rounded-lg border border-white/15 bg-white/7 px-3 py-1.5 text-xs text-white/70 transition hover:bg-white/12"
+          >
+            Limpiar filtros
+          </button>
+        ) : null}
+      </div>
 
       {errorMessage ? (
         <div className="rounded-2xl border border-red-300/35 bg-red-400/10 px-4 py-3 text-sm text-red-100">
@@ -463,28 +615,13 @@ export default function AreasToolbar({
           Cargando herramientas...
         </div>
       ) : tools.length > 0 ? (
-        <>
-          <div
-            className={`grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 transition-opacity duration-150 ${isLoading ? "pointer-events-none opacity-50" : "opacity-100"}`}
-          >
-            {tools.map((tool) => (
-              <AreaToolCard key={tool.id} tool={tool} />
-            ))}
-          </div>
-
-          {hasMore ? (
-            <div className="flex justify-center pt-2">
-              <button
-                type="button"
-                onClick={handleLoadMore}
-                disabled={isLoadingMore}
-                className="inline-flex items-center rounded-full border border-white/20 bg-white/10 px-5 py-2.5 text-sm font-medium text-white/85 transition hover:bg-white/15 disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                {isLoadingMore ? "Cargando..." : "Cargar 50 mas"}
-              </button>
-            </div>
-          ) : null}
-        </>
+        <AreaToolsGrid
+          tools={tools}
+          isLoading={isLoading}
+          hasMore={hasMore}
+          isLoadingMore={isLoadingMore}
+          onLoadMore={onLoadMore}
+        />
       ) : (
         <AreasEmptyState hasFilters={hasFilters} />
       )}

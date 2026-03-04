@@ -1,11 +1,10 @@
 import Link from "next/link";
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { FileText } from "lucide-react";
 import { getCurrentUser } from "@/lib/auth/session";
 import { getSupabaseServerAuthClient } from "@/lib/supabase/server";
-import { uploadMediaFile } from "@/lib/supabase/admin-storage";
 import UploadImageField from "@/components/admin/upload-image-field";
+import UploadImageInline from "@/components/admin/upload-image-inline";
+import { createPostAction, updatePostAction } from "./actions";
 
 export const metadata = {
   title: "Posts - Admin IA NEXUS",
@@ -24,23 +23,6 @@ type AdminPostRow = {
   published_at: string | null;
   updated_at: string;
 };
-
-function slugify(value: string) {
-  return value
-    .toLowerCase()
-    .trim()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9\s-]/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-")
-    .replace(/^-|-$/g, "");
-}
-
-function normalizeNullableText(value: FormDataEntryValue | null) {
-  const normalized = (typeof value === "string" ? value : "").trim();
-  return normalized.length > 0 ? normalized : null;
-}
 
 function toDatetimeLocal(value: string | null) {
   if (!value) return "";
@@ -64,144 +46,10 @@ function formatDate(value: string | null) {
 async function ensureStaffUser() {
   const user = await getCurrentUser();
   const role = user?.role ?? null;
-
   if (!user || (role !== "admin" && role !== "master")) {
     throw new Error("No autorizado");
   }
-
   return user;
-}
-
-async function createPostAction(formData: FormData) {
-  "use server";
-
-  try {
-    const user = await ensureStaffUser();
-    const supabase = await getSupabaseServerAuthClient();
-
-    const title = (formData.get("title")?.toString() ?? "").trim();
-    const providedSlug = (formData.get("slug")?.toString() ?? "").trim();
-    const slug = slugify(providedSlug || title);
-    const excerpt = normalizeNullableText(formData.get("excerpt"));
-    const content = (formData.get("content_md")?.toString() ?? "").trim();
-    const iaType = normalizeNullableText(formData.get("ia_type"));
-    const postKind = (formData.get("post_kind")?.toString() ?? "blog") as AdminPostRow["post_kind"];
-    const status = (formData.get("status")?.toString() ?? "draft") as AdminPostRow["status"];
-    const publishedInput = normalizeNullableText(formData.get("published_at"));
-
-    if (!title || !slug || !content) {
-      redirect("/admin/posts?err=Completa%20titulo%2C%20slug%20y%20contenido");
-    }
-
-    // Handle image upload (file takes priority over URL)
-    let coverImage = normalizeNullableText(formData.get("cover_image_url"));
-    const fileInput = formData.get("cover_image_file");
-    if (fileInput instanceof File && fileInput.size > 0) {
-      const { url: uploadedUrl, error: uploadErr } = await uploadMediaFile(fileInput, "posts");
-      if (uploadErr) {
-        redirect(`/admin/posts?err=${encodeURIComponent("Error subiendo imagen: " + uploadErr)}`);
-      }
-      coverImage = uploadedUrl;
-    }
-
-    const publishedAt =
-      status === "published"
-        ? (publishedInput ? new Date(publishedInput).toISOString() : new Date().toISOString())
-        : publishedInput
-          ? new Date(publishedInput).toISOString()
-          : null;
-
-    const { error } = await supabase.from("posts").insert({
-      title,
-      slug,
-      excerpt,
-      content_md: content,
-      cover_image_url: coverImage,
-      post_kind: postKind,
-      ia_type: iaType,
-      status,
-      published_at: publishedAt,
-      author_id: user.id,
-    });
-
-    if (error) {
-      redirect(`/admin/posts?err=${encodeURIComponent(error.message)}`);
-    }
-
-    revalidatePath("/blog");
-    revalidatePath("/admin/posts");
-    redirect("/admin/posts?ok=Post%20creado%20correctamente");
-  } catch {
-    redirect("/admin/posts?err=No%20fue%20posible%20crear%20el%20post");
-  }
-}
-
-async function updatePostAction(formData: FormData) {
-  "use server";
-
-  try {
-    await ensureStaffUser();
-    const supabase = await getSupabaseServerAuthClient();
-
-    const id = (formData.get("id")?.toString() ?? "").trim();
-    const title = (formData.get("title")?.toString() ?? "").trim();
-    const providedSlug = (formData.get("slug")?.toString() ?? "").trim();
-    const slug = slugify(providedSlug || title);
-    const excerpt = normalizeNullableText(formData.get("excerpt"));
-    const content = (formData.get("content_md")?.toString() ?? "").trim();
-    const iaType = normalizeNullableText(formData.get("ia_type"));
-    const postKind = (formData.get("post_kind")?.toString() ?? "blog") as AdminPostRow["post_kind"];
-    const status = (formData.get("status")?.toString() ?? "draft") as AdminPostRow["status"];
-    const publishedInput = normalizeNullableText(formData.get("published_at"));
-
-    if (!id || !title || !slug || !content) {
-      redirect("/admin/posts?err=Faltan%20datos%20obligatorios%20para%20actualizar");
-    }
-
-    // Handle image upload (file takes priority over existing URL)
-    let coverImage = normalizeNullableText(formData.get("cover_image_url"));
-    const fileInput = formData.get("cover_image_file");
-    if (fileInput instanceof File && fileInput.size > 0) {
-      const { url: uploadedUrl, error: uploadErr } = await uploadMediaFile(fileInput, "posts");
-      if (uploadErr) {
-        redirect(`/admin/posts?err=${encodeURIComponent("Error subiendo imagen: " + uploadErr)}`);
-      }
-      coverImage = uploadedUrl;
-    }
-
-    const publishedAt =
-      status === "published"
-        ? (publishedInput ? new Date(publishedInput).toISOString() : new Date().toISOString())
-        : publishedInput
-          ? new Date(publishedInput).toISOString()
-          : null;
-
-    const { error } = await supabase
-      .from("posts")
-      .update({
-        title,
-        slug,
-        excerpt,
-        content_md: content,
-        cover_image_url: coverImage,
-        post_kind: postKind,
-        ia_type: iaType,
-        status,
-        published_at: publishedAt,
-      })
-      .eq("id", id);
-
-    if (error) {
-      redirect(`/admin/posts?err=${encodeURIComponent(error.message)}`);
-    }
-
-    revalidatePath("/blog");
-    revalidatePath("/blog/[slug]");
-    revalidatePath("/admin/posts");
-    redirect("/admin/posts?ok=Post%20actualizado%20correctamente");
-  } catch {
-    redirect("/admin/posts?err=No%20fue%20posible%20actualizar%20el%20post");
-  }
 }
 
 export default async function AdminPostsPage({
@@ -275,7 +123,10 @@ export default async function AdminPostsPage({
           </select>
           <input type="datetime-local" name="published_at" className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none" />
           <textarea name="excerpt" rows={2} placeholder="Excerpt (opcional)" className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none md:col-span-2" />
-          <textarea name="content_md" rows={8} required placeholder="Contenido markdown" className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none md:col-span-2" />
+          <div className="md:col-span-2">
+            <UploadImageInline textareaId="content_md_new" folder="posts" />
+          </div>
+          <textarea id="content_md_new" name="content_md" rows={8} required placeholder="Contenido markdown" className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none md:col-span-2" />
           <div className="md:col-span-2 flex justify-end">
             <button
               type="submit"
@@ -332,7 +183,10 @@ export default async function AdminPostsPage({
                   </select>
                   <input type="datetime-local" name="published_at" defaultValue={toDatetimeLocal(post.published_at)} className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none" />
                   <textarea name="excerpt" rows={2} defaultValue={post.excerpt ?? ""} className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none md:col-span-2" />
-                  <textarea name="content_md" rows={8} required defaultValue={post.content_md} className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none md:col-span-2" />
+                  <div className="md:col-span-2">
+                    <UploadImageInline textareaId={`content_md_${post.id}`} folder="posts" />
+                  </div>
+                  <textarea id={`content_md_${post.id}`} name="content_md" rows={8} required defaultValue={post.content_md} className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none md:col-span-2" />
                   <div className="md:col-span-2 flex justify-end">
                     <button
                       type="submit"

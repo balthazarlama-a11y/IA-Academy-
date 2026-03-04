@@ -1,12 +1,45 @@
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import AreasToolbar from "@/components/areas/areas-toolbar";
-import { getAreasToolsPage } from "@/lib/repositories/tools-repo";
+import { getAreasPage } from "@/lib/repositories/areas-repo";
+import type { AreaFilters } from "@/lib/repositories/areas-repo";
+import type { ToolLevel, ToolPlan } from "@/lib/types/tool";
 
-export const revalidate = 300;
+// No static revalidation — page is dynamic when searchParams are present.
+export const dynamic = "force-dynamic";
 
-export default async function AreasPage() {
-  const initialPage = await getAreasToolsPage({}, { limit: 50, offset: 0 });
+const VALID_PLANS  = new Set<string>(["free", "freemium", "paid", "edu_free"]);
+const VALID_LEVELS = new Set<string>(["beginner", "intermediate", "advanced", "all"]);
+const VALID_AREAS  = new Set<string>(["programacion", "salud", "investigacion", "diseno", "escritura"]);
+
+function parseFilters(raw: Record<string, string | string[] | undefined>): AreaFilters {
+  const search = typeof raw.q === "string" ? raw.q : undefined;
+  const readList = (key: string) => {
+    const value = raw[key];
+    const entries = Array.isArray(value) ? value : value ? [value] : [];
+    return [...new Set(entries.flatMap((entry) => entry.split(",")).map((entry) => entry.trim()).filter(Boolean))];
+  };
+
+  const rawAreas = readList("area");
+  const rawPlans = readList("plan");
+  const rawLevels = readList("level");
+
+  return {
+    search: search?.trim() || undefined,
+    categorySlugs: rawAreas.filter((value) => VALID_AREAS.has(value)),
+    plans: rawPlans.filter((value) => VALID_PLANS.has(value)) as ToolPlan[],
+    levels: rawLevels.filter((value) => VALID_LEVELS.has(value)) as ToolLevel[],
+  };
+}
+
+type PageProps = {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
+
+export default async function AreasPage({ searchParams }: PageProps) {
+  const params         = await searchParams;
+  const initialFilters = parseFilters(params);
+  const initialPage    = await getAreasPage(initialFilters, { limit: 50, offset: 0 });
 
   return (
     <main className="relative min-h-screen flex flex-col">
@@ -41,6 +74,7 @@ export default async function AreasPage() {
             initialTools={initialPage.tools}
             initialHasMore={initialPage.hasMore}
             initialNextOffset={initialPage.nextOffset}
+            initialFilters={initialFilters}
           />
 
         </div>
@@ -50,3 +84,4 @@ export default async function AreasPage() {
     </main>
   );
 }
+

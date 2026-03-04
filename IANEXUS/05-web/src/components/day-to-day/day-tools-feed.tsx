@@ -1,0 +1,157 @@
+"use client";
+
+import Link from "next/link";
+import { ExternalLink, BadgeCheck, GraduationCap } from "lucide-react";
+import type { Tool, ToolPlan, ToolLevel } from "@/lib/repositories/tools-repo";
+import type { FilterState } from "./day-filter-bar";
+
+const PLAN_CONFIG: Record<ToolPlan, { label: string; color: string; bg: string }> = {
+  free: { label: "Gratis", color: "rgba(52,211,153,0.9)", bg: "rgba(52,211,153,0.12)" },
+  edu_free: { label: ".edu", color: "rgba(56,189,248,0.9)", bg: "rgba(56,189,248,0.12)" },
+  freemium: { label: "Freemium", color: "rgba(251,191,36,0.9)", bg: "rgba(251,191,36,0.12)" },
+  paid: { label: "Pago", color: "rgba(148,163,184,0.7)", bg: "rgba(148,163,184,0.08)" },
+};
+
+const LEVEL_LABEL: Record<ToolLevel, string> = {
+  beginner: "Principiante",
+  intermediate: "Intermedio",
+  advanced: "Avanzado",
+  all: "Todos",
+};
+
+type DayToolsFeedProps = {
+  tools: Tool[];
+  filters: FilterState;
+};
+
+export default function DayToolsFeed({ tools, filters }: DayToolsFeedProps) {
+  const filteredTools = tools.filter((tool) => {
+    // Search filter
+    if (filters.search) {
+      const searchLower = filters.search.toLowerCase();
+      const matchesSearch =
+        tool.name.toLowerCase().includes(searchLower) ||
+        (tool.description?.toLowerCase().includes(searchLower) ?? false) ||
+        (tool.ia_type?.toLowerCase().includes(searchLower) ?? false);
+      if (!matchesSearch) return false;
+    }
+
+    // Plan filter
+    if (filters.plan !== "all" && tool.plan !== filters.plan) {
+      return false;
+    }
+
+    // Category filter
+    if (filters.category && tool.category.name !== filters.category) {
+      return false;
+    }
+
+    // Level filter
+    if (filters.level !== "all" && tool.level !== filters.level) {
+      return false;
+    }
+
+    return true;
+  });
+
+  if (filteredTools.length === 0) {
+    return (
+      <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-8 text-center">
+        <ExternalLink className="mx-auto h-8 w-8 text-white/20 mb-3" />
+        <p className="text-sm text-white/50">No se encontraron herramientas</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col gap-4">
+      <h2 className="text-sm font-medium uppercase tracking-[0.12em] text-white/50 px-1">
+        Herramientas ({filteredTools.length})
+      </h2>
+
+      <div className="flex flex-col gap-4">
+        {filteredTools.map((tool) => {
+          const plan = PLAN_CONFIG[tool.plan];
+          const accentColor = tool.category.color_accent ?? "#6366f1";
+
+          return (
+            <article
+              key={tool.id}
+              className="group rounded-2xl border border-white/10 bg-white/[0.04] p-4 transition-colors duration-150 hover:border-white/20 hover:bg-white/[0.06]"
+            >
+              {/* Header */}
+              <div className="flex items-start justify-between gap-3">
+                <h3 className="text-sm font-medium text-white">{tool.name}</h3>
+                <span
+                  className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-medium"
+                  style={{ color: plan.color, background: plan.bg }}
+                >
+                  {plan.label}
+                </span>
+              </div>
+
+              {/* Category & Level */}
+              <div className="mt-2 flex flex-wrap items-center gap-2">
+                <span
+                  className="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium"
+                  style={{
+                    color: accentColor,
+                    background: `${accentColor}15`,
+                    border: `1px solid ${accentColor}25`,
+                  }}
+                >
+                  {tool.category.name}
+                </span>
+                <span className="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[10px] text-white/45">
+                  {LEVEL_LABEL[tool.level]}
+                </span>
+              </div>
+
+              {/* Description */}
+              {tool.description && (
+                <p className="mt-2 line-clamp-2 text-xs text-white/50">
+                  {tool.description}
+                </p>
+              )}
+
+              {/* Footer */}
+              <div className="mt-3 flex items-center justify-between border-t border-white/10 pt-3">
+                <div className="flex items-center gap-3">
+                  {tool.verified && (
+                    <span className="inline-flex items-center gap-1 text-[10px] text-emerald-400/80">
+                      <BadgeCheck className="h-3 w-3" />
+                      Verificada
+                    </span>
+                  )}
+                  {tool.edu_verified && (
+                    <span className="inline-flex items-center gap-1 text-[10px] text-cyan-400/80">
+                      <GraduationCap className="h-3 w-3" />
+                      .edu
+                    </span>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <Link
+                    href={`/herramientas/${tool.slug}`}
+                    className="inline-flex items-center rounded-lg border border-white/15 bg-white/5 px-2.5 py-1 text-[11px] font-medium text-white/70 transition hover:bg-white/10"
+                  >
+                    Detalle
+                  </Link>
+                  <a
+                    href={tool.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center rounded-lg border border-white/15 bg-white/5 px-2 py-1 text-white/50 transition hover:text-white"
+                  >
+                    <ExternalLink className="h-3 w-3" />
+                  </a>
+                </div>
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
