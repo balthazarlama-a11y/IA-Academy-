@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useTransition, useState } from "react";
 import type {
   AdminPostToolRelation,
   AdminRelationPost,
@@ -39,30 +42,52 @@ export function PostToolsLinker({
   onLink: ActionFn;
   onUnlink: ActionFn;
 }) {
+  const [isLinkPending, startLinkTransition] = useTransition();
+  const [isUnlinkPending, startUnlinkTransition] = useTransition();
+  const [pendingUnlinkKey, setPendingUnlinkKey] = useState<string | null>(null);
+
+  const handleLink = (formData: FormData) => {
+    startLinkTransition(() => {
+      onLink(formData);
+    });
+  };
+
+  const handleUnlink = (formData: FormData, relationKey: string) => {
+    setPendingUnlinkKey(relationKey);
+    startUnlinkTransition(() => {
+      onUnlink(formData);
+    });
+  };
+
+  const isRelationUpdating = (relation: AdminPostToolRelation) => {
+    return isLinkPending || (isUnlinkPending && pendingUnlinkKey === `${relation.postId}:${relation.toolId}`);
+  };
+
   return (
     <div className="space-y-6">
       {successMessage ? (
-        <div className="rounded-xl border border-emerald-300/30 bg-emerald-400/10 px-4 py-3 text-sm text-emerald-100">
+        <div className="rounded-xl border border-emerald-300/30 bg-emerald-400/10 px-4 py-3 text-sm text-emerald-700">
           {successMessage}
         </div>
       ) : null}
 
       {errorMessage ? (
-        <div className="rounded-xl border border-red-300/30 bg-red-400/10 px-4 py-3 text-sm text-red-100">
+        <div className="rounded-xl border border-red-300/30 bg-red-400/10 px-4 py-3 text-sm text-red-700">
           {errorMessage}
         </div>
       ) : null}
 
       <section
         className="rounded-2xl p-5"
-        style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)" }}
+        style={{ background: "rgba(255, 255, 255, 0.88)", border: "1px solid rgba(148, 163, 184, 0.32)" }}
       >
-        <h3 className="mb-4 text-lg font-medium text-white/90">Vincular post con tool</h3>
-        <form action={onLink} className="grid grid-cols-1 gap-3 md:grid-cols-4">
+        <h3 className="mb-4 text-lg font-medium text-slate-900">Vincular post con tool</h3>
+        <form action={handleLink} className="grid grid-cols-1 gap-3 md:grid-cols-4">
           <select
             name="post_id"
             required
-            className="rounded-lg border border-white/15 bg-[#11111a] px-3 py-2 text-sm text-white outline-none md:col-span-2"
+            disabled={isLinkPending}
+            className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none md:col-span-2 disabled:opacity-50"
             defaultValue=""
           >
             <option value="" disabled>
@@ -78,7 +103,8 @@ export function PostToolsLinker({
           <select
             name="tool_id"
             required
-            className="rounded-lg border border-white/15 bg-[#11111a] px-3 py-2 text-sm text-white outline-none"
+            disabled={isLinkPending}
+            className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50"
             defaultValue=""
           >
             <option value="" disabled>
@@ -96,26 +122,35 @@ export function PostToolsLinker({
             type="number"
             min={0}
             defaultValue={0}
-            className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none"
+            disabled={isLinkPending}
+            className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50"
           />
 
           <div className="md:col-span-4 flex justify-end">
             <button
               type="submit"
-              className="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-white"
-              style={{ background: "linear-gradient(135deg, #3b82f6, #8b5cf6)" }}
+              disabled={isLinkPending}
+              className="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-white transition-opacity disabled:opacity-50"
+              style={{ background: "linear-gradient(135deg, #2563eb, #7c3aed)" }}
             >
-              Guardar relacion
+              {isLinkPending ? (
+                <>
+                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                  Guardando...
+                </>
+              ) : (
+                "Guardar relacion"
+              )}
             </button>
           </div>
         </form>
       </section>
 
       <section className="space-y-3">
-        <h3 className="text-lg font-medium text-white/90">Relaciones actuales ({relations.length})</h3>
+        <h3 className="text-lg font-medium text-slate-900">Relaciones actuales ({relations.length})</h3>
 
         {relations.length === 0 ? (
-          <div className="rounded-xl border border-white/10 bg-white/5 p-8 text-center text-sm text-white/50">
+          <div className="rounded-xl border border-slate-200 bg-white p-8 text-center text-sm text-slate-500">
             No hay relaciones creadas todavia.
           </div>
         ) : (
@@ -123,28 +158,28 @@ export function PostToolsLinker({
             {relations.map((relation) => (
               <div
                 key={`${relation.postId}:${relation.toolId}`}
-                className="rounded-xl border border-white/10 bg-white/[0.03] p-4"
+                className="rounded-xl border border-slate-200 bg-white p-4"
               >
                 <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                   <div className="space-y-1">
-                    <p className="text-sm text-white/85">
+                    <p className="text-sm text-slate-800">
                       Post:{" "}
-                      <Link href={`/blog/${relation.post.slug}`} className="text-cyan-300 hover:text-cyan-200">
+                      <Link href={`/blog/${relation.post.slug}`} className="text-cyan-700 hover:text-cyan-700">
                         {relation.post.title}
                       </Link>{" "}
-                      <span className="text-white/45">({relation.post.status})</span>
+                      <span className="text-slate-500">({relation.post.status})</span>
                     </p>
-                    <p className="text-sm text-white/75">
+                    <p className="text-sm text-slate-700">
                       Tool:{" "}
-                      <Link href={`/herramientas/${relation.tool.slug}`} className="text-violet-300 hover:text-violet-200">
+                      <Link href={`/herramientas/${relation.tool.slug}`} className="text-violet-700 hover:text-violet-700">
                         {relation.tool.name}
                       </Link>{" "}
-                      <span className="text-white/45">({relation.tool.status})</span>
+                      <span className="text-slate-500">({relation.tool.status})</span>
                     </p>
                   </div>
 
                   <div className="flex flex-wrap items-center gap-2">
-                    <form action={onLink} className="flex items-center gap-2">
+                    <form action={handleLink} className="flex items-center gap-2">
                       <input type="hidden" name="post_id" value={relation.postId} />
                       <input type="hidden" name="tool_id" value={relation.toolId} />
                       <input
@@ -152,24 +187,31 @@ export function PostToolsLinker({
                         type="number"
                         min={0}
                         defaultValue={relation.sortOrder}
-                        className="w-24 rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none"
+                        disabled={isRelationUpdating(relation)}
+                        className="w-24 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50"
                       />
                       <button
                         type="submit"
-                        className="rounded-lg border border-white/15 bg-white/10 px-3 py-2 text-xs font-medium text-white transition hover:bg-white/15"
+                        disabled={isRelationUpdating(relation)}
+                        className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-medium text-slate-900 transition hover:bg-slate-100 disabled:opacity-50"
                       >
-                        Actualizar
+                        {isLinkPending ? "Actualizando..." : "Actualizar"}
                       </button>
                     </form>
 
-                    <form action={onUnlink}>
+                    <form
+                      action={(formData) => handleUnlink(formData, `${relation.postId}:${relation.toolId}`)}
+                    >
                       <input type="hidden" name="post_id" value={relation.postId} />
                       <input type="hidden" name="tool_id" value={relation.toolId} />
                       <button
                         type="submit"
-                        className="rounded-lg border border-red-300/35 bg-red-400/10 px-3 py-2 text-xs font-medium text-red-100 transition hover:bg-red-400/15"
+                        disabled={isRelationUpdating(relation)}
+                        className="rounded-lg border border-red-300/35 bg-red-400/10 px-3 py-2 text-xs font-medium text-red-700 transition hover:bg-red-400/15 disabled:opacity-50"
                       >
-                        Desvincular
+                        {isUnlinkPending && pendingUnlinkKey === `${relation.postId}:${relation.toolId}`
+                          ? "Eliminando..."
+                          : "Desvincular"}
                       </button>
                     </form>
                   </div>

@@ -228,20 +228,43 @@ export async function linkToolToPost(input: {
   toolId: string;
   sortOrder: number;
 }): Promise<{ ok: boolean; error?: string }> {
+  // Validación de inputs
+  if (!input.postId || typeof input.postId !== "string" || input.postId.trim() === "") {
+    return { ok: false, error: "ID de post invalido" };
+  }
+  if (!input.toolId || typeof input.toolId !== "string" || input.toolId.trim() === "") {
+    return { ok: false, error: "ID de tool invalido" };
+  }
+  if (!Number.isFinite(input.sortOrder) || input.sortOrder < 0) {
+    return { ok: false, error: "Orden de clasificacion debe ser un numero positivo" };
+  }
+
   const supabase = await getSupabaseServerAuthClient();
 
   const { error } = await supabase.from("post_tools").upsert(
     {
-      post_id: input.postId,
-      tool_id: input.toolId,
-      sort_order: input.sortOrder,
+      post_id: input.postId.trim(),
+      tool_id: input.toolId.trim(),
+      sort_order: Math.floor(input.sortOrder),
     },
     { onConflict: "post_id,tool_id" },
   );
 
   if (error) {
-    console.error("[post-tools-repo] linkToolToPost:", error.message);
-    return { ok: false, error: error.message };
+    console.error("[post-tools-repo] linkToolToPost:", error.message, error.code);
+    
+    // Mensajes de error amigables según el tipo de error de Supabase
+    if (error.code === "23503") {
+      return { ok: false, error: "El post o la tool no existen" };
+    }
+    if (error.code === "23505") {
+      return { ok: false, error: "Esta relacion ya existe" };
+    }
+    if (error.code === "42501") {
+      return { ok: false, error: "No tienes permisos para realizar esta accion" };
+    }
+    
+    return { ok: false, error: `Error de base de datos: ${error.message}` };
   }
 
   return { ok: true };
@@ -251,17 +274,31 @@ export async function unlinkToolFromPost(input: {
   postId: string;
   toolId: string;
 }): Promise<{ ok: boolean; error?: string }> {
+  // Validación de inputs
+  if (!input.postId || typeof input.postId !== "string" || input.postId.trim() === "") {
+    return { ok: false, error: "ID de post invalido" };
+  }
+  if (!input.toolId || typeof input.toolId !== "string" || input.toolId.trim() === "") {
+    return { ok: false, error: "ID de tool invalido" };
+  }
+
   const supabase = await getSupabaseServerAuthClient();
 
   const { error } = await supabase
     .from("post_tools")
     .delete()
-    .eq("post_id", input.postId)
-    .eq("tool_id", input.toolId);
+    .eq("post_id", input.postId.trim())
+    .eq("tool_id", input.toolId.trim());
 
   if (error) {
-    console.error("[post-tools-repo] unlinkToolFromPost:", error.message);
-    return { ok: false, error: error.message };
+    console.error("[post-tools-repo] unlinkToolFromPost:", error.message, error.code);
+    
+    // Mensajes de error amigables según el tipo de error de Supabase
+    if (error.code === "42501") {
+      return { ok: false, error: "No tienes permisos para realizar esta accion" };
+    }
+    
+    return { ok: false, error: `Error de base de datos: ${error.message}` };
   }
 
   return { ok: true };

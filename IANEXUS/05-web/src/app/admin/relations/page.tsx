@@ -27,6 +27,20 @@ async function ensureStaffUser() {
   return user;
 }
 
+/**
+ * Verifica si un error es un redirect error de Next.js.
+ * Los redirect errors NO deben ser tratados como errores reales.
+ */
+function isNextRedirectError(error: unknown): boolean {
+  if (typeof error !== "object" || error === null) return false;
+  const e = error as Record<string, unknown>;
+  // Next.js redirect errors tienen estas características
+  return (
+    e.message === "NEXT_REDIRECT" ||
+    (typeof e.digest === "string" && e.digest.startsWith("NEXT_REDIRECT"))
+  );
+}
+
 async function linkRelationAction(formData: FormData) {
   "use server";
 
@@ -56,8 +70,16 @@ async function linkRelationAction(formData: FormData) {
     revalidatePath("/estudiantes");
     revalidatePath("/dia-a-dia");
     redirect("/admin/relations?ok=Relacion%20guardada%20correctamente");
-  } catch {
-    redirect("/admin/relations?err=No%20fue%20posible%20guardar%20la%20relacion");
+  } catch (error) {
+    // NO capturar errores de redirect de Next.js - son parte del flujo normal
+    if (isNextRedirectError(error)) {
+      throw error;
+    }
+
+    // Solo capturar errores reales (DB, auth, etc.)
+    const message = error instanceof Error ? error.message : "Error desconocido";
+    console.error("[linkRelationAction] Error real:", message);
+    redirect(`/admin/relations?err=${encodeURIComponent("No fue posible guardar la relacion: " + message)}`);
   }
 }
 
@@ -87,8 +109,16 @@ async function unlinkRelationAction(formData: FormData) {
     revalidatePath("/estudiantes");
     revalidatePath("/dia-a-dia");
     redirect("/admin/relations?ok=Relacion%20eliminada%20correctamente");
-  } catch {
-    redirect("/admin/relations?err=No%20fue%20posible%20eliminar%20la%20relacion");
+  } catch (error) {
+    // NO capturar errores de redirect de Next.js - son parte del flujo normal
+    if (isNextRedirectError(error)) {
+      throw error;
+    }
+
+    // Solo capturar errores reales
+    const message = error instanceof Error ? error.message : "Error desconocido";
+    console.error("[unlinkRelationAction] Error real:", message);
+    redirect(`/admin/relations?err=${encodeURIComponent("No fue posible eliminar la relacion: " + message)}`);
   }
 }
 
@@ -110,34 +140,34 @@ export default async function AdminRelationsPage({
     <div className="space-y-6">
       <div className="flex items-center justify-between gap-3">
         <div>
-          <h2 className="text-2xl font-semibold text-white/90">Relaciones Posts x Tools</h2>
-          <p className="text-sm text-white/50">
+          <h2 className="text-2xl font-semibold text-slate-900">Relaciones Posts x Tools</h2>
+          <p className="text-sm text-slate-500">
             Conecta publicaciones con herramientas para mostrar recomendaciones cruzadas.
           </p>
         </div>
         <div className="flex items-center gap-2">
           <Link
             href="/admin/posts"
-            className="inline-flex items-center gap-2 rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm text-white/85 transition hover:bg-white/10"
+            className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm text-slate-800 transition hover:bg-slate-50"
           >
             Posts
           </Link>
           <Link
             href="/admin/tools"
-            className="inline-flex items-center gap-2 rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm text-white/85 transition hover:bg-white/10"
+            className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm text-slate-800 transition hover:bg-slate-50"
           >
             Tools
           </Link>
         </div>
       </div>
 
-      <div className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/70">
+      <div className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700">
         <div className="inline-flex items-center gap-2">
-          <BookOpen className="h-4 w-4 text-violet-300" />
+          <BookOpen className="h-4 w-4 text-violet-700" />
           <span>
-            Estado actual: <span className="text-white/90">{relations.length}</span> relaciones,{" "}
-            <span className="text-white/90">{posts.length}</span> posts,{" "}
-            <span className="text-white/90">{tools.length}</span> tools.
+            Estado actual: <span className="text-slate-900">{relations.length}</span> relaciones,{" "}
+            <span className="text-slate-900">{posts.length}</span> posts,{" "}
+            <span className="text-slate-900">{tools.length}</span> tools.
           </span>
         </div>
       </div>
