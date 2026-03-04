@@ -13,7 +13,7 @@ export default async function EstudiantesPage() {
       <Header />
 
       <section className="flex-1 w-full px-6 py-10 md:py-14">
-        <div className="mx-auto w-full max-w-6xl">
+        <div className="mx-auto w-full max-w-7xl">
           <header className="rounded-3xl border border-white/15 bg-white/[0.07] p-6 md:p-8 backdrop-blur-2xl">
             <p className="inline-flex items-center rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs uppercase tracking-[0.14em] text-white/65">
               Estudiantes
