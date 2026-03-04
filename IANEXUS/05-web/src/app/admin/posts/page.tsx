@@ -1,60 +1,330 @@
-/**
- * Posts Admin Page
- * Placeholder - CRUD completo en Fase 5
- */
-
-import { FileText, Plus } from "lucide-react";
+import Link from "next/link";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+import { FileText } from "lucide-react";
+import { getCurrentUser } from "@/lib/auth/session";
+import { getSupabaseServerAuthClient } from "@/lib/supabase/server";
 
 export const metadata = {
-  title: "Posts — Admin IA NEXUS",
+  title: "Posts - Admin IA NEXUS",
 };
 
-export default function AdminPostsPage() {
+type AdminPostRow = {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string | null;
+  content_md: string;
+  cover_image_url: string | null;
+  post_kind: "blog" | "tool" | "guide" | "news";
+  ia_type: string | null;
+  status: "draft" | "scheduled" | "published" | "archived";
+  published_at: string | null;
+  updated_at: string;
+};
+
+function slugify(value: string) {
+  return value
+    .toLowerCase()
+    .trim()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+function normalizeNullableText(value: FormDataEntryValue | null) {
+  const normalized = (typeof value === "string" ? value : "").trim();
+  return normalized.length > 0 ? normalized : null;
+}
+
+function toDatetimeLocal(value: string | null) {
+  if (!value) return "";
+  const date = new Date(value);
+  const offset = date.getTimezoneOffset();
+  const local = new Date(date.getTime() - offset * 60_000);
+  return local.toISOString().slice(0, 16);
+}
+
+function formatDate(value: string | null) {
+  if (!value) return "-";
+  return new Intl.DateTimeFormat("es-CL", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(new Date(value));
+}
+
+async function ensureStaffUser() {
+  const user = await getCurrentUser();
+  const role = user?.role ?? null;
+
+  if (!user || (role !== "admin" && role !== "master")) {
+    throw new Error("No autorizado");
+  }
+
+  return user;
+}
+
+async function createPostAction(formData: FormData) {
+  "use server";
+
+  try {
+    const user = await ensureStaffUser();
+    const supabase = await getSupabaseServerAuthClient();
+
+    const title = (formData.get("title")?.toString() ?? "").trim();
+    const providedSlug = (formData.get("slug")?.toString() ?? "").trim();
+    const slug = slugify(providedSlug || title);
+    const excerpt = normalizeNullableText(formData.get("excerpt"));
+    const content = (formData.get("content_md")?.toString() ?? "").trim();
+    const coverImage = normalizeNullableText(formData.get("cover_image_url"));
+    const iaType = normalizeNullableText(formData.get("ia_type"));
+    const postKind = (formData.get("post_kind")?.toString() ?? "blog") as AdminPostRow["post_kind"];
+    const status = (formData.get("status")?.toString() ?? "draft") as AdminPostRow["status"];
+    const publishedInput = normalizeNullableText(formData.get("published_at"));
+
+    if (!title || !slug || !content) {
+      redirect("/admin/posts?err=Completa%20titulo%2C%20slug%20y%20contenido");
+    }
+
+    const publishedAt =
+      status === "published"
+        ? (publishedInput ? new Date(publishedInput).toISOString() : new Date().toISOString())
+        : publishedInput
+          ? new Date(publishedInput).toISOString()
+          : null;
+
+    const { error } = await supabase.from("posts").insert({
+      title,
+      slug,
+      excerpt,
+      content_md: content,
+      cover_image_url: coverImage,
+      post_kind: postKind,
+      ia_type: iaType,
+      status,
+      published_at: publishedAt,
+      author_id: user.id,
+    });
+
+    if (error) {
+      redirect(`/admin/posts?err=${encodeURIComponent(error.message)}`);
+    }
+
+    revalidatePath("/blog");
+    revalidatePath("/admin/posts");
+    redirect("/admin/posts?ok=Post%20creado%20correctamente");
+  } catch {
+    redirect("/admin/posts?err=No%20fue%20posible%20crear%20el%20post");
+  }
+}
+
+async function updatePostAction(formData: FormData) {
+  "use server";
+
+  try {
+    await ensureStaffUser();
+    const supabase = await getSupabaseServerAuthClient();
+
+    const id = (formData.get("id")?.toString() ?? "").trim();
+    const title = (formData.get("title")?.toString() ?? "").trim();
+    const providedSlug = (formData.get("slug")?.toString() ?? "").trim();
+    const slug = slugify(providedSlug || title);
+    const excerpt = normalizeNullableText(formData.get("excerpt"));
+    const content = (formData.get("content_md")?.toString() ?? "").trim();
+    const coverImage = normalizeNullableText(formData.get("cover_image_url"));
+    const iaType = normalizeNullableText(formData.get("ia_type"));
+    const postKind = (formData.get("post_kind")?.toString() ?? "blog") as AdminPostRow["post_kind"];
+    const status = (formData.get("status")?.toString() ?? "draft") as AdminPostRow["status"];
+    const publishedInput = normalizeNullableText(formData.get("published_at"));
+
+    if (!id || !title || !slug || !content) {
+      redirect("/admin/posts?err=Faltan%20datos%20obligatorios%20para%20actualizar");
+    }
+
+    const publishedAt =
+      status === "published"
+        ? (publishedInput ? new Date(publishedInput).toISOString() : new Date().toISOString())
+        : publishedInput
+          ? new Date(publishedInput).toISOString()
+          : null;
+
+    const { error } = await supabase
+      .from("posts")
+      .update({
+        title,
+        slug,
+        excerpt,
+        content_md: content,
+        cover_image_url: coverImage,
+        post_kind: postKind,
+        ia_type: iaType,
+        status,
+        published_at: publishedAt,
+      })
+      .eq("id", id);
+
+    if (error) {
+      redirect(`/admin/posts?err=${encodeURIComponent(error.message)}`);
+    }
+
+    revalidatePath("/blog");
+    revalidatePath("/blog/[slug]");
+    revalidatePath("/admin/posts");
+    redirect("/admin/posts?ok=Post%20actualizado%20correctamente");
+  } catch {
+    redirect("/admin/posts?err=No%20fue%20posible%20actualizar%20el%20post");
+  }
+}
+
+export default async function AdminPostsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ ok?: string; err?: string }>;
+}) {
+  await ensureStaffUser();
+  const supabase = await getSupabaseServerAuthClient();
+
+  const params = await searchParams;
+  const successMessage = params.ok ?? "";
+  const errorMessage = params.err ?? "";
+
+  const { data } = await supabase
+    .from("posts")
+    .select("id, title, slug, excerpt, content_md, cover_image_url, post_kind, ia_type, status, published_at, updated_at")
+    .order("updated_at", { ascending: false })
+    .limit(100);
+
+  const posts = ((data ?? []) as AdminPostRow[]);
+
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-3">
         <div>
-          <h2 className="text-xl font-bold text-white/90">Posts</h2>
-          <p className="text-sm text-white/40">
-            Gestiona el contenido del blog
-          </p>
+          <h2 className="text-2xl font-semibold text-white/90">Posts</h2>
+          <p className="text-sm text-white/50">Crea y edita contenido del blog.</p>
         </div>
-        <button
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200"
-          style={{
-            background: "linear-gradient(135deg, #3b82f6, #8b5cf6)",
-            color: "white",
-            boxShadow: "0 4px 15px rgba(139, 92, 246, 0.30)",
-          }}
+        <Link
+          href="/admin/tools"
+          className="inline-flex items-center gap-2 rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm text-white/85 transition hover:bg-white/10"
         >
-          <Plus className="h-4 w-4" />
-          Nuevo Post
-        </button>
+          Ir a Tools
+        </Link>
       </div>
 
-      {/* Empty State */}
-      <div
-        className="p-12 rounded-xl text-center"
-        style={{
-          background: "rgba(255, 255, 255, 0.03)",
-          border: "1px solid rgba(255, 255, 255, 0.08)",
-        }}
-      >
-        <div
-          className="mx-auto h-16 w-16 rounded-full flex items-center justify-center mb-4"
-          style={{ background: "rgba(255, 255, 255, 0.05)" }}
-        >
-          <FileText className="h-8 w-8 text-white/30" />
+      {successMessage ? (
+        <div className="rounded-xl border border-emerald-300/30 bg-emerald-400/10 px-4 py-3 text-sm text-emerald-100">
+          {successMessage}
         </div>
-        <h3 className="text-lg font-medium text-white/70 mb-1">
-          CRUD en desarrollo
-        </h3>
-        <p className="text-sm text-white/40 max-w-sm mx-auto">
-          La gestión completa de posts estará disponible en la Fase 5. Aquí
-          podrás crear, editar y eliminar contenido.
-        </p>
-      </div>
+      ) : null}
+
+      {errorMessage ? (
+        <div className="rounded-xl border border-red-300/30 bg-red-400/10 px-4 py-3 text-sm text-red-100">
+          {errorMessage}
+        </div>
+      ) : null}
+
+      <section
+        className="rounded-2xl p-5"
+        style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)" }}
+      >
+        <h3 className="mb-4 text-lg font-medium text-white/90">Nuevo post</h3>
+        <form action={createPostAction} className="grid grid-cols-1 gap-3 md:grid-cols-2">
+          <input name="title" required placeholder="Titulo" className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none" />
+          <input name="slug" placeholder="slug-opcional" className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none" />
+          <input name="cover_image_url" placeholder="URL imagen portada (opcional)" className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none md:col-span-2" />
+          <input name="ia_type" placeholder="Tipo IA (opcional)" className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none" />
+          <select name="post_kind" defaultValue="blog" className="rounded-lg border border-white/15 bg-[#11111a] px-3 py-2 text-sm text-white outline-none">
+            <option value="blog">Blog</option>
+            <option value="tool">Tool</option>
+            <option value="guide">Guide</option>
+            <option value="news">News</option>
+          </select>
+          <select name="status" defaultValue="draft" className="rounded-lg border border-white/15 bg-[#11111a] px-3 py-2 text-sm text-white outline-none">
+            <option value="draft">Draft</option>
+            <option value="scheduled">Scheduled</option>
+            <option value="published">Published</option>
+            <option value="archived">Archived</option>
+          </select>
+          <input type="datetime-local" name="published_at" className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none" />
+          <textarea name="excerpt" rows={2} placeholder="Excerpt (opcional)" className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none md:col-span-2" />
+          <textarea name="content_md" rows={8} required placeholder="Contenido markdown" className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none md:col-span-2" />
+          <div className="md:col-span-2 flex justify-end">
+            <button
+              type="submit"
+              className="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-white"
+              style={{ background: "linear-gradient(135deg, #3b82f6, #8b5cf6)" }}
+            >
+              Crear post
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <section className="space-y-3">
+        <h3 className="text-lg font-medium text-white/90">Posts existentes ({posts.length})</h3>
+
+        {posts.length === 0 ? (
+          <div className="rounded-xl border border-white/10 bg-white/5 p-8 text-center text-sm text-white/50">
+            No hay posts todavia.
+          </div>
+        ) : (
+          posts.map((post) => (
+            <details
+              key={post.id}
+              className="rounded-xl border border-white/10 bg-white/[0.03]"
+            >
+              <summary className="cursor-pointer list-none px-4 py-3">
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <p className="text-sm font-medium text-white/90">{post.title}</p>
+                    <p className="text-xs text-white/50">/{post.slug} - {post.status} - {formatDate(post.updated_at)}</p>
+                  </div>
+                  <FileText className="h-4 w-4 text-white/40" />
+                </div>
+              </summary>
+
+              <div className="border-t border-white/10 p-4">
+                <form action={updatePostAction} className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                  <input type="hidden" name="id" value={post.id} />
+                  <input name="title" required defaultValue={post.title} className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none" />
+                  <input name="slug" required defaultValue={post.slug} className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none" />
+                  <input name="cover_image_url" defaultValue={post.cover_image_url ?? ""} placeholder="URL imagen portada" className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none md:col-span-2" />
+                  <input name="ia_type" defaultValue={post.ia_type ?? ""} placeholder="Tipo IA" className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none" />
+                  <select name="post_kind" defaultValue={post.post_kind} className="rounded-lg border border-white/15 bg-[#11111a] px-3 py-2 text-sm text-white outline-none">
+                    <option value="blog">Blog</option>
+                    <option value="tool">Tool</option>
+                    <option value="guide">Guide</option>
+                    <option value="news">News</option>
+                  </select>
+                  <select name="status" defaultValue={post.status} className="rounded-lg border border-white/15 bg-[#11111a] px-3 py-2 text-sm text-white outline-none">
+                    <option value="draft">Draft</option>
+                    <option value="scheduled">Scheduled</option>
+                    <option value="published">Published</option>
+                    <option value="archived">Archived</option>
+                  </select>
+                  <input type="datetime-local" name="published_at" defaultValue={toDatetimeLocal(post.published_at)} className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none" />
+                  <textarea name="excerpt" rows={2} defaultValue={post.excerpt ?? ""} className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none md:col-span-2" />
+                  <textarea name="content_md" rows={8} required defaultValue={post.content_md} className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none md:col-span-2" />
+                  <div className="md:col-span-2 flex justify-end">
+                    <button
+                      type="submit"
+                      className="inline-flex items-center gap-2 rounded-lg border border-white/15 bg-white/10 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/15"
+                    >
+                      Guardar cambios
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </details>
+          ))
+        )}
+      </section>
     </div>
   );
 }

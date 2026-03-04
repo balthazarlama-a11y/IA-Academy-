@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState, useEffect, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { BookOpen, LogIn, LogOut, Shield, X } from "lucide-react";
+import { BookOpen, LogIn, LogOut, PenSquare, Shield, Wrench, X } from "lucide-react";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import type { AppRole } from "@/lib/auth/roles";
 
@@ -241,16 +241,44 @@ export default function Header() {
                   </div>
 
                   {isStaff ? (
-                    <Link
-                      href="/admin"
-                      className="inline-flex items-center gap-1 rounded-full px-3 py-2 text-xs font-semibold text-white"
-                      style={{
-                        background: "rgba(59,130,246,0.35)",
-                        border: "1px solid rgba(147,197,253,0.45)",
-                      }}
-                    >
-                      Admin
-                    </Link>
+                    <>
+                      <Link
+                        href="/admin/tools"
+                        className="inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-semibold text-white transition-opacity hover:opacity-80"
+                        style={{
+                          background: "rgba(16,185,129,0.25)",
+                          border: "1px solid rgba(110,231,183,0.40)",
+                          touchAction: "manipulation",
+                        }}
+                        title="Añadir Tool"
+                      >
+                        <Wrench className="h-3.5 w-3.5" />
+                        <span className="hidden lg:inline">Añadir Tool</span>
+                      </Link>
+                      <Link
+                        href="/admin/posts"
+                        className="inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-semibold text-white transition-opacity hover:opacity-80"
+                        style={{
+                          background: "rgba(139,92,246,0.28)",
+                          border: "1px solid rgba(196,181,253,0.40)",
+                          touchAction: "manipulation",
+                        }}
+                        title="Subir Post"
+                      >
+                        <PenSquare className="h-3.5 w-3.5" />
+                        <span className="hidden lg:inline">Subir Post</span>
+                      </Link>
+                      <Link
+                        href="/admin"
+                        className="inline-flex items-center gap-1 rounded-full px-3 py-2 text-xs font-semibold text-white"
+                        style={{
+                          background: "rgba(59,130,246,0.35)",
+                          border: "1px solid rgba(147,197,253,0.45)",
+                        }}
+                      >
+                        Admin
+                      </Link>
+                    </>
                   ) : null}
 
                   <button
@@ -311,6 +339,30 @@ export default function Header() {
                 </Link>
               ))}
             </nav>
+
+            {isStaff ? (
+              <div className="mt-2 flex flex-col gap-1 border-t border-white/10 pt-2">
+                <p className="px-3 pb-1 text-[10px] font-semibold uppercase tracking-widest text-white/35">
+                  Acciones rápidas
+                </p>
+                <Link
+                  href="/admin/tools"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-white/85 transition-colors hover:bg-white/10"
+                >
+                  <Wrench className="h-4 w-4 text-emerald-300" />
+                  Añadir Tool
+                </Link>
+                <Link
+                  href="/admin/posts"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-white/85 transition-colors hover:bg-white/10"
+                >
+                  <PenSquare className="h-4 w-4 text-violet-300" />
+                  Subir Post
+                </Link>
+              </div>
+            ) : null}
 
             <div className="mt-3 border-t border-white/10 pt-3">
               {isLoading ? (

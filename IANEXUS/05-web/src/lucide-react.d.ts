@@ -44,4 +44,6 @@ declare module 'lucide-react' {
   export const LogOut: React.FC<IconProps>;
   export const ExternalLink: React.FC<IconProps>;
   export const X: React.FC<IconProps>;
+  export const Wrench: React.FC<IconProps>;
+  export const PenSquare: React.FC<IconProps>;
 }
