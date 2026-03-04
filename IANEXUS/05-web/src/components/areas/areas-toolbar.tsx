@@ -458,13 +458,15 @@ export default function AreasToolbar({
         </div>
       ) : null}
 
-      {isLoading ? (
+      {isLoading && tools.length === 0 ? (
         <div className="rounded-3xl border border-white/15 bg-white/[0.05] px-6 py-10 text-center text-white/70">
           Cargando herramientas...
         </div>
       ) : tools.length > 0 ? (
         <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div
+            className={`grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 transition-opacity duration-150 ${isLoading ? "pointer-events-none opacity-50" : "opacity-100"}`}
+          >
             {tools.map((tool) => (
               <AreaToolCard key={tool.id} tool={tool} />
             ))}

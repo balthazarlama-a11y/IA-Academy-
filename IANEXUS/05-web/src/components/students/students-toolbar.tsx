@@ -229,6 +229,10 @@ export default function StudentsToolbar({
             query = query.eq("ia_type", filters.iaType);
           }
 
+          if (filters.scope === "student_pack") {
+            query = query.or("plan.eq.edu_free,edu_verified.eq.true");
+          }
+
           const safeSearch = clampSearch(filters.search);
           if (safeSearch.length > 0) {
             query = query.or(
@@ -249,15 +253,11 @@ export default function StudentsToolbar({
 
           const rawRows = ((data ?? []) as unknown as RawToolRow[]);
           const mappedRows = rawRows.map(mapTool);
-          const scopedRows =
-            filters.scope === "student_pack"
-              ? mappedRows.filter((tool) => tool.plan === "edu_free" || tool.edu_verified)
-              : mappedRows;
 
           const more = rawRows.length === PAGE_SIZE;
 
           return {
-            tools: scopedRows,
+            tools: mappedRows,
             hasMore: more,
             nextOffset: more ? offset + PAGE_SIZE : null,
             error: null,
