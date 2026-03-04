@@ -1,8 +1,8 @@
-﻿import Link from "next/link";
-import { Wrench } from "lucide-react";
+import Link from "next/link";
 import { getCurrentUser } from "@/lib/auth/session";
 import { getSupabaseServerAuthClient } from "@/lib/supabase/server";
-import UploadImageField from "@/components/admin/upload-image-field";
+import { CreateToolForm } from "@/components/admin/create-tool-form";
+import { ToolEditorItem } from "@/components/admin/tool-editor-item";
 import { createToolAction, updateToolAction } from "./actions";
 
 export const metadata = {
@@ -35,22 +35,6 @@ type ToolCategory = {
   slug: string;
 };
 
-function formatDate(value: string) {
-  return new Intl.DateTimeFormat("es-CL", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(new Date(value));
-}
-
-function getToolCategoryName(value: AdminToolRow["tool_categories"]) {
-  if (!value) return "Sin categoria";
-  if (Array.isArray(value)) return value[0]?.name ?? "Sin categoria";
-  return value.name;
-}
-
 async function ensureStaffUser() {
   const user = await getCurrentUser();
   const role = user?.role ?? null;
@@ -79,7 +63,7 @@ export default async function AdminToolsPage({
       .from("tools")
       .select("id, name, slug, description, url, cover_image_url, plan, level, ia_type, category_id, verified, edu_verified, featured, status, sort_order, updated_at, tool_categories(name, slug)")
       .order("updated_at", { ascending: false })
-      .limit(150),
+      .limit(100),
     supabase
       .from("tool_categories")
       .select("id, name, slug")
@@ -122,53 +106,7 @@ export default async function AdminToolsPage({
         style={{ background: "rgba(255, 255, 255, 0.88)", border: "1px solid rgba(148, 163, 184, 0.32)" }}
       >
         <h3 className="mb-4 text-lg font-medium text-slate-900">Nueva tool</h3>
-        <form action={createToolAction} encType="multipart/form-data" className="grid grid-cols-1 gap-3 md:grid-cols-2">
-          <input name="name" required placeholder="Nombre" className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none" />
-          <input name="slug" placeholder="slug-opcional" className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none" />
-          <input name="url" required placeholder="https://..." className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none md:col-span-2" />
-          <textarea name="description" rows={2} placeholder="Descripcion" className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none md:col-span-2" />
-          <UploadImageField fileInputName="cover_image_file" urlInputName="cover_image_url" label="Imagen / logo" colSpan="md:col-span-2" />
-          <select name="category_id" required className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none">
-            <option value="">Selecciona categoria</option>
-            {categories.map((category) => (
-              <option key={category.id} value={category.id}>{category.name}</option>
-            ))}
-          </select>
-          <input name="ia_type" placeholder="Tipo IA (opcional)" className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none" />
-          <select name="plan" defaultValue="free" className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none">
-            <option value="free">Free</option>
-            <option value="edu_free">Edu Free</option>
-            <option value="freemium">Freemium</option>
-            <option value="paid">Paid</option>
-          </select>
-          <select name="level" defaultValue="all" className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none">
-            <option value="all">All</option>
-            <option value="beginner">Beginner</option>
-            <option value="intermediate">Intermediate</option>
-            <option value="advanced">Advanced</option>
-          </select>
-          <select name="status" defaultValue="published" className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none">
-            <option value="draft">Draft</option>
-            <option value="scheduled">Scheduled</option>
-            <option value="published">Published</option>
-            <option value="archived">Archived</option>
-          </select>
-          <input name="sort_order" type="number" min={0} defaultValue={0} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none" />
-
-          <label className="inline-flex items-center gap-2 text-sm text-slate-700"><input name="verified" type="checkbox" /> Verificada</label>
-          <label className="inline-flex items-center gap-2 text-sm text-slate-700"><input name="edu_verified" type="checkbox" /> Edu verificada</label>
-          <label className="inline-flex items-center gap-2 text-sm text-slate-700 md:col-span-2"><input name="featured" type="checkbox" /> Destacada</label>
-
-          <div className="md:col-span-2 flex justify-end">
-            <button
-              type="submit"
-              className="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-white"
-              style={{ background: "linear-gradient(135deg, #2563eb, #7c3aed)" }}
-            >
-              Crear tool
-            </button>
-          </div>
-        </form>
+        <CreateToolForm categories={categories} createAction={createToolAction} />
       </section>
 
       <section className="space-y-3">
@@ -179,77 +117,18 @@ export default async function AdminToolsPage({
             No hay tools todavía.
           </div>
         ) : (
-          tools.map((tool) => (
-            <details key={tool.id} className="rounded-xl border border-slate-200 bg-white">
-              <summary className="cursor-pointer list-none px-4 py-3">
-                <div className="flex items-center justify-between gap-3">
-                  <div>
-                    <p className="text-sm font-medium text-slate-900">{tool.name}</p>
-                    <p className="text-xs text-slate-500">/{tool.slug} - {tool.status} - {getToolCategoryName(tool.tool_categories)} - {formatDate(tool.updated_at)}</p>
-                  </div>
-                  <Wrench className="h-4 w-4 text-slate-500" />
-                </div>
-              </summary>
-
-              <div className="border-t border-slate-200 p-4">
-                <form action={updateToolAction} encType="multipart/form-data" className="grid grid-cols-1 gap-3 md:grid-cols-2">
-                  <input type="hidden" name="id" value={tool.id} />
-                  <input name="name" required defaultValue={tool.name} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none" />
-                  <input name="slug" required defaultValue={tool.slug} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none" />
-                  <input name="url" required defaultValue={tool.url} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none md:col-span-2" />
-                  <textarea name="description" rows={2} defaultValue={tool.description ?? ""} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none md:col-span-2" />
-                  <UploadImageField fileInputName="cover_image_file" urlInputName="cover_image_url" existingUrl={tool.cover_image_url} label="Imagen / logo" colSpan="md:col-span-2" />
-                  <select name="category_id" defaultValue={tool.category_id} required className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none">
-                    {categories.map((category) => (
-                      <option key={category.id} value={category.id}>{category.name}</option>
-                    ))}
-                  </select>
-                  <input name="ia_type" defaultValue={tool.ia_type ?? ""} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none" />
-                  <select name="plan" defaultValue={tool.plan} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none">
-                    <option value="free">Free</option>
-                    <option value="edu_free">Edu Free</option>
-                    <option value="freemium">Freemium</option>
-                    <option value="paid">Paid</option>
-                  </select>
-                  <select name="level" defaultValue={tool.level} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none">
-                    <option value="all">All</option>
-                    <option value="beginner">Beginner</option>
-                    <option value="intermediate">Intermediate</option>
-                    <option value="advanced">Advanced</option>
-                  </select>
-                  <select name="status" defaultValue={tool.status} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none">
-                    <option value="draft">Draft</option>
-                    <option value="scheduled">Scheduled</option>
-                    <option value="published">Published</option>
-                    <option value="archived">Archived</option>
-                  </select>
-                  <input name="sort_order" type="number" min={0} defaultValue={tool.sort_order} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none" />
-
-                  <label className="inline-flex items-center gap-2 text-sm text-slate-700">
-                    <input name="verified" type="checkbox" defaultChecked={tool.verified} /> Verificada
-                  </label>
-                  <label className="inline-flex items-center gap-2 text-sm text-slate-700">
-                    <input name="edu_verified" type="checkbox" defaultChecked={tool.edu_verified} /> Edu verificada
-                  </label>
-                  <label className="inline-flex items-center gap-2 text-sm text-slate-700 md:col-span-2">
-                    <input name="featured" type="checkbox" defaultChecked={tool.featured} /> Destacada
-                  </label>
-
-                  <div className="md:col-span-2 flex justify-end">
-                    <button
-                      type="submit"
-                      className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-900 transition hover:bg-slate-100"
-                    >
-                      Guardar cambios
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </details>
-          ))
+          <div className="space-y-3">
+            {tools.map((tool) => (
+              <ToolEditorItem
+                key={tool.id}
+                tool={tool}
+                categories={categories}
+                updateAction={updateToolAction}
+              />
+            ))}
+          </div>
         )}
       </section>
     </div>
   );
 }
-
