@@ -4,8 +4,10 @@ import { Suspense } from "react";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import { PostContent } from "@/components/blog/post-content";
+import RelatedTools from "@/components/blog/related-tools";
 import { getCurrentUser } from "@/lib/auth/session";
 import { fetchPublishedPostBySlug } from "@/lib/supabase/server";
+import { getRelatedToolsByPostSlug } from "@/lib/repositories/post-tools-repo";
 
 // Cache estático con ISR cada 5 minutos
 export const revalidate = 300;
@@ -33,9 +35,10 @@ export default async function BlogPostPage({ params }: PageProps) {
   const decodedSlug = decodeURIComponent(slug);
 
   // Fetch en paralelo
-  const [post, viewer] = await Promise.all([
+  const [post, viewer, relatedTools] = await Promise.all([
     fetchPublishedPostBySlug(decodedSlug),
     getCurrentUser(),
+    getRelatedToolsByPostSlug(decodedSlug),
   ]);
 
   if (!post) {
@@ -75,6 +78,8 @@ export default async function BlogPostPage({ params }: PageProps) {
           <Suspense fallback={<ContentSkeleton />}>
             <PostContent content={post.content_md} isLoggedIn={isLoggedIn} slug={post.slug} />
           </Suspense>
+
+          <RelatedTools tools={relatedTools} />
         </article>
       </section>
 

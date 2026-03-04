@@ -3,7 +3,9 @@ import { notFound } from "next/navigation";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import ToolDetail from "@/components/tools/tool-detail";
-import { getRelatedPostsByTool, getToolBySlug } from "@/lib/repositories/tools-repo";
+import RelatedPosts from "@/components/tools/related-posts";
+import { getRelatedPostsByToolSlug } from "@/lib/repositories/post-tools-repo";
+import { getToolBySlug } from "@/lib/repositories/tools-repo";
 
 export default async function ToolDetailPage({
   params,
@@ -13,13 +15,14 @@ export default async function ToolDetailPage({
   const { slug } = await params;
   const decodedSlug = decodeURIComponent(slug);
 
-  const tool = await getToolBySlug(decodedSlug);
+  const [tool, relatedPosts] = await Promise.all([
+    getToolBySlug(decodedSlug),
+    getRelatedPostsByToolSlug(decodedSlug),
+  ]);
 
   if (!tool) {
     notFound();
   }
-
-  const relatedPosts = await getRelatedPostsByTool(tool.id);
 
   return (
     <main className="relative min-h-screen flex flex-col">
@@ -43,7 +46,10 @@ export default async function ToolDetailPage({
           </div>
         </div>
 
-        <ToolDetail tool={tool} relatedPosts={relatedPosts} />
+        <div className="[&>article>section:last-child]:hidden">
+          <ToolDetail tool={tool} relatedPosts={relatedPosts} />
+        </div>
+        <RelatedPosts posts={relatedPosts} />
       </section>
 
       <Footer />
