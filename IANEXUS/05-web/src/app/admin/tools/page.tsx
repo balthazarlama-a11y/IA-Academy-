@@ -49,7 +49,7 @@ async function ensureStaffUser() {
 export default async function AdminToolsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ ok?: string; err?: string }>;
+  searchParams: Promise<{ ok?: string; err?: string; q?: string }>;
 }) {
   await ensureStaffUser();
   const supabase = await getSupabaseServerAuthClient();
@@ -57,6 +57,7 @@ export default async function AdminToolsPage({
   const params = await searchParams;
   const successMessage = params.ok ?? "";
   const errorMessage = params.err ?? "";
+  const query = (params.q ?? "").trim().toLowerCase();
 
   const [{ data: toolsData }, { data: categoriesData }] = await Promise.all([
     supabase
@@ -71,8 +72,11 @@ export default async function AdminToolsPage({
       .order("name", { ascending: true }),
   ]);
 
-  const tools = ((toolsData ?? []) as unknown as AdminToolRow[]);
-  const categories = ((categoriesData ?? []) as ToolCategory[]);
+  const tools = (toolsData ?? []) as unknown as AdminToolRow[];
+  const categories = (categoriesData ?? []) as ToolCategory[];
+  const filteredTools = query
+    ? tools.filter((tool) => [tool.name, tool.slug, tool.url].some((value) => value.toLowerCase().includes(query)))
+    : tools;
 
   return (
     <div className="space-y-6">
@@ -110,21 +114,40 @@ export default async function AdminToolsPage({
       </section>
 
       <section className="space-y-3">
-        <h3 className="text-lg font-medium text-slate-900">Tools existentes ({tools.length})</h3>
+        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          <h3 className="text-lg font-medium text-slate-900">Tools existentes ({filteredTools.length})</h3>
+          <form action="/admin/tools" method="get" className="flex w-full gap-2 md:w-auto md:min-w-[420px]">
+            <input
+              name="q"
+              defaultValue={params.q ?? ""}
+              placeholder="Buscar por nombre, slug o URL..."
+              className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none ring-0 transition focus:border-slate-300"
+            />
+            <button
+              type="submit"
+              className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800 transition hover:bg-slate-50"
+            >
+              Buscar
+            </button>
+            {query ? (
+              <Link
+                href="/admin/tools"
+                className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 transition hover:bg-slate-50"
+              >
+                Limpiar
+              </Link>
+            ) : null}
+          </form>
+        </div>
 
-        {tools.length === 0 ? (
+        {filteredTools.length === 0 ? (
           <div className="rounded-xl border border-slate-200 bg-white p-8 text-center text-sm text-slate-500">
-            No hay tools todavía.
+            {query ? "No se encontraron tools para esta busqueda." : "No hay tools todavia."}
           </div>
         ) : (
           <div className="space-y-3">
-            {tools.map((tool) => (
-              <ToolEditorItem
-                key={tool.id}
-                tool={tool}
-                categories={categories}
-                updateAction={updateToolAction}
-              />
+            {filteredTools.map((tool) => (
+              <ToolEditorItem key={tool.id} tool={tool} categories={categories} updateAction={updateToolAction} />
             ))}
           </div>
         )}
