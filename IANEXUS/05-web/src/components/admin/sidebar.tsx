@@ -6,6 +6,8 @@ import {
   LayoutDashboard,
   FileText,
   Users,
+  Wrench,
+  BookOpenText,
   Settings,
   Shield,
   BookOpen,
@@ -19,6 +21,8 @@ interface AdminSidebarProps {
 const navigation = [
   { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
   { name: "Posts", href: "/admin/posts", icon: FileText },
+  { name: "Tools", href: "/admin/tools", icon: Wrench },
+  { name: "Relaciones", href: "/admin/relations", icon: BookOpenText },
   { name: "Usuarios", href: "/admin/users", icon: Users },
 ];
 

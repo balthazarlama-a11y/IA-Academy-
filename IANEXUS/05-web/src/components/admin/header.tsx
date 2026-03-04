@@ -54,8 +54,8 @@ export function AdminHeader({ user }: AdminHeaderProps) {
     >
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-lg font-semibold text-white/90">Panel de Administracion</h1>
-          <p className="text-sm text-white/40">Gestiona contenido, usuarios y configuracion</p>
+          <h1 className="text-lg font-semibold text-white/90">Panel de Administración</h1>
+          <p className="text-sm text-white/40">Gestiona contenido, usuarios y configuración</p>
         </div>
 
         <div className="flex items-center gap-3">
@@ -70,7 +70,7 @@ export function AdminHeader({ user }: AdminHeaderProps) {
             className="px-3 py-2 rounded-lg text-xs text-white/70 border border-white/12 hover:bg-white/[0.07] transition-colors"
             style={{ background: "rgba(255,255,255,0.03)" }}
           >
-            Cerrar sesion
+            Cerrar sesión
           </button>
 
           <div
