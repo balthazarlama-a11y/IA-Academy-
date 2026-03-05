@@ -11,12 +11,7 @@ import { fetchPublishedPostBySlug } from "@/lib/supabase/server";
 import { getRelatedToolsByPostSlug } from "@/lib/repositories/post-tools-repo";
 
 // Cache estático con ISR cada 5 minutos
-export const revalidate = 300;
-
-export async function generateStaticParams() {
-  // Pre-renderizar posts populares en build
-  return [];
-}
+export const dynamic = "force-dynamic";
 
 function formatDate(value: string | null) {
   if (!value) return "";
