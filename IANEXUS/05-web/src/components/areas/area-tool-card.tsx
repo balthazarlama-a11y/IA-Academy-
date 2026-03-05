@@ -62,7 +62,7 @@ function AreaToolCard({ tool }: { tool: Tool }) {
           )}
         </div>
 
-        {/* Nombre + badge plan -->
+        {/* Nombre + badge plan */}
         <div className="flex items-start justify-between gap-3">
           <h3 className="text-lg font-semibold text-slate-900 leading-snug transition-colors duration-150 group-hover:text-slate-900">
             {tool.name}
@@ -75,7 +75,7 @@ function AreaToolCard({ tool }: { tool: Tool }) {
           </span>
         </div>
 
-        {/* Categoría + nivel */}
+        {/* Categoría + nivel + señales extra */}
         <div className="flex flex-wrap gap-2">
           <span
             className="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium"
@@ -90,6 +90,17 @@ function AreaToolCard({ tool }: { tool: Tool }) {
           <span className="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium text-slate-600 border border-slate-200">
             {LEVEL_LABEL[tool.level]}
           </span>
+          {tool.ia_type ? (
+            <span className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs text-slate-500">
+              {tool.ia_type}
+            </span>
+          ) : null}
+          {tool.featured ? (
+            <span className="inline-flex items-center gap-1 rounded-full border border-amber-300/40 bg-amber-400/10 px-3 py-1 text-xs font-medium text-amber-700">
+              <svg className="h-3 w-3" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              Destacada
+            </span>
+          ) : null}
         </div>
 
         {/* Descripción */}
@@ -100,7 +111,7 @@ function AreaToolCard({ tool }: { tool: Tool }) {
         )}
 
         {/* Badges verificación */}
-        <div className="flex items-center gap-4 mt-auto pt-5 border-t border-slate-200">
+        <div className="flex items-center gap-3 mt-auto pt-5 border-t border-slate-200">
           {tool.verified && (
             <span className="inline-flex items-center gap-1.5 text-xs text-emerald-600">
               <BadgeCheck className="h-4 w-4" />
@@ -111,6 +122,11 @@ function AreaToolCard({ tool }: { tool: Tool }) {
             <span className="inline-flex items-center gap-1.5 text-xs text-cyan-600">
               <GraduationCap className="h-4 w-4" />
               Plan .edu
+            </span>
+          )}
+          {tool.guide_slug && (
+            <span className="ml-auto inline-flex items-center gap-1 rounded-full border border-violet-300/30 bg-violet-400/8 px-2.5 py-1 text-xs text-violet-600">
+              Tiene guía
             </span>
           )}
         </div>
