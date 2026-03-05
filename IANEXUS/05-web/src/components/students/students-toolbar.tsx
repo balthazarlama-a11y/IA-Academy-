@@ -25,7 +25,7 @@ type RawToolRow = {
   slug: string;
   description: string | null;
   url: string;
-  logo_url: string | null;
+  cover_image_url: string | null;
   plan: ToolPlan;
   ia_type: string | null;
   edu_verified: boolean;
@@ -50,7 +50,7 @@ const PAGE_SIZE = 50;
 const SEARCH_DEBOUNCE_MS = 400;
 const CACHE_TTL_MS = 90_000;
 const TOOL_SELECT =
-  "id, name, slug, description, url, logo_url, plan, ia_type, edu_verified, featured, sort_order, created_at";
+  "id, name, slug, description, url, cover_image_url, plan, ia_type, edu_verified, featured, sort_order, created_at";
 
 const DEFAULT_CATEGORY = {
   id: "",
@@ -69,7 +69,7 @@ function mapTool(row: RawToolRow): Tool {
     slug: row.slug,
     description: row.description,
     url: row.url,
-    logo_url: row.logo_url,
+    cover_image_url: row.cover_image_url,
     plan: row.plan,
     level: "all",
     ia_type: row.ia_type,

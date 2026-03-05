@@ -42,8 +42,27 @@ function AreaToolCard({ tool }: { tool: Tool }) {
       />
 
       <div className="relative z-10 flex flex-col h-full gap-4">
+        {/* Logo / Imagen */}
+        <div className="flex items-start justify-between gap-3">
+          {tool.cover_image_url ? (
+            <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+              <img
+                src={tool.cover_image_url}
+                alt={`${tool.name} logo`}
+                className="h-full w-full object-contain p-2"
+                loading="lazy"
+              />
+            </div>
+          ) : (
+            <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-slate-200 bg-slate-50">
+              <span className="text-xl font-bold text-slate-300">
+                {tool.name.charAt(0).toUpperCase()}
+              </span>
+            </div>
+          )}
+        </div>
 
-        {/* Nombre + badge plan */}
+        {/* Nombre + badge plan -->
         <div className="flex items-start justify-between gap-3">
           <h3 className="text-lg font-semibold text-slate-900 leading-snug transition-colors duration-150 group-hover:text-slate-900">
             {tool.name}

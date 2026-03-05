@@ -19,7 +19,7 @@ export type AreasPage = {
 const PAGE_SIZE = 50;
 
 const AREAS_SELECT = [
-  "id, name, slug, description, url, plan, level, ia_type, verified, edu_verified, featured, category_id",
+  "id, name, slug, description, url, cover_image_url, plan, level, ia_type, verified, edu_verified, featured, category_id",
   "tool_categories(id, name, slug, description, color_accent, icon_name, sort_order)",
 ].join(", ");
 
@@ -39,6 +39,7 @@ type RawAreaTool = {
   slug: string;
   description: string | null;
   url: string;
+  cover_image_url: string | null;
   plan: ToolPlan;
   level: ToolLevel;
   ia_type: string | null;
@@ -71,7 +72,7 @@ function mapTool(row: RawAreaTool): Tool {
     slug: row.slug,
     description: row.description,
     url: row.url,
-    logo_url: null,
+    cover_image_url: row.cover_image_url ?? null,
     plan: row.plan,
     level: row.level,
     ia_type: row.ia_type,

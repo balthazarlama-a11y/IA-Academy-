@@ -23,6 +23,23 @@ export default function ToolDetail({
 
   return (
     <article className="mx-auto w-full max-w-4xl rounded-3xl border border-slate-200 bg-white backdrop-blur-xl p-6 md:p-9">
+      {/* Logo / Imagen */}
+      {tool.cover_image_url ? (
+        <div className="mb-6 flex h-20 w-20 items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <img
+            src={tool.cover_image_url}
+            alt={`${tool.name} logo`}
+            className="h-full w-full object-contain p-3"
+          />
+        </div>
+      ) : (
+        <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-2xl border border-slate-200 bg-slate-50">
+          <span className="text-3xl font-bold text-slate-300">
+            {tool.name.charAt(0).toUpperCase()}
+          </span>
+        </div>
+      )}
+
       <div
         className="inline-flex rounded-full px-3 py-1 text-xs border"
         style={{

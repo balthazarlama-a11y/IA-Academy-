@@ -17,7 +17,7 @@ export type Tool = {
   slug: string;
   description: string | null;
   url: string;
-  logo_url: string | null;
+  cover_image_url: string | null;
   plan: ToolPlan;
   level: ToolLevel;
   ia_type: string | null;

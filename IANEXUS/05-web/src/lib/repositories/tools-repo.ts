@@ -33,7 +33,7 @@ type RawTool = {
   slug: string;
   description: string | null;
   url: string;
-  logo_url: string | null;
+  cover_image_url: string | null;
   plan: ToolPlan;
   level: ToolLevel;
   ia_type: string | null;
@@ -78,17 +78,17 @@ export type ToolsPage = {
 };
 
 const LIST_TOOLS_SELECT = [
-  "id, name, slug, description, url, logo_url, plan, level, ia_type, verified, edu_verified, featured, sort_order, created_at",
+  "id, name, slug, description, url, cover_image_url, plan, level, ia_type, verified, edu_verified, featured, sort_order, created_at",
   "tool_categories(id, name, slug, description, color_accent, icon_name, sort_order)",
 ].join(", ");
 
 const AREAS_LIST_TOOLS_SELECT = [
-  "id, name, slug, description, url, plan, level, ia_type, verified, edu_verified, featured",
+  "id, name, slug, description, url, cover_image_url, plan, level, ia_type, verified, edu_verified, featured",
   "tool_categories(id, name, slug, description, color_accent, icon_name, sort_order)",
 ].join(", ");
 
 const DETAIL_TOOLS_SELECT = [
-  "id, name, slug, description, url, logo_url, plan, level, ia_type, verified, edu_verified, featured, sort_order, created_at",
+  "id, name, slug, description, url, cover_image_url, plan, level, ia_type, verified, edu_verified, featured, sort_order, created_at",
   "tool_categories(id, name, slug, description, color_accent, icon_name, sort_order)",
   "post_tools(posts(slug))",
 ].join(", ");
@@ -164,7 +164,7 @@ function mapTool(row: RawTool): Tool {
     slug: row.slug,
     description: row.description,
     url: row.url,
-    logo_url: row.logo_url,
+    cover_image_url: row.cover_image_url,
     plan: row.plan,
     level: row.level,
     ia_type: row.ia_type,
@@ -185,7 +185,7 @@ function mapAreasTool(row: RawTool): Tool {
     slug: row.slug,
     description: row.description,
     url: row.url,
-    logo_url: null,
+    cover_image_url: row.cover_image_url ?? null,
     plan: row.plan,
     level: row.level,
     ia_type: row.ia_type,

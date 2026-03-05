@@ -123,7 +123,7 @@ function mapTool(row: RawToolRow): Tool {
     slug: row.slug,
     description: row.description,
     url: row.url,
-    logo_url: null,
+    cover_image_url: null,
     plan: row.plan,
     level: row.level,
     ia_type: row.ia_type,

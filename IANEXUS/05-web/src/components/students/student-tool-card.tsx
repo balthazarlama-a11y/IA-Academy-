@@ -40,6 +40,23 @@ export default memo(function StudentToolCard({ tool }: { tool: Tool }) {
       />
 
       <div className="flex min-h-[260px] flex-col">
+        {/* Logo / Imagen */}
+        {tool.cover_image_url ? (
+          <div className="mb-4 flex h-16 w-16 items-center justify-center overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+            <img
+              src={tool.cover_image_url}
+              alt={`${tool.name} logo`}
+              className="h-full w-full object-contain p-2"
+              loading="lazy"
+            />
+          </div>
+        ) : (
+          <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-xl border border-slate-200 bg-slate-50">
+            <span className="text-2xl font-bold text-slate-300">
+              {tool.name.charAt(0).toUpperCase()}
+            </span>
+          </div>
+        )}
         <div className="flex flex-wrap items-center gap-2">
           <span
             className={`inline-flex items-center rounded-full border px-3 py-1.5 text-xs font-medium ${planTone(tool.plan)}`}
