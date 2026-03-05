@@ -27,11 +27,8 @@ export function StaffEditButton({ href, label, className }: StaffEditButtonProps
   const [show, setShow] = useState(getCached);
 
   useEffect(() => {
-    // Already resolved — no need to re-query
-    if (_cachedIsStaff !== undefined) {
-      setShow(_cachedIsStaff);
-      return;
-    }
+    // Already resolved — useState(getCached) already set the correct initial value
+    if (_cachedIsStaff !== undefined) return;
 
     const supabase = getSupabaseBrowserClient();
 
