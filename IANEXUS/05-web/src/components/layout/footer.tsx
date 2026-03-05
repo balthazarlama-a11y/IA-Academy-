@@ -6,10 +6,9 @@ export default function Footer() {
       <div
         className="mx-auto w-full max-w-5xl rounded-2xl flex items-center justify-between px-5 py-2.5"
         style={{
-          background: "rgba(255, 255, 255, 0.78)",
-          backdropFilter: "blur(16px) saturate(140%)",
-          border: "1px solid rgba(148, 163, 184, 0.30)",
-          boxShadow: "0 10px 24px rgba(15,23,42,0.08), inset 0 1px 0 rgba(255,255,255,0.85)",
+          background: "rgba(255, 255, 255, 0.92)",
+          border: "1px solid rgba(148, 163, 184, 0.24)",
+          boxShadow: "0 8px 18px rgba(15,23,42,0.06), inset 0 1px 0 rgba(255,255,255,0.85)",
         }}
       >
         <span className="text-xs" style={{ color: "rgba(71,85,105,0.88)" }}>

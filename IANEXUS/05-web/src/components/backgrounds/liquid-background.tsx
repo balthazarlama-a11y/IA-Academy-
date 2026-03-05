@@ -16,6 +16,9 @@ type LiquidBackgroundProps = {
   performanceMode?: "full" | "lite" | "minimal";
 };
 
+const MINIMAL_BACKGROUND =
+  "radial-gradient(44% 34% at 26% 14%, rgba(99,102,241,0.12) 0%, rgba(99,102,241,0.03) 42%, transparent 70%), radial-gradient(38% 28% at 78% 78%, rgba(14,165,233,0.12) 0%, rgba(14,165,233,0.03) 42%, transparent 70%), linear-gradient(180deg, #fbfcff 0%, #f8fbff 100%)";
+
 const FULL_BLOBS: BlobConfig[] = [
   {
     top: "-12%",
@@ -87,45 +90,25 @@ const LITE_BLOBS: BlobConfig[] = [
   },
 ];
 
-// Fondo estático, sin blur pesado
-const MINIMAL_BLOBS: BlobConfig[] = [
-  {
-    top: "0%",
-    left: "20%",
-    width: 600,
-    height: 400,
-    background: "radial-gradient(ellipse at center, rgba(99,102,241,0.10) 0%, transparent 60%)",
-    borderRadius: "50%",
-    filter: "blur(40px)",
-    opacity: 0.42,
-  },
-  {
-    bottom: "0%",
-    right: "10%",
-    width: 500,
-    height: 350,
-    background: "radial-gradient(ellipse at center, rgba(14,165,233,0.10) 0%, transparent 60%)",
-    borderRadius: "50%",
-    filter: "blur(40px)",
-    opacity: 0.42,
-  },
-];
-
 export default function LiquidBackground({
   performanceMode = "full",
 }: LiquidBackgroundProps) {
+  if (performanceMode === "minimal") {
+    return (
+      <div
+        className="fixed inset-0 -z-10 overflow-hidden"
+        style={{
+          background: MINIMAL_BACKGROUND,
+          contain: "strict",
+        }}
+      />
+    );
+  }
+
   const blobs =
-    performanceMode === "minimal"
-      ? MINIMAL_BLOBS
-      : performanceMode === "lite"
-        ? LITE_BLOBS
-        : FULL_BLOBS;
+    performanceMode === "lite" ? LITE_BLOBS : FULL_BLOBS;
   const baseColor =
-    performanceMode === "minimal"
-      ? "#fbfcff"
-      : performanceMode === "lite"
-        ? "#f7f9fd"
-        : "#f4f7fb";
+    performanceMode === "lite" ? "#f7f9fd" : "#f4f7fb";
 
   return (
     <div

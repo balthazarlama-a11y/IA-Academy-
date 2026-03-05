@@ -168,7 +168,7 @@ export default function Home() {
       <section className="row-start-2 px-6 py-4 md:py-6">
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-6">
           <section className="grid items-start gap-5 lg:grid-cols-[0.82fr_1.18fr]">
-            <div className="rounded-[2rem] border border-slate-200/80 bg-white/90 p-6 text-center shadow-[0_18px_60px_rgba(15,23,42,0.08)] backdrop-blur md:p-8 lg:text-left">
+            <div className="rounded-[2rem] border border-slate-200/80 bg-white/94 p-6 text-center shadow-[0_18px_40px_rgba(15,23,42,0.06)] md:p-8 lg:text-left">
               <p className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.16em] text-slate-600">
                 IA NEXUS para estudiantes
               </p>
@@ -226,7 +226,7 @@ export default function Home() {
             </div>
 
             <div className="grid gap-4">
-              <div className="rounded-[2rem] border border-slate-200/80 bg-white/90 p-5 shadow-[0_18px_60px_rgba(15,23,42,0.08)] backdrop-blur">
+              <div className="rounded-[2rem] border border-slate-200/80 bg-white/94 p-5 shadow-[0_18px_40px_rgba(15,23,42,0.06)]">
                 <div className="flex items-center justify-between gap-3">
                   <div>
                     <p className="text-sm font-semibold uppercase tracking-[0.14em] text-slate-500">
@@ -249,7 +249,7 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="rounded-[2rem] border border-slate-200/80 bg-white/90 p-5 shadow-[0_18px_60px_rgba(15,23,42,0.08)] backdrop-blur">
+              <div className="rounded-[2rem] border border-slate-200/80 bg-white/94 p-5 shadow-[0_18px_40px_rgba(15,23,42,0.06)]">
                 <p className="text-sm font-semibold uppercase tracking-[0.14em] text-slate-500">
                   Algunas herramientas conocidas
                 </p>
@@ -273,7 +273,7 @@ export default function Home() {
           </section>
 
           <section className="grid gap-4 lg:grid-cols-[0.95fr_1.05fr]">
-            <div className="rounded-[2rem] border border-slate-200/80 bg-white/90 p-6 shadow-[0_18px_60px_rgba(15,23,42,0.08)] backdrop-blur">
+            <div className="rounded-[2rem] border border-slate-200/80 bg-white/94 p-6 shadow-[0_18px_40px_rgba(15,23,42,0.06)]">
               <p className="text-sm font-semibold uppercase tracking-[0.14em] text-slate-500">
                 Para que te sirve
               </p>
@@ -293,7 +293,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="rounded-[2rem] border border-slate-200/80 bg-white/90 p-6 shadow-[0_18px_60px_rgba(15,23,42,0.08)] backdrop-blur">
+            <div className="rounded-[2rem] border border-slate-200/80 bg-white/94 p-6 shadow-[0_18px_40px_rgba(15,23,42,0.06)]">
               <div className="flex items-center justify-between gap-3">
                 <p className="text-sm font-semibold uppercase tracking-[0.14em] text-slate-500">
                   Explora segun tu area
@@ -321,7 +321,7 @@ export default function Home() {
             </div>
           </section>
 
-          <section className="rounded-[2rem] border border-slate-200/80 bg-white/90 p-6 shadow-[0_18px_60px_rgba(15,23,42,0.08)] backdrop-blur md:p-8">
+          <section className="rounded-[2rem] border border-slate-200/80 bg-white/94 p-6 shadow-[0_18px_40px_rgba(15,23,42,0.06)] md:p-8">
             <div className="grid items-center gap-5 lg:grid-cols-[1fr_auto]">
               <div>
                 <p className="text-sm font-semibold uppercase tracking-[0.14em] text-slate-500">
