@@ -114,6 +114,49 @@ export async function createToolAction(formData: FormData) {
   }
 }
 
+export async function deleteToolAction(formData: FormData) {
+  try {
+    await ensureStaffUser();
+    const supabase = await getSupabaseServerAuthClient();
+
+    const id = (formData.get("id")?.toString() ?? "").trim();
+
+    if (!id) {
+      redirect("/admin/tools?err=ID%20de%20tool%20requerido");
+    }
+
+    // 1. Eliminar primero las relaciones en post_tools (integridad referencial)
+    const { error: relError } = await supabase
+      .from("post_tools")
+      .delete()
+      .eq("tool_id", id);
+
+    if (relError) {
+      redirect(`/admin/tools?err=${encodeURIComponent("Error eliminando relaciones: " + relError.message)}`);
+    }
+
+    // 2. Eliminar la tool
+    const { error } = await supabase
+      .from("tools")
+      .delete()
+      .eq("id", id);
+
+    if (error) {
+      redirect(`/admin/tools?err=${encodeURIComponent(error.message)}`);
+    }
+
+    revalidatePath("/areas");
+    revalidatePath("/estudiantes");
+    revalidatePath("/herramientas/[slug]");
+    revalidatePath("/admin/tools");
+    revalidatePath("/admin/relations");
+    redirect("/admin/tools?ok=Tool%20eliminada%20correctamente");
+  } catch (err: unknown) {
+    if (isNextNavigationError(err)) throw err;
+    redirect("/admin/tools?err=No%20fue%20posible%20eliminar%20la%20tool");
+  }
+}
+
 export async function updateToolAction(formData: FormData) {
   try {
     await ensureStaffUser();

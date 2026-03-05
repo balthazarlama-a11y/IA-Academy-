@@ -3,7 +3,7 @@ import { getCurrentUser } from "@/lib/auth/session";
 import { getSupabaseServerAuthClient } from "@/lib/supabase/server";
 import { CreateToolForm } from "@/components/admin/create-tool-form";
 import { ToolEditorItem } from "@/components/admin/tool-editor-item";
-import { createToolAction, updateToolAction } from "./actions";
+import { createToolAction, updateToolAction, deleteToolAction } from "./actions";
 
 export const metadata = {
   title: "Tools - Admin IA NEXUS",
@@ -147,7 +147,7 @@ export default async function AdminToolsPage({
         ) : (
           <div className="space-y-3">
             {filteredTools.map((tool) => (
-              <ToolEditorItem key={tool.id} tool={tool} categories={categories} updateAction={updateToolAction} />
+              <ToolEditorItem key={tool.id} tool={tool} categories={categories} updateAction={updateToolAction} deleteAction={deleteToolAction} />
             ))}
           </div>
         )}

@@ -1,7 +1,7 @@
 "use client";
 
 import { FileText } from "lucide-react";
-import { useTransition } from "react";
+import { useTransition, useState } from "react";
 import UploadImageField from "./upload-image-field";
 import UploadImageInline from "./upload-image-inline";
 
@@ -43,16 +43,35 @@ function formatDate(value: string | null) {
 export function PostEditorItem({
   post,
   updateAction,
+  deleteAction,
 }: {
   post: Post;
   updateAction: ActionFn;
+  deleteAction: ActionFn;
 }) {
   const [isPending, startTransition] = useTransition();
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
 
   const handleSubmit = (formData: FormData) => {
     startTransition(() => {
       updateAction(formData);
     });
+  };
+
+  const handleDelete = () => {
+    if (!showConfirmDelete) {
+      setShowConfirmDelete(true);
+      return;
+    }
+    const formData = new FormData();
+    formData.append("id", post.id);
+    startTransition(() => {
+      deleteAction(formData);
+    });
+  };
+
+  const cancelDelete = () => {
+    setShowConfirmDelete(false);
   };
 
   return (
@@ -148,7 +167,46 @@ export function PostEditorItem({
             disabled={isPending}
             className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50 md:col-span-2"
           />
-          <div className="md:col-span-2 flex justify-end">
+          
+          {/* Botones de acción */}
+          <div className="md:col-span-2 flex items-center justify-between gap-3">
+            {/* Botón Eliminar con confirmación */}
+            <div className="flex items-center gap-2">
+              {showConfirmDelete ? (
+                <>
+                  <span className="text-sm text-red-600 font-medium">
+                    ¿Confirmar eliminación?
+                  </span>
+                  <button
+                    type="button"
+                    onClick={handleDelete}
+                    disabled={isPending}
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-red-300 bg-red-50 px-3 py-2 text-sm font-medium text-red-700 transition hover:bg-red-100 disabled:opacity-50"
+                  >
+                    {isPending ? "Eliminando..." : "Sí, eliminar"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={cancelDelete}
+                    disabled={isPending}
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:opacity-50"
+                  >
+                    Cancelar
+                  </button>
+                </>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleDelete}
+                  className="inline-flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm font-medium text-red-700 transition hover:bg-red-100"
+                >
+                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                  Eliminar
+                </button>
+              )}
+            </div>
+
+            {/* Botón Guardar */}
             <button
               type="submit"
               disabled={isPending}

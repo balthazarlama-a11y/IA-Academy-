@@ -3,7 +3,7 @@ import { getCurrentUser } from "@/lib/auth/session";
 import { getSupabaseServerAuthClient } from "@/lib/supabase/server";
 import { CreatePostForm } from "@/components/admin/create-post-form";
 import { PaginatedPostsList } from "@/components/admin/paginated-posts-list";
-import { createPostAction, updatePostAction } from "./actions";
+import { createPostAction, updatePostAction, deletePostAction } from "./actions";
 
 export const metadata = {
   title: "Posts - Admin IA NEXUS",
@@ -86,7 +86,7 @@ export default async function AdminPostsPage({
 
       <section className="space-y-3">
         <h3 className="text-lg font-medium text-slate-900">Posts existentes ({posts.length})</h3>
-        <PaginatedPostsList posts={posts} updateAction={updatePostAction} />
+        <PaginatedPostsList posts={posts} updateAction={updatePostAction} deleteAction={deletePostAction} />
       </section>
     </div>
   );

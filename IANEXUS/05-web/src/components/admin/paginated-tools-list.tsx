@@ -38,12 +38,14 @@ interface PaginatedToolsListProps {
   tools: Tool[];
   categories: ToolCategory[];
   updateAction: ActionFn;
+  deleteAction: ActionFn;
 }
 
 export function PaginatedToolsList({
   tools,
   categories,
   updateAction,
+  deleteAction,
 }: PaginatedToolsListProps) {
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -79,6 +81,7 @@ export function PaginatedToolsList({
             tool={tool}
             categories={categories}
             updateAction={updateAction}
+            deleteAction={deleteAction}
           />
         ))}
       </div>

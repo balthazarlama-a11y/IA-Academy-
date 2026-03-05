@@ -25,11 +25,13 @@ const ITEMS_PER_PAGE = 25;
 interface PaginatedPostsListProps {
   posts: Post[];
   updateAction: ActionFn;
+  deleteAction: ActionFn;
 }
 
 export function PaginatedPostsList({
   posts,
   updateAction,
+  deleteAction,
 }: PaginatedPostsListProps) {
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -64,6 +66,7 @@ export function PaginatedPostsList({
             key={post.id}
             post={post}
             updateAction={updateAction}
+            deleteAction={deleteAction}
           />
         ))}
       </div>

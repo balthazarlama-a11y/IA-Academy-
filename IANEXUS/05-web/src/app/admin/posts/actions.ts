@@ -104,6 +104,48 @@ export async function createPostAction(formData: FormData) {
   }
 }
 
+export async function deletePostAction(formData: FormData) {
+  try {
+    await ensureStaffUser();
+    const supabase = await getSupabaseServerAuthClient();
+
+    const id = (formData.get("id")?.toString() ?? "").trim();
+
+    if (!id) {
+      redirect("/admin/posts?err=ID%20de%20post%20requerido");
+    }
+
+    // 1. Eliminar primero las relaciones en post_tools (integridad referencial)
+    const { error: relError } = await supabase
+      .from("post_tools")
+      .delete()
+      .eq("post_id", id);
+
+    if (relError) {
+      redirect(`/admin/posts?err=${encodeURIComponent("Error eliminando relaciones: " + relError.message)}`);
+    }
+
+    // 2. Eliminar el post
+    const { error } = await supabase
+      .from("posts")
+      .delete()
+      .eq("id", id);
+
+    if (error) {
+      redirect(`/admin/posts?err=${encodeURIComponent(error.message)}`);
+    }
+
+    revalidatePath("/blog");
+    revalidatePath("/blog/[slug]");
+    revalidatePath("/admin/posts");
+    revalidatePath("/admin/relations");
+    redirect("/admin/posts?ok=Post%20eliminado%20correctamente");
+  } catch (err: unknown) {
+    if (isNextNavigationError(err)) throw err;
+    redirect("/admin/posts?err=No%20fue%20posible%20eliminar%20el%20post");
+  }
+}
+
 export async function updatePostAction(formData: FormData) {
   try {
     await ensureStaffUser();
