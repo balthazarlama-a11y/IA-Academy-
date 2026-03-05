@@ -1,27 +1,27 @@
 import Link from "next/link";
-import { ArrowRight, GraduationCap, Layers3, Sparkles } from "lucide-react";
+import { ArrowRight, BookOpenText, GraduationCap, Layers3 } from "lucide-react";
 
 const PILLARS = [
   {
-    title: "Descuentos y plan .edu",
-    subtitle: "Beneficios reales para estudiantes",
+    title: "Para estudiar mejor",
+    subtitle: "Resumir, investigar y organizar apuntes",
     icon: GraduationCap,
     href: "/estudiantes",
     gradient: "from-blue-600 to-sky-500",
     glow: "rgba(37, 99, 235, 0.18)",
   },
   {
-    title: "Tools para proyectos",
-    subtitle: "Portafolio, freelance y entregas",
-    icon: Layers3,
+    title: "Por carrera y necesidad",
+    subtitle: "Explora herramientas segun tu area",
+    icon: BookOpenText,
     href: "/areas",
     gradient: "from-indigo-600 to-violet-500",
     glow: "rgba(99, 102, 241, 0.18)",
   },
   {
-    title: "No quedarte atras",
-    subtitle: "Novedades y casos que si importan",
-    icon: Sparkles,
+    title: "Mas alla de ChatGPT",
+    subtitle: "Opciones para presentar, leer y aprender",
+    icon: Layers3,
     href: "/dia-a-dia",
     gradient: "from-emerald-600 to-teal-500",
     glow: "rgba(5, 150, 105, 0.18)",
