@@ -9,13 +9,7 @@ import { getToolBySlug } from "@/lib/repositories/tools-repo";
 import { getCurrentUser } from "@/lib/auth/session";
 import { hasAdminAccess } from "@/lib/auth/roles";
 
-// ISR cada 5 minutos
-export const revalidate = 300;
-
-export async function generateStaticParams() {
-  // Pre-render vacío - las páginas se generan bajo demanda con ISR
-  return [];
-}
+export const dynamic = "force-dynamic";
 
 export default async function ToolDetailPage({
   params,
@@ -23,11 +17,21 @@ export default async function ToolDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const decodedSlug = decodeURIComponent(slug);
+
+  let decodedSlug = "";
+  try {
+    decodedSlug = decodeURIComponent(slug);
+  } catch {
+    notFound();
+  }
+
+  if (!decodedSlug.trim()) {
+    notFound();
+  }
 
   const [tool, relatedPosts, viewer] = await Promise.all([
     getToolBySlug(decodedSlug),
-    getRelatedPostsByToolSlug(decodedSlug),
+    getRelatedPostsByToolSlug(decodedSlug).catch(() => []),
     getCurrentUser().catch(() => null),
   ]);
 
