@@ -20,11 +20,17 @@ export async function generateStaticParams() {
 
 function formatDate(value: string | null) {
   if (!value) return "";
-  return new Intl.DateTimeFormat("es-ES", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  }).format(new Date(value));
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) return "";
+  try {
+    return new Intl.DateTimeFormat("es-ES", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    }).format(parsed);
+  } catch {
+    return "";
+  }
 }
 
 interface PageProps {
@@ -60,6 +66,10 @@ export default async function BlogPostPage({ params }: PageProps) {
 
   const isLoggedIn = Boolean(viewer);
   const isStaff = hasAdminAccess(viewer?.role ?? null);
+  const safeSlug = typeof post.slug === "string" ? post.slug : decodedSlug;
+  const safeTitle = typeof post.title === "string" ? post.title : "Post";
+  const safeExcerpt = typeof post.excerpt === "string" ? post.excerpt : null;
+  const safeContent = typeof post.content_md === "string" ? post.content_md : "";
   const date = formatDate(post.published_at || post.created_at);
 
   return (
@@ -77,8 +87,8 @@ export default async function BlogPostPage({ params }: PageProps) {
             </Link>
             {isStaff && (
               <Link
-                href={`/admin/posts?q=${encodeURIComponent(post.slug)}`}
-                aria-label={`Editar post "${post.title}" en Admin`}
+                href={`/admin/posts?q=${encodeURIComponent(safeSlug)}`}
+                aria-label={`Editar post "${safeTitle}" en Admin`}
                 className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-600 hover:bg-slate-100 transition-colors"
               >
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
@@ -91,20 +101,20 @@ export default async function BlogPostPage({ params }: PageProps) {
 
           <header className="mt-6">
             <h1 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-slate-900 leading-tight">
-              {post.title}
+              {safeTitle}
             </h1>
             {date && (
               <div className="mt-2 text-sm text-slate-500">
                 {date}
               </div>
             )}
-            {post.excerpt ? (
-              <p className="mt-4 text-slate-600 text-base leading-relaxed">{post.excerpt}</p>
+            {safeExcerpt ? (
+              <p className="mt-4 text-slate-600 text-base leading-relaxed">{safeExcerpt}</p>
             ) : null}
           </header>
 
           <Suspense fallback={<ContentSkeleton />}>
-            <PostContent content={post.content_md} isLoggedIn={isLoggedIn} slug={post.slug} />
+            <PostContent content={safeContent} isLoggedIn={isLoggedIn} slug={safeSlug} />
           </Suspense>
 
           <RelatedTools tools={relatedTools} />

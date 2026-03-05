@@ -3,7 +3,7 @@
 import Link from "next/link";
 
 interface PostContentProps {
-  content: string;
+  content: string | null | undefined;
   isLoggedIn: boolean;
   slug: string;
 }
@@ -56,7 +56,8 @@ function renderBlock(block: string, index: number) {
 }
 
 export function PostContent({ content, isLoggedIn, slug }: PostContentProps) {
-  const blocks = content
+  const normalizedContent = typeof content === "string" ? content : "";
+  const blocks = normalizedContent
     .split(/\n{2,}/)
     .map((block) => block.trim())
     .filter(Boolean);
