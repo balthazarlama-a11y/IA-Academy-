@@ -32,18 +32,30 @@ interface PageProps {
 
 export default async function BlogPostPage({ params }: PageProps) {
   const { slug } = await params;
-  const decodedSlug = decodeURIComponent(slug);
 
-  // Fetch en paralelo
-  const [post, viewer, relatedTools] = await Promise.all([
-    fetchPublishedPostBySlug(decodedSlug),
-    getCurrentUser(),
-    getRelatedToolsByPostSlug(decodedSlug),
-  ]);
+  let decodedSlug = "";
+  try {
+    decodedSlug = decodeURIComponent(slug);
+  } catch {
+    notFound();
+  }
+
+  if (!decodedSlug.trim()) {
+    notFound();
+  }
+
+  // El post es el dato crítico: si no existe/publicado => 404
+  const post = await fetchPublishedPostBySlug(decodedSlug);
 
   if (!post) {
     notFound();
   }
+
+  // Datos auxiliares con fallback para evitar 500 por dependencias no críticas
+  const [viewer, relatedTools] = await Promise.all([
+    getCurrentUser().catch(() => null),
+    getRelatedToolsByPostSlug(decodedSlug).catch(() => []),
+  ]);
 
   const isLoggedIn = Boolean(viewer);
   const date = formatDate(post.published_at || post.created_at);

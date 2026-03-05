@@ -90,22 +90,27 @@ export async function fetchPublishedPosts() {
 }
 
 export async function fetchPublishedPostBySlug(slug: string) {
-  const supabase = getSupabaseServerClient();
+  try {
+    const supabase = getSupabaseServerClient();
 
-  const { data, error } = await supabase
-    .from("posts")
-    .select(
-      "id, title, slug, excerpt, cover_image_url, ia_type, published_at, content_md, post_kind, created_at",
-    )
-    .eq("slug", slug)
-    .eq("status", "published")
-    .or(`published_at.is.null,published_at.lte.${new Date().toISOString()}`)
-    .maybeSingle();
+    const { data, error } = await supabase
+      .from("posts")
+      .select(
+        "id, title, slug, excerpt, cover_image_url, ia_type, published_at, content_md, post_kind, created_at",
+      )
+      .eq("slug", slug)
+      .eq("status", "published")
+      .or(`published_at.is.null,published_at.lte.${new Date().toISOString()}`)
+      .maybeSingle();
 
-  if (error) {
-    console.error("Error fetching post by slug:", error);
+    if (error) {
+      console.error("Error fetching post by slug:", error);
+      return null;
+    }
+
+    return (data as PostDetail | null) ?? null;
+  } catch (error) {
+    console.error("Unexpected error fetching post by slug:", error);
     return null;
   }
-
-  return (data as PostDetail | null) ?? null;
 }
