@@ -1,26 +1,26 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import { ArrowRight, GraduationCap, Layers3, Sparkles } from "lucide-react";
 
 const PILLARS = [
   {
-    title: "Gratis para Estudiantes",
-    subtitle: "Herramientas verificadas sin costo",
+    title: "Descuentos y plan .edu",
+    subtitle: "Beneficios reales para estudiantes",
     icon: GraduationCap,
     href: "/estudiantes",
     gradient: "from-blue-600 to-sky-500",
     glow: "rgba(37, 99, 235, 0.18)",
   },
   {
-    title: "Areas y Especialidades",
-    subtitle: "IA por carrera y disciplina",
+    title: "Tools para proyectos",
+    subtitle: "Portafolio, freelance y entregas",
     icon: Layers3,
     href: "/areas",
     gradient: "from-indigo-600 to-violet-500",
     glow: "rgba(99, 102, 241, 0.18)",
   },
   {
-    title: "IA del Día a Día",
-    subtitle: "Fundamentales para tareas variadas",
+    title: "No quedarte atras",
+    subtitle: "Novedades y casos que si importan",
     icon: Sparkles,
     href: "/dia-a-dia",
     gradient: "from-emerald-600 to-teal-500",
@@ -45,7 +45,10 @@ export default function PillarCards({ variant = "grid" }: PillarCardsProps) {
     variant === "stacked"
       ? "flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br"
       : "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br";
-  const titleClass = variant === "stacked" ? "font-semibold text-slate-900 leading-tight text-base md:text-lg" : "font-semibold text-slate-900 leading-tight text-sm md:text-base";
+  const titleClass =
+    variant === "stacked"
+      ? "font-semibold text-slate-900 leading-tight text-base md:text-lg"
+      : "font-semibold text-slate-900 leading-tight text-sm md:text-base";
   const subtitleClass = variant === "stacked" ? "text-sm mt-1.5" : "text-xs mt-1";
   const iconSize = variant === "stacked" ? "h-6 w-6 text-white" : "h-5 w-5 text-white";
 
@@ -78,9 +81,7 @@ export default function PillarCards({ variant = "grid" }: PillarCardsProps) {
               </div>
 
               <div>
-                <p className={titleClass}>
-                  {pillar.title}
-                </p>
+                <p className={titleClass}>{pillar.title}</p>
                 <p className={subtitleClass} style={{ color: "rgba(71,85,105,0.85)" }}>
                   {pillar.subtitle}
                 </p>
@@ -99,4 +100,3 @@ export default function PillarCards({ variant = "grid" }: PillarCardsProps) {
     </div>
   );
 }
-
