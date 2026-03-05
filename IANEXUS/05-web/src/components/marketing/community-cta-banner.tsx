@@ -1,11 +1,9 @@
-import Link from "next/link";
+import { TrackedWhatsAppLink } from "@/components/marketing/tracked-whatsapp-link";
 
 interface CommunityCtaBannerProps {
   location: "hero" | "blog_banner" | "areas_banner" | "estudiantes_banner";
   subtitle?: string;
 }
-
-const WHATSAPP_LINK = "https://chat.whatsapp.com/tu-enlace-general";
 
 export function CommunityCtaBanner({ location, subtitle }: CommunityCtaBannerProps) {
   const defaultSubtitles: Record<string, string> = {
@@ -26,11 +24,8 @@ export function CommunityCtaBanner({ location, subtitle }: CommunityCtaBannerPro
         {finalSubtitle}
       </p>
       <div className="mt-5">
-        <Link
-          href={WHATSAPP_LINK}
-          target="_blank"
-          rel="noopener noreferrer"
-          data-location={location}
+        <TrackedWhatsAppLink
+          location={location}
           className="inline-flex items-center gap-2 px-8 py-3 rounded-full text-base font-semibold text-white transition-opacity hover:opacity-90"
           style={{
             background: "linear-gradient(135deg, #2563eb, #7c3aed)",
@@ -47,7 +42,7 @@ export function CommunityCtaBanner({ location, subtitle }: CommunityCtaBannerPro
               strokeLinejoin="round"
             />
           </svg>
-        </Link>
+        </TrackedWhatsAppLink>
       </div>
     </div>
   );

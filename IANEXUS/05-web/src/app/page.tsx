@@ -3,7 +3,7 @@ import Header from "@/components/layout/header";
 import PillarCards from "@/components/home/pillar-cards";
 import Footer from "@/components/layout/footer";
 import TypewriterTitle from "@/components/home/typewriter-title";
-import { WHATSAPP_GROUP_URL } from "@/config/site";
+import { TrackedWhatsAppLink } from "@/components/marketing/tracked-whatsapp-link";
 
 export default function Home() {
   return (
@@ -48,10 +48,8 @@ export default function Home() {
             </div>
 
             <div className="mt-6 flex justify-center lg:justify-start">
-              <a
-                href={WHATSAPP_GROUP_URL}
-                target="_blank"
-                rel="noopener noreferrer"
+              <TrackedWhatsAppLink
+                location="hero"
                 className="inline-flex items-center gap-3 px-10 py-4 rounded-full text-base md:text-lg font-semibold text-white transition-colors duration-150"
                 style={{
                   background: "linear-gradient(135deg, #2563eb, #7c3aed)",
@@ -69,7 +67,7 @@ export default function Home() {
                     strokeLinejoin="round"
                   />
                 </svg>
-              </a>
+              </TrackedWhatsAppLink>
             </div>
           </div>
 
