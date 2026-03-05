@@ -1,5 +1,6 @@
-﻿import Footer from "@/components/layout/footer";
+import Footer from "@/components/layout/footer";
 import Header from "@/components/layout/header";
+import { CommunityCtaBanner } from "@/components/marketing/community-cta-banner";
 import StudentsToolbar from "@/components/students/students-toolbar";
 import { getToolsPage } from "@/lib/repositories/tools-repo";
 
@@ -9,7 +10,7 @@ export default async function EstudiantesPage() {
   const initialPage = await getToolsPage({ onlyFree: true }, { limit: 50, offset: 0 });
 
   return (
-    <main className="relative min-h-screen flex flex-col">
+    <main className="relative flex min-h-screen flex-col">
       <Header />
 
       <section className="flex-1 w-full px-6 py-10 md:py-14">
@@ -27,11 +28,11 @@ export default async function EstudiantesPage() {
                 backgroundClip: "text",
               }}
             >
-              Oportunidades gratis para tu carrera
+              Herramientas y descuentos para estudiantes que si quieren avanzar
             </h1>
             <p className="mt-3 max-w-3xl text-base text-slate-600 md:text-lg">
-              Encuentra herramientas con plan gratis o beneficios educativos. Activa
-              freemium solo cuando quieras ampliar la búsqueda.
+              Encuentra herramientas con beneficios educativos, planes gratis y opciones
+              utiles para proyectos extra antes de que se vuelvan masivas.
             </p>
           </header>
 
@@ -40,6 +41,13 @@ export default async function EstudiantesPage() {
             initialHasMore={initialPage.hasMore}
             initialNextOffset={initialPage.nextOffset}
           />
+
+          <div className="mt-10">
+            <CommunityCtaBanner
+              location="estudiantes_banner"
+              subtitle="Entra al grupo para enterarte de descuentos, herramientas para proyectos extra y oportunidades de IA antes que otros estudiantes."
+            />
+          </div>
         </div>
       </section>
 
@@ -47,4 +55,3 @@ export default async function EstudiantesPage() {
     </main>
   );
 }
-
