@@ -1,7 +1,6 @@
 import Link from "next/link";
 import LiquidBackground from "@/components/backgrounds/liquid-background";
 import PillarCards from "@/components/home/pillar-cards";
-import TypewriterTitle from "@/components/home/typewriter-title";
 import Footer from "@/components/layout/footer";
 import Header from "@/components/layout/header";
 import { TrackedWhatsAppLink } from "@/components/marketing/tracked-whatsapp-link";
@@ -160,7 +159,7 @@ const toolCloud = [
 export default function Home() {
   return (
     <main className="relative grid min-h-screen grid-rows-[auto_1fr_auto] overflow-hidden">
-      <LiquidBackground performanceMode="lite" />
+      <LiquidBackground performanceMode="minimal" />
 
       <div className="row-start-1">
         <Header />
@@ -168,32 +167,30 @@ export default function Home() {
 
       <section className="row-start-2 px-6 py-4 md:py-6">
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-6">
-          <section className="grid items-center gap-6 lg:grid-cols-[1.08fr_0.92fr]">
+          <section className="grid items-start gap-5 lg:grid-cols-[0.82fr_1.18fr]">
             <div className="rounded-[2rem] border border-slate-200/80 bg-white/90 p-6 text-center shadow-[0_18px_60px_rgba(15,23,42,0.08)] backdrop-blur md:p-8 lg:text-left">
               <p className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.16em] text-slate-600">
                 IA NEXUS para estudiantes
               </p>
 
-              <TypewriterTitle
-                text="Hay mucho mas que ChatGPT para estudiar mejor"
-                gradient
-                className="mt-4 text-4xl font-semibold leading-tight tracking-tight md:text-5xl lg:text-6xl"
-              />
+              <h1 className="mt-4 text-4xl font-semibold leading-tight tracking-tight text-slate-950 md:text-5xl">
+                Descubre herramientas de IA para estudiar mejor
+              </h1>
 
-              <p className="mx-auto mt-4 max-w-2xl text-base text-slate-600 md:text-lg lg:mx-0">
-                Descubre herramientas utiles para resumir, investigar, presentar, organizar tus
-                apuntes y encontrar opciones segun tu carrera o necesidad.
+              <p className="mx-auto mt-4 max-w-xl text-base text-slate-600 md:text-lg lg:mx-0">
+                Explora opciones para resumir, investigar, presentar y aprender segun lo que
+                necesitas hoy.
               </p>
 
               <div className="mt-5 flex flex-wrap items-center justify-center gap-2 lg:justify-start">
                 <span className="rounded-full border border-slate-200 bg-white px-3 py-1 text-sm text-slate-700">
-                  Compara mas alla de ChatGPT
+                  Gratis y freemium
                 </span>
                 <span className="rounded-full border border-slate-200 bg-white px-3 py-1 text-sm text-slate-700">
-                  Explora por area
+                  Por area
                 </span>
                 <span className="rounded-full border border-slate-200 bg-white px-3 py-1 text-sm text-slate-700">
-                  Beneficios para estudiantes
+                  Mas alla de ChatGPT
                 </span>
               </div>
 
@@ -230,8 +227,31 @@ export default function Home() {
 
             <div className="grid gap-4">
               <div className="rounded-[2rem] border border-slate-200/80 bg-white/90 p-5 shadow-[0_18px_60px_rgba(15,23,42,0.08)] backdrop-blur">
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <p className="text-sm font-semibold uppercase tracking-[0.14em] text-slate-500">
+                      Elige tu forma de descubrir herramientas
+                    </p>
+                    <h2 className="mt-1 text-xl font-semibold text-slate-900 md:text-2xl">
+                      Tres caminos claros para empezar
+                    </h2>
+                  </div>
+                  <Link
+                    href="/areas"
+                    className="hidden rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 md:inline-flex"
+                  >
+                    Explorar areas
+                  </Link>
+                </div>
+
+                <div className="mt-5">
+                  <PillarCards variant="grid" />
+                </div>
+              </div>
+
+              <div className="rounded-[2rem] border border-slate-200/80 bg-white/90 p-5 shadow-[0_18px_60px_rgba(15,23,42,0.08)] backdrop-blur">
                 <p className="text-sm font-semibold uppercase tracking-[0.14em] text-slate-500">
-                  Herramientas conocidas
+                  Algunas herramientas conocidas
                 </p>
                 <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
                   {toolCloud.map((tool) => (
@@ -249,8 +269,6 @@ export default function Home() {
                   ))}
                 </div>
               </div>
-
-              <PillarCards variant="grid" />
             </div>
           </section>
 
