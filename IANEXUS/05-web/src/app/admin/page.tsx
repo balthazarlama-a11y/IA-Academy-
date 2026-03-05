@@ -6,6 +6,7 @@
 import Link from "next/link";
 import { FileText, Eye, Wrench, PenSquare } from "lucide-react";
 import { getSupabaseServerAuthClient } from "@/lib/supabase/server";
+import { AnalyticsKpiSection } from "@/components/admin/analytics-kpi-section";
 
 export const metadata = {
   title: "Dashboard — Admin IA NEXUS",
@@ -119,6 +120,9 @@ export default async function AdminDashboardPage() {
           ))}
         </div>
       </section>
+
+      {/* Analytics KPIs */}
+      <AnalyticsKpiSection />
 
       {/* Quick Actions */}
       <section>

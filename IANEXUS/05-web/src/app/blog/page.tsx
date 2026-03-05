@@ -1,7 +1,8 @@
-﻿import BlogEmptyState from "@/components/blog/blog-empty-state";
+import BlogEmptyState from "@/components/blog/blog-empty-state";
 import BlogPostCard from "@/components/blog/blog-post-card";
 import Footer from "@/components/layout/footer";
 import Header from "@/components/layout/header";
+import { CommunityCtaBanner } from "@/components/marketing/community-cta-banner";
 import { fetchPublishedPosts } from "@/lib/supabase/server";
 
 // ISR cada 5 minutos
@@ -49,6 +50,11 @@ export default async function BlogPage() {
               <BlogEmptyState />
             )}
           </div>
+
+          {/* CTA Comunidad */}
+          <div className="mt-12">
+            <CommunityCtaBanner location="blog_banner" />
+          </div>
         </div>
       </section>
 
@@ -56,4 +62,3 @@ export default async function BlogPage() {
     </main>
   );
 }
-

@@ -1,6 +1,7 @@
-﻿import Header from "@/components/layout/header";
+import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import AreasToolbar from "@/components/areas/areas-toolbar";
+import { CommunityCtaBanner } from "@/components/marketing/community-cta-banner";
 import { getAreasPage } from "@/lib/repositories/areas-repo";
 import type { AreaFilters } from "@/lib/repositories/areas-repo";
 import type { ToolLevel, ToolPlan } from "@/lib/types/tool";
@@ -77,6 +78,11 @@ export default async function AreasPage({ searchParams }: PageProps) {
             initialFilters={initialFilters}
           />
 
+          {/* CTA Comunidad */}
+          <div className="w-full max-w-3xl">
+            <CommunityCtaBanner location="areas_banner" />
+          </div>
+
         </div>
       </section>
 
@@ -84,5 +90,3 @@ export default async function AreasPage({ searchParams }: PageProps) {
     </main>
   );
 }
-
-
