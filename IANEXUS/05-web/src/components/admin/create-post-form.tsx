@@ -55,6 +55,9 @@ export function CreatePostForm({
         <option value="guide">Guide</option>
         <option value="news">News</option>
       </select>
+      <p className="text-xs text-slate-500 md:col-span-2">
+        Tip: usa <strong>News</strong> para updates cortos y escaneables; usa <strong>Blog</strong> o <strong>Guide</strong> para contenido mas desarrollado.
+      </p>
       <select
         name="status"
         defaultValue="draft"

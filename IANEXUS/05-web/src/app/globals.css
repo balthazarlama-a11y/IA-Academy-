@@ -100,6 +100,25 @@ body {
   animation: cursor-blink 1s step-end infinite;
 }
 
+.nav-link {
+  position: relative;
+}
+.nav-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 1.5px;
+  background: #3b82f6;
+  border-radius: 9999px;
+  transition: width 0.18s ease;
+}
+.nav-link:hover::after,
+.nav-link.active::after {
+  width: 100%;
+}
+
 @keyframes page-fade-in {
   from {
     opacity: 0;

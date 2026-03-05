@@ -1,5 +1,6 @@
 import BlogEmptyState from "@/components/blog/blog-empty-state";
 import BlogPostCard from "@/components/blog/blog-post-card";
+import LatestUpdatesSection from "@/components/blog/latest-updates-section";
 import Footer from "@/components/layout/footer";
 import Header from "@/components/layout/header";
 import { CommunityCtaBanner } from "@/components/marketing/community-cta-banner";
@@ -10,6 +11,8 @@ export const revalidate = 300;
 
 export default async function BlogPage() {
   const posts = await fetchPublishedPosts();
+  const latestNews = posts.filter((post) => post.post_kind === "news").slice(0, 3);
+  const libraryPosts = posts.filter((post) => post.post_kind !== "news");
 
   return (
     <main className="relative min-h-screen flex flex-col" style={{ background: "#f5f7fb" }}>
@@ -31,22 +34,47 @@ export default async function BlogPage() {
                 backgroundClip: "text",
               }}
             >
-              Posts publicados
+              Blog y updates publicados
             </h1>
             <p className="mt-3 max-w-2xl text-base text-slate-600 md:text-lg">
-              Recursos curados sobre IA: herramientas, guias y tendencias para aplicar
-              en estudio, trabajo y proyectos.
+              Recursos curados para estudiar, trabajar y seguir los cambios mas importantes de IA.
             </p>
           </header>
 
+          {latestNews.length > 0 ? (
+            <div className="mt-8">
+              <LatestUpdatesSection
+                posts={latestNews}
+                title="Ultimas actualizaciones"
+                subtitle="Novedades cortas, lanzamientos y cambios que conviene revisar primero."
+              />
+            </div>
+          ) : null}
+
           <div className="mt-8">
-            {posts.length > 0 ? (
+            {libraryPosts.length > 0 ? (
+              <>
+                <div className="mb-5 flex items-center justify-between gap-3">
+                  <div>
+                    <h2 className="text-xl font-semibold text-slate-900 md:text-2xl">
+                      Biblioteca de guias y posts
+                    </h2>
+                    <p className="mt-1 text-sm text-slate-500">
+                      Contenido mas profundo para estudiar despues de revisar los updates.
+                    </p>
+                  </div>
+                  <span className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs text-slate-600">
+                    {libraryPosts.length} publicaciones
+                  </span>
+                </div>
+
               <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
-                {posts.map((post) => (
+                {libraryPosts.map((post) => (
                   <BlogPostCard key={post.id} post={post} />
                 ))}
               </div>
-            ) : (
+              </>
+            ) : posts.length > 0 ? null : (
               <BlogEmptyState />
             )}
           </div>

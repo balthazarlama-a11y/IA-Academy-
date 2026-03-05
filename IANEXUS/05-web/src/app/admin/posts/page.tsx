@@ -52,6 +52,10 @@ export default async function AdminPostsPage({
     .limit(500);
 
   const posts = ((data ?? []) as AdminPostRow[]);
+  const newsCount = posts.filter((post) => post.post_kind === "news").length;
+  const publishedNewsCount = posts.filter(
+    (post) => post.post_kind === "news" && post.status === "published",
+  ).length;
 
   return (
     <div className="space-y-6">
@@ -83,6 +87,9 @@ export default async function AdminPostsPage({
       {!query ? (
         <section className="rounded-2xl border border-slate-200 bg-white p-5">
           <h3 className="mb-4 text-lg font-medium text-slate-900">Nuevo post</h3>
+          <div className="mb-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+            Usa <strong>News</strong> para updates breves y lanzamientos. Hoy hay {newsCount} news creadas y {publishedNewsCount} publicadas.
+          </div>
           <CreatePostForm createAction={createPostAction} />
         </section>
       ) : null}

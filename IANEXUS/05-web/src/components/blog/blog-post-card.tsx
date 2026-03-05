@@ -15,6 +15,8 @@ function formatDate(dateString: string | null) {
 }
 
 export default function BlogPostCard({ post }: { post: Post }) {
+  const isNews = post.post_kind === "news";
+
   return (
     <article className="group relative rounded-2xl border border-slate-200 bg-white transition-colors duration-150 hover:border-slate-200 hover:bg-white">
       <StaffEditButton
@@ -45,9 +47,15 @@ export default function BlogPostCard({ post }: { post: Post }) {
 
         <div className="flex flex-col">
           <div className="flex items-start justify-between gap-3">
-            <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white px-2 py-0.5 text-[10px] uppercase tracking-[0.12em] text-slate-600">
+            <span
+              className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] uppercase tracking-[0.12em] ${
+                isNews
+                  ? "border border-amber-200 bg-amber-50 text-amber-700"
+                  : "border border-slate-200 bg-white text-slate-600"
+              }`}
+            >
               <Sparkles className="h-2.5 w-2.5" />
-              Post
+              {isNews ? "News" : "Post"}
             </span>
             <ArrowUpRight className="h-4 w-4 text-slate-500" />
           </div>
@@ -63,7 +71,14 @@ export default function BlogPostCard({ post }: { post: Post }) {
           ) : null}
 
           <div className="mt-4 flex items-center justify-between border-t border-slate-200 pt-3">
-            <time className="text-xs text-slate-500">{formatDate(post.published_at)}</time>
+            <div className="flex items-center gap-2">
+              <time className="text-xs text-slate-500">{formatDate(post.published_at)}</time>
+              {isNews ? (
+                <span className="inline-flex items-center rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[11px] text-amber-700">
+                  Update corto
+                </span>
+              ) : null}
+            </div>
             {post.ia_type ? (
               <span className="inline-flex items-center rounded-full border border-slate-200 bg-white px-2 py-0.5 text-[11px] text-slate-600">
                 {post.ia_type}

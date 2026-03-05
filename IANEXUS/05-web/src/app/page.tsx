@@ -1,13 +1,17 @@
 import LiquidBackground from "@/components/backgrounds/liquid-background";
+import LatestUpdatesSection from "@/components/blog/latest-updates-section";
 import TypewriterTitle from "@/components/home/typewriter-title";
 import Footer from "@/components/layout/footer";
 import Header from "@/components/layout/header";
 import { TrackedWhatsAppLink } from "@/components/marketing/tracked-whatsapp-link";
 import PillarCards from "@/components/home/pillar-cards";
+import { fetchPublishedNews } from "@/lib/supabase/server";
 
-export default function Home() {
+export default async function Home() {
+  const latestNews = await fetchPublishedNews(3);
+
   return (
-    <main className="relative grid min-h-screen grid-rows-[auto_1fr_auto] overflow-hidden">
+    <main className="relative grid min-h-screen grid-rows-[auto_1fr_auto_auto] overflow-hidden">
       <LiquidBackground performanceMode="lite" />
 
       <div className="row-start-1">
@@ -18,7 +22,12 @@ export default function Home() {
         <div className="mx-auto grid w-full max-w-5xl items-center gap-8 lg:grid-cols-[1.05fr_0.95fr]">
           <div className="order-1 text-center lg:text-left">
             <TypewriterTitle
-              text="Si solo usas ChatGPT, ya vas tarde"
+              phrases={[
+                "Si solo usas ChatGPT, ya vas tarde",
+                "Descubre las IAs que importan",
+                "Herramientas .edu para tu carrera",
+              ]}
+              gradient
               className="text-4xl font-semibold leading-tight tracking-tight md:text-5xl lg:text-6xl"
             />
 
@@ -26,15 +35,14 @@ export default function Home() {
               className="mx-auto mt-3 max-w-xl text-base md:text-lg lg:mx-0"
               style={{ color: "rgba(71,85,105,0.9)" }}
             >
-              Descubre descuentos para estudiantes, herramientas para proyectos extra y
-              oportunidades de IA que la mayoria todavia no esta usando.
+              Herramientas <strong className="font-semibold text-slate-800">.edu gratis</strong> · prompts para tu carrera · comunidad activa.
             </p>
 
             <div className="mt-5 grid gap-3 sm:grid-cols-3">
               {[
-                "Planes .edu y descuentos detectados antes que el resto",
-                "Herramientas para portafolio, freelance y proyectos extra",
-                "WhatsApp con ideas utiles para no quedarte atras",
+                "Planes .edu detectados antes que el resto",
+                "Herramientas para portafolio y proyectos",
+                "Comunidad WhatsApp activa de estudiantes",
               ].map((item) => (
                 <div
                   key={item}
@@ -57,7 +65,7 @@ export default function Home() {
                 ))}
               </div>
               <p className="text-sm text-slate-600">
-                Entra al grupo y enterate antes que otros estudiantes de lo ultimo en IA.
+                Estudiantes universitarios ya en la comunidad.
               </p>
             </div>
 
@@ -94,7 +102,19 @@ export default function Home() {
         </div>
       </section>
 
-      <div className="row-start-3">
+      {latestNews.length > 0 ? (
+        <section className="row-start-3 px-6 pb-10 md:pb-14">
+          <div className="mx-auto w-full max-w-5xl">
+            <LatestUpdatesSection
+              posts={latestNews}
+              title="Lo ultimo en IA, sin ruido"
+              subtitle="Updates breves para detectar que salio, que cambio y que vale la pena mirar hoy."
+            />
+          </div>
+        </section>
+      ) : null}
+
+      <div className={latestNews.length > 0 ? "row-start-4" : "row-start-3"}>
         <Footer />
       </div>
     </main>

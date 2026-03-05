@@ -199,16 +199,19 @@ export default function Header() {
             </Link>
 
             <nav className="hidden md:flex gap-8 items-center">
-              {NAV_LINKS.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="text-sm font-medium transition-colors hover:opacity-100"
-                  style={{ color: "rgba(51,65,85,0.82)" }}
-                >
-                  {item.label}
-                </Link>
-              ))}
+              {NAV_LINKS.map((item) => {
+                const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`nav-link text-sm font-medium transition-colors hover:opacity-100${isActive ? " active" : ""}`}
+                    style={{ color: isActive ? "rgba(37,99,235,0.9)" : "rgba(51,65,85,0.82)" }}
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
             </nav>
 
             <div className="hidden md:flex items-center gap-2 flex-none">

@@ -1,7 +1,10 @@
+import path from "node:path";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Configuración de imágenes para Supabase Storage
+  outputFileTracingRoot: path.resolve(__dirname),
+
+  // Configuracion de imagenes para Supabase Storage
   images: {
     remotePatterns: [
       {
@@ -11,8 +14,8 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  
-  // Configuración de headers para seguridad
+
+  // Configuracion de headers para seguridad
   async headers() {
     return [
       {

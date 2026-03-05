@@ -60,6 +60,7 @@ export type Post = {
   excerpt: string | null;
   cover_image_url: string | null;
   ia_type: string | null;
+  post_kind: "blog" | "tool" | "guide" | "news";
   published_at: string | null;
 };
 
@@ -74,7 +75,7 @@ export async function fetchPublishedPosts() {
 
   const { data, error } = await supabase
     .from("posts")
-    .select("id, title, slug, excerpt, cover_image_url, ia_type, published_at")
+    .select("id, title, slug, excerpt, cover_image_url, ia_type, post_kind, published_at")
     .eq("status", "published")
     .or(`published_at.is.null,published_at.lte.${new Date().toISOString()}`)
     .order("published_at", { ascending: false, nullsFirst: false })
@@ -83,6 +84,27 @@ export async function fetchPublishedPosts() {
 
   if (error) {
     console.error("Error fetching posts:", error);
+    return [];
+  }
+
+  return (data as Post[]) || [];
+}
+
+export async function fetchPublishedNews(limit = 6) {
+  const supabase = getSupabaseServerClient();
+
+  const { data, error } = await supabase
+    .from("posts")
+    .select("id, title, slug, excerpt, cover_image_url, ia_type, post_kind, published_at")
+    .eq("status", "published")
+    .eq("post_kind", "news")
+    .or(`published_at.is.null,published_at.lte.${new Date().toISOString()}`)
+    .order("published_at", { ascending: false, nullsFirst: false })
+    .order("created_at", { ascending: false })
+    .limit(limit);
+
+  if (error) {
+    console.error("Error fetching news posts:", error);
     return [];
   }
 

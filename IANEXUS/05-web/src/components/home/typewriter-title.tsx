@@ -2,66 +2,121 @@
 
 import { useEffect, useMemo, useState } from "react";
 
+type Phase = "idle" | "typing" | "deleting";
+
 type TypewriterTitleProps = {
-  text: string;
+  /** Single phrase (backwards compat) */
+  text?: string;
+  /** Multiple phrases — cycles through them with backspace animation */
+  phrases?: string[];
   className?: string;
+  /** Apply gradient text (blue → purple) */
+  gradient?: boolean;
   speedMs?: number;
+  deleteSpeedMs?: number;
+  /** How long to hold the fully-typed phrase before deleting */
+  holdMs?: number;
   startDelayMs?: number;
 };
 
 export default function TypewriterTitle({
   text,
+  phrases,
   className,
-  speedMs = 55,
+  gradient = false,
+  speedMs = 52,
+  deleteSpeedMs = 26,
+  holdMs = 2400,
   startDelayMs = 180,
 }: TypewriterTitleProps) {
-  const [visibleCount, setVisibleCount] = useState(0);
-  const [started, setStarted] = useState(false);
+  const allPhrases = useMemo(() => {
+    if (phrases?.length) return phrases;
+    if (text) return [text];
+    return [""];
+  }, [phrases, text]);
 
   const reducedMotion = useMemo(
     () =>
       typeof window !== "undefined" &&
-      window.matchMedia &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+      !!window.matchMedia?.("(prefers-reduced-motion: reduce)").matches,
     [],
   );
 
+  const isMulti = allPhrases.length > 1;
+
+  const [phraseIdx, setPhraseIdx] = useState(0);
+  const [count, setCount] = useState(() =>
+    reducedMotion ? (allPhrases[0]?.length ?? 0) : 0,
+  );
+  const [phase, setPhase] = useState<Phase>(() =>
+    reducedMotion ? "typing" : "idle",
+  );
+
+  const current = allPhrases[phraseIdx];
+
   useEffect(() => {
-    if (reducedMotion) {
-      const immediateTimer = setTimeout(() => {
-        setVisibleCount(text.length);
-      }, 0);
-      return () => clearTimeout(immediateTimer);
+    if (reducedMotion) return;
+
+    if (phase === "idle") {
+      const t = setTimeout(() => setPhase("typing"), startDelayMs);
+      return () => clearTimeout(t);
     }
 
-    const startTimer = setTimeout(() => {
-      setStarted(true);
-    }, startDelayMs);
+    if (phase === "typing") {
+      if (count < current.length) {
+        const t = setTimeout(() => setCount((c) => c + 1), speedMs);
+        return () => clearTimeout(t);
+      }
+      if (isMulti) {
+        const t = setTimeout(() => setPhase("deleting"), holdMs);
+        return () => clearTimeout(t);
+      }
+      return; // single phrase — done, stay
+    }
 
-    return () => clearTimeout(startTimer);
-  }, [reducedMotion, startDelayMs, text.length]);
+    if (phase === "deleting") {
+      if (count > 0) {
+        const t = setTimeout(() => setCount((c) => c - 1), deleteSpeedMs);
+        return () => clearTimeout(t);
+      }
+      // count reached 0 — advance to next phrase
+      const t = setTimeout(() => {
+        setPhraseIdx((i) => (i + 1) % allPhrases.length);
+        setPhase("typing");
+      }, deleteSpeedMs);
+      return () => clearTimeout(t);
+    }
+  }, [
+    phase,
+    count,
+    current,
+    isMulti,
+    allPhrases.length,
+    reducedMotion,
+    startDelayMs,
+    holdMs,
+    speedMs,
+    deleteSpeedMs,
+  ]);
 
-  useEffect(() => {
-    if (!started || reducedMotion) return;
+  const shown = current.slice(0, count);
 
-    if (visibleCount >= text.length) return;
-
-    const writeTimer = setTimeout(() => {
-      setVisibleCount((current) => Math.min(current + 1, text.length));
-    }, speedMs);
-
-    return () => clearTimeout(writeTimer);
-  }, [started, reducedMotion, visibleCount, text.length, speedMs]);
-
-  const shownText = text.slice(0, visibleCount);
+  const titleStyle = gradient
+    ? {
+        backgroundImage:
+          "linear-gradient(95deg, #2563eb 0%, #7c3aed 50%, #0f766e 100%)",
+        WebkitBackgroundClip: "text" as const,
+        WebkitTextFillColor: "transparent" as const,
+        backgroundClip: "text" as const,
+      }
+    : { color: "rgba(15,23,42,0.96)" };
 
   return (
-    <h1 className={className} style={{ color: "rgba(15,23,42,0.96)" }}>
-      {shownText}
-      <span
-        aria-hidden="true"
-        className="ml-1 inline-block h-[0.95em] w-[2px] translate-y-[2px] animate-pulse bg-blue-500/80 align-middle"
-      />
+    <h1 className={className} style={titleStyle}>
+      {shown}
+      {!reducedMotion && (
+        <span aria-hidden="true" className="cursor-blink" />
+      )}
     </h1>
   );
 }

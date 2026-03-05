@@ -87,10 +87,10 @@ export default function PillarCards({ variant = "grid" }: PillarCardsProps) {
               </div>
 
               <div
-                className="ml-auto inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-300 bg-slate-50 text-slate-700"
+                className="ml-auto inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-300 bg-slate-50 text-slate-700 transition-transform duration-150 group-hover:translate-x-0.5"
                 aria-hidden="true"
               >
-                <ArrowRight className="h-4 w-4" />
+                <ArrowRight className="h-4 w-4 transition-transform duration-150 group-hover:translate-x-0.5" />
               </div>
             </div>
           </Link>
