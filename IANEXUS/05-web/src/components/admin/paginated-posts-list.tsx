@@ -26,12 +26,14 @@ interface PaginatedPostsListProps {
   posts: Post[];
   updateAction: ActionFn;
   deleteAction: ActionFn;
+  openSlug?: string;
 }
 
 export function PaginatedPostsList({
   posts,
   updateAction,
   deleteAction,
+  openSlug = "",
 }: PaginatedPostsListProps) {
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -67,6 +69,7 @@ export function PaginatedPostsList({
             post={post}
             updateAction={updateAction}
             deleteAction={deleteAction}
+            defaultOpen={openSlug ? post.slug === openSlug || post.title.toLowerCase() === openSlug : false}
           />
         ))}
       </div>

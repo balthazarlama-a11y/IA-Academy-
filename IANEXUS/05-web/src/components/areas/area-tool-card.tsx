@@ -2,6 +2,7 @@ import { memo } from "react";
 import Link from "next/link";
 import { ExternalLink, BookOpen, BadgeCheck, GraduationCap } from "lucide-react";
 import type { Tool, ToolPlan, ToolLevel } from "@/lib/repositories/tools-repo";
+import { StaffEditButton } from "@/components/staff/staff-edit-button";
 
 const PLAN_CONFIG: Record<ToolPlan, { label: string; color: string; bg: string }> = {
   free:     { label: "Gratis",      color: "rgba(52,211,153,0.9)",  bg: "rgba(52,211,153,0.12)" },
@@ -32,6 +33,12 @@ function AreaToolCard({ tool }: { tool: Tool }) {
       <div
         className="absolute top-0 inset-x-0 h-1 rounded-t-3xl"
         style={{ background: accentColor, opacity: 0.8 }}
+      />
+
+      <StaffEditButton
+        href={`/admin/tools?q=${encodeURIComponent(tool.slug)}`}
+        label={`Editar herramienta "${tool.name}" en Admin`}
+        className="absolute right-4 top-4 z-20"
       />
 
       <div className="relative z-10 flex flex-col h-full gap-4">

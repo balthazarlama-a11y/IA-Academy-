@@ -6,6 +6,7 @@ import Footer from "@/components/layout/footer";
 import { PostContent } from "@/components/blog/post-content";
 import RelatedTools from "@/components/blog/related-tools";
 import { getCurrentUser } from "@/lib/auth/session";
+import { hasAdminAccess } from "@/lib/auth/roles";
 import { fetchPublishedPostBySlug } from "@/lib/supabase/server";
 import { getRelatedToolsByPostSlug } from "@/lib/repositories/post-tools-repo";
 
@@ -58,6 +59,7 @@ export default async function BlogPostPage({ params }: PageProps) {
   ]);
 
   const isLoggedIn = Boolean(viewer);
+  const isStaff = hasAdminAccess(viewer?.role ?? null);
   const date = formatDate(post.published_at || post.created_at);
 
   return (
@@ -66,12 +68,26 @@ export default async function BlogPostPage({ params }: PageProps) {
 
       <section className="flex-1 w-full px-6 py-8 md:py-10">
         <article className="mx-auto w-full max-w-3xl rounded-2xl border border-slate-200 bg-white p-6 md:p-10">
-          <Link
-            href="/blog"
-            className="inline-flex text-sm text-slate-500 hover:text-slate-700 transition-colors"
-          >
-            ← Volver al blog
-          </Link>
+          <div className="flex items-center justify-between gap-4">
+            <Link
+              href="/blog"
+              className="inline-flex text-sm text-slate-500 hover:text-slate-700 transition-colors"
+            >
+              ← Volver al blog
+            </Link>
+            {isStaff && (
+              <Link
+                href={`/admin/posts?q=${encodeURIComponent(post.slug)}`}
+                aria-label={`Editar post "${post.title}" en Admin`}
+                className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-600 hover:bg-slate-100 transition-colors"
+              >
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                  <path d="M8.5 1.5l2 2L4 10H2V8L8.5 1.5z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/>
+                </svg>
+                Editar en Admin
+              </Link>
+            )}
+          </div>
 
           <header className="mt-6">
             <h1 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-slate-900 leading-tight">

@@ -105,13 +105,15 @@ export default async function AdminToolsPage({
         </div>
       ) : null}
 
-      <section
-        className="rounded-2xl p-5"
-        style={{ background: "rgba(255, 255, 255, 0.88)", border: "1px solid rgba(148, 163, 184, 0.32)" }}
-      >
-        <h3 className="mb-4 text-lg font-medium text-slate-900">Nueva tool</h3>
-        <CreateToolForm categories={categories} createAction={createToolAction} />
-      </section>
+      {!query ? (
+        <section
+          className="rounded-2xl p-5"
+          style={{ background: "rgba(255, 255, 255, 0.88)", border: "1px solid rgba(148, 163, 184, 0.32)" }}
+        >
+          <h3 className="mb-4 text-lg font-medium text-slate-900">Nueva tool</h3>
+          <CreateToolForm categories={categories} createAction={createToolAction} />
+        </section>
+      ) : null}
 
       <section className="space-y-3">
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
@@ -147,7 +149,14 @@ export default async function AdminToolsPage({
         ) : (
           <div className="space-y-3">
             {filteredTools.map((tool) => (
-              <ToolEditorItem key={tool.id} tool={tool} categories={categories} updateAction={updateToolAction} deleteAction={deleteToolAction} />
+              <ToolEditorItem
+                key={tool.id}
+                tool={tool}
+                categories={categories}
+                updateAction={updateToolAction}
+                deleteAction={deleteToolAction}
+                defaultOpen={query ? tool.slug === query || tool.name.toLowerCase() === query : false}
+              />
             ))}
           </div>
         )}

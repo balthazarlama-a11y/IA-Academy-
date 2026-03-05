@@ -1,7 +1,7 @@
 import { memo } from "react";
 import Link from "next/link";
 import type { Tool } from "@/lib/repositories/tools-repo";
-
+import { StaffEditButton } from "@/components/staff/staff-edit-button";
 function shortDescription(value: string | null) {
   if (!value) return "Herramienta recomendada para potenciar tu trabajo academico.";
   if (value.length <= 140) return value;
@@ -32,6 +32,12 @@ export default memo(function StudentToolCard({ tool }: { tool: Tool }) {
       }}
     >
       <div className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-cyan-300/80 via-violet-300/70 to-emerald-300/80" />
+
+      <StaffEditButton
+        href={`/admin/tools?q=${encodeURIComponent(tool.slug)}`}
+        label={`Editar herramienta "${tool.name}" en Admin`}
+        className="absolute right-4 top-4 z-10"
+      />
 
       <div className="flex min-h-[260px] flex-col">
         <div className="flex flex-wrap items-center gap-2">

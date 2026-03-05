@@ -42,9 +42,7 @@ export default function Home() {
                   </div>
                 ))}
               </div>
-              <p className="text-sm text-slate-600">
-                <span className="font-semibold text-slate-800">+500 estudiantes</span> de 15 carreras ya participan
-              </p>
+              <p className="text-sm text-slate-600">Únete a lo último de la IA y sé de los primeros en participar!</p>
             </div>
 
             <div className="mt-6 flex justify-center lg:justify-start">

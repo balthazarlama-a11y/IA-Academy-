@@ -53,11 +53,13 @@ export function ToolEditorItem({
   categories,
   updateAction,
   deleteAction,
+  defaultOpen = false,
 }: {
   tool: Tool;
   categories: ToolCategory[];
   updateAction: ActionFn;
   deleteAction: ActionFn;
+  defaultOpen?: boolean;
 }) {
   const [isPending, startTransition] = useTransition();
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
@@ -85,7 +87,7 @@ export function ToolEditorItem({
   };
 
   return (
-    <details className="rounded-xl border border-slate-200 bg-white">
+    <details className="rounded-xl border border-slate-200 bg-white" open={defaultOpen || undefined}>
       <summary className="cursor-pointer list-none px-4 py-3">
         <div className="flex items-center justify-between gap-3">
           <div className="min-w-0 flex-1">

@@ -1,9 +1,10 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import { ExternalLink, BadgeCheck, GraduationCap } from "lucide-react";
 import type { Tool, ToolPlan, ToolLevel } from "@/lib/repositories/tools-repo";
 import type { FilterState } from "./day-filter-bar";
+import { StaffEditButton } from "@/components/staff/staff-edit-button";
 
 const PLAN_CONFIG: Record<ToolPlan, { label: string; color: string; bg: string }> = {
   free: { label: "Gratis", color: "rgba(52,211,153,0.9)", bg: "rgba(52,211,153,0.12)" },
@@ -77,8 +78,13 @@ export default function DayToolsFeed({ tools, filters }: DayToolsFeedProps) {
           return (
             <article
               key={tool.id}
-              className="group rounded-2xl border border-slate-200 bg-white p-4 transition-colors duration-150 hover:border-slate-300 hover:bg-white"
+              className="group relative rounded-2xl border border-slate-200 bg-white p-4 transition-colors duration-150 hover:border-slate-300 hover:bg-white"
             >
+              <StaffEditButton
+                href={`/admin/tools?q=${encodeURIComponent(tool.slug)}`}
+                label={`Editar herramienta "${tool.name}" en Admin`}
+                className="absolute right-3 top-3 z-10"
+              />
               {/* Header */}
               <div className="flex items-start justify-between gap-3">
                 <h3 className="text-sm font-medium text-slate-900">{tool.name}</h3>

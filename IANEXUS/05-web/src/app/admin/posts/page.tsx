@@ -35,7 +35,7 @@ async function ensureStaffUser() {
 export default async function AdminPostsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ ok?: string; err?: string }>;
+  searchParams: Promise<{ ok?: string; err?: string; q?: string }>;
 }) {
   await ensureStaffUser();
   const supabase = await getSupabaseServerAuthClient();
@@ -43,6 +43,7 @@ export default async function AdminPostsPage({
   const params = await searchParams;
   const successMessage = params.ok ?? "";
   const errorMessage = params.err ?? "";
+  const query = (params.q ?? "").trim().toLowerCase();
 
   const { data } = await supabase
     .from("posts")
@@ -79,14 +80,16 @@ export default async function AdminPostsPage({
         </div>
       ) : null}
 
-      <section className="rounded-2xl border border-slate-200 bg-white p-5">
-        <h3 className="mb-4 text-lg font-medium text-slate-900">Nuevo post</h3>
-        <CreatePostForm createAction={createPostAction} />
-      </section>
+      {!query ? (
+        <section className="rounded-2xl border border-slate-200 bg-white p-5">
+          <h3 className="mb-4 text-lg font-medium text-slate-900">Nuevo post</h3>
+          <CreatePostForm createAction={createPostAction} />
+        </section>
+      ) : null}
 
       <section className="space-y-3">
         <h3 className="text-lg font-medium text-slate-900">Posts existentes ({posts.length})</h3>
-        <PaginatedPostsList posts={posts} updateAction={updatePostAction} deleteAction={deletePostAction} />
+        <PaginatedPostsList posts={posts} updateAction={updatePostAction} deleteAction={deletePostAction} openSlug={query} />
       </section>
     </div>
   );
