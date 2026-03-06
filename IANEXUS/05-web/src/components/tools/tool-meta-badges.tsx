@@ -1,11 +1,11 @@
 import { BadgeCheck, GraduationCap, Layers3, Sparkles } from "lucide-react";
 import type { Tool } from "@/lib/types/tool";
 
-const PLAN_LABEL: Record<Tool["plan"], string> = {
-  free: "Gratis",
-  edu_free: "Pack Estudiante",
-  freemium: "Freemium",
-  paid: "Pago",
+const PLAN_BADGE: Record<Tool["plan"], { label: string; color: string; bg: string; border: string }> = {
+  free:     { label: "Gratis",          color: "#059669", bg: "rgba(16,185,129,0.10)", border: "rgba(52,211,153,0.35)" },
+  edu_free: { label: "Pack Estudiante", color: "#0284c7", bg: "rgba(56,189,248,0.10)", border: "rgba(56,189,248,0.35)" },
+  freemium: { label: "Freemium",        color: "#d97706", bg: "rgba(251,191,36,0.12)", border: "rgba(251,191,36,0.40)" },
+  paid:     { label: "Pago",            color: "#64748b", bg: "rgba(148,163,184,0.08)", border: "rgba(148,163,184,0.30)" },
 };
 
 const LEVEL_LABEL: Record<Tool["level"], string> = {
@@ -16,11 +16,15 @@ const LEVEL_LABEL: Record<Tool["level"], string> = {
 };
 
 export default function ToolMetaBadges({ tool }: { tool: Tool }) {
+  const planBadge = PLAN_BADGE[tool.plan];
   return (
     <div className="flex flex-wrap gap-2">
-      <span className="inline-flex items-center gap-1 rounded-full border border-slate-300 bg-slate-50 px-2.5 py-1 text-xs text-slate-700">
+      <span
+        className="inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-semibold"
+        style={{ color: planBadge.color, background: planBadge.bg, borderColor: planBadge.border }}
+      >
         <Sparkles className="h-3.5 w-3.5" />
-        {PLAN_LABEL[tool.plan]}
+        {planBadge.label}
       </span>
 
       <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white px-2.5 py-1 text-xs text-slate-700">

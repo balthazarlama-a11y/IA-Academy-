@@ -1,11 +1,13 @@
 import { memo } from "react";
 import Link from "next/link";
+import { BadgeCheck, GraduationCap } from "lucide-react";
 import type { Tool } from "@/lib/repositories/tools-repo";
 import { StaffEditButton } from "@/components/staff/staff-edit-button";
+
 function shortDescription(value: string | null) {
-  if (!value) return "Herramienta recomendada para potenciar tu trabajo academico.";
-  if (value.length <= 140) return value;
-  return `${value.slice(0, 137)}...`;
+  if (!value) return "Herramienta recomendada para tu trabajo académico.";
+  if (value.length <= 90) return value;
+  return `${value.slice(0, 87)}...`;
 }
 
 function planLabel(plan: Tool["plan"]) {
@@ -25,7 +27,7 @@ function planTone(plan: Tool["plan"]) {
 export default memo(function StudentToolCard({ tool }: { tool: Tool }) {
   return (
     <article
-      className="relative overflow-hidden rounded-3xl border border-slate-200 p-6 shadow-[0_6px_16px_rgba(15,23,42,0.07)]"
+      className="group relative overflow-hidden rounded-3xl border border-slate-200 p-6 shadow-[0_6px_16px_rgba(15,23,42,0.07)] transition-shadow duration-150 hover:shadow-[0_10px_24px_rgba(15,23,42,0.11)] hover:border-slate-300"
       style={{
         background: "linear-gradient(180deg,#ffffff 0%,#f8fafc 100%)",
         contain: "layout style paint",
@@ -39,51 +41,64 @@ export default memo(function StudentToolCard({ tool }: { tool: Tool }) {
         className="absolute right-4 top-4 z-10"
       />
 
-      <div className="flex min-h-[260px] flex-col">
-        {/* Logo / Imagen */}
+      <div className="flex min-h-[240px] flex-col">
+        {/* Logo */}
         {tool.cover_image_url ? (
-          <div className="mb-4 flex h-16 w-16 items-center justify-center overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+          <div className="mb-4 flex h-14 w-14 items-center justify-center overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
             <img
               src={tool.cover_image_url}
               alt={`${tool.name} logo`}
-              className="h-full w-full object-contain p-2"
+              className="h-full w-full object-contain p-1.5"
               loading="lazy"
             />
           </div>
         ) : (
-          <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-xl border border-slate-200 bg-slate-50">
+          <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl border border-slate-200 bg-slate-50">
             <span className="text-2xl font-bold text-slate-300">
               {tool.name.charAt(0).toUpperCase()}
             </span>
           </div>
         )}
-        <div className="flex flex-wrap items-center gap-2">
-          <span
-            className={`inline-flex items-center rounded-full border px-3 py-1.5 text-xs font-medium ${planTone(tool.plan)}`}
-          >
+
+        {/* Badges */}
+        <div className="flex flex-wrap items-center gap-1.5">
+          <span className={`inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-medium ${planTone(tool.plan)}`}>
             {planLabel(tool.plan)}
           </span>
-          {tool.edu_verified ? (
-            <span className="inline-flex items-center rounded-full border border-emerald-300/30 bg-emerald-400/10 px-3 py-1.5 text-xs font-medium text-emerald-700">
-              Pack estudiante
+          {tool.featured && (
+            <span className="inline-flex items-center gap-1 rounded-full border border-amber-300/40 bg-amber-400/10 px-2.5 py-1 text-xs font-medium text-amber-700">
+              <svg className="h-3 w-3" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              Destacada
             </span>
-          ) : null}
-          {tool.ia_type ? (
-            <span className="inline-flex items-center rounded-full border border-slate-300 bg-slate-50 px-3 py-1.5 text-xs text-slate-700">
+          )}
+          {tool.edu_verified && (
+            <span className="inline-flex items-center gap-1 rounded-full border border-emerald-300/30 bg-emerald-400/10 px-2.5 py-1 text-xs font-medium text-emerald-700">
+              <GraduationCap className="h-3 w-3" />
+              Pack .edu
+            </span>
+          )}
+          {tool.verified && (
+            <span className="inline-flex items-center gap-1 rounded-full border border-blue-300/30 bg-blue-400/10 px-2.5 py-1 text-xs font-medium text-blue-700">
+              <BadgeCheck className="h-3 w-3" />
+              Verificada
+            </span>
+          )}
+          {tool.ia_type && !tool.edu_verified && (
+            <span className="inline-flex items-center rounded-full border border-slate-300 bg-slate-50 px-2.5 py-1 text-xs text-slate-600">
               {tool.ia_type}
             </span>
-          ) : null}
+          )}
         </div>
 
-        <h2 className="mt-5 text-xl font-semibold leading-snug text-slate-900">{tool.name}</h2>
-        <p className="mt-3 text-sm leading-relaxed text-slate-600">
+        <h2 className="mt-4 text-lg font-semibold leading-snug text-slate-900">{tool.name}</h2>
+        <p className="mt-2 text-sm leading-relaxed text-slate-600">
           {shortDescription(tool.description)}
         </p>
 
-        <div className="mt-auto flex flex-wrap items-center gap-3 pt-7">
+        <div className="mt-auto flex flex-wrap items-center gap-3 pt-5">
           <Link
             href={`/herramientas/${tool.slug}`}
-            className="inline-flex items-center rounded-full border border-cyan-300/40 bg-cyan-400/15 px-4 py-2.5 text-sm font-medium text-cyan-700 transition-colors duration-150 hover:bg-cyan-400/25"
+            className="inline-flex items-center rounded-full border border-cyan-300/40 bg-cyan-400/15 px-4 py-2 text-sm font-medium text-cyan-700 transition-colors duration-150 hover:bg-cyan-400/25"
           >
             Ver detalle
           </Link>
@@ -92,7 +107,7 @@ export default memo(function StudentToolCard({ tool }: { tool: Tool }) {
               href={tool.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center rounded-full border border-slate-300 bg-slate-50 px-4 py-2.5 text-sm font-medium text-slate-700 transition-colors duration-150 hover:bg-slate-100"
+              className="inline-flex items-center rounded-full border border-slate-300 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-700 transition-colors duration-150 hover:bg-slate-100"
             >
               Ir a herramienta
             </a>

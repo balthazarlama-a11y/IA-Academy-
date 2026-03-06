@@ -85,15 +85,31 @@ export default function DayToolsFeed({ tools, filters }: DayToolsFeedProps) {
                 label={`Editar herramienta "${tool.name}" en Admin`}
                 className="absolute right-3 top-3 z-10"
               />
-              {/* Header */}
-              <div className="flex items-start justify-between gap-3">
-                <h3 className="text-sm font-medium text-slate-900">{tool.name}</h3>
-                <span
-                  className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-medium"
-                  style={{ color: plan.color, background: plan.bg }}
-                >
-                  {plan.label}
-                </span>
+              {/* Header: logo + nombre + plan badge */}
+              <div className="flex items-start gap-3">
+                {tool.cover_image_url ? (
+                  <div className="shrink-0 h-9 w-9 rounded-xl border border-slate-200 bg-white overflow-hidden shadow-sm">
+                    <img
+                      src={tool.cover_image_url}
+                      alt=""
+                      className="h-full w-full object-contain p-1"
+                      loading="lazy"
+                    />
+                  </div>
+                ) : (
+                  <div className="shrink-0 flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-slate-50">
+                    <span className="text-xs font-bold text-slate-300">{tool.name.charAt(0)}</span>
+                  </div>
+                )}
+                <div className="flex-1 flex items-start justify-between gap-2 min-w-0">
+                  <h3 className="text-sm font-medium text-slate-900 truncate">{tool.name}</h3>
+                  <span
+                    className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-medium"
+                    style={{ color: plan.color, background: plan.bg }}
+                  >
+                    {plan.label}
+                  </span>
+                </div>
               </div>
 
               {/* Category & Level */}
@@ -111,6 +127,11 @@ export default function DayToolsFeed({ tools, filters }: DayToolsFeedProps) {
                 <span className="inline-flex items-center rounded-full border border-slate-200 bg-white px-2 py-0.5 text-[10px] text-slate-500">
                   {LEVEL_LABEL[tool.level]}
                 </span>
+                {tool.featured && (
+                  <span className="inline-flex items-center rounded-full border border-amber-300/40 bg-amber-400/10 px-2 py-0.5 text-[10px] text-amber-700">
+                    ★ Destacada
+                  </span>
+                )}
               </div>
 
               {/* Description */}
