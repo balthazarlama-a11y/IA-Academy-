@@ -26,20 +26,12 @@ const nextConfig: NextConfig = {
             value: "nosniff",
           },
           {
+            key: "X-Frame-Options",
+            value: "DENY",
+          },
+          {
             key: "X-XSS-Protection",
             value: "1; mode=block",
-          },
-          // Permite que el preview embebido de Antigravity/Jetski pueda mostrar la app
-          // En produccion, cambiar 'frame-ancestors *' por tu dominio real
-          {
-            // Permite embeber la app en iframes externos (preview de Antigravity, VS Code, etc.)
-            // En produccion, cambiar a tu dominio real o eliminar esta linea
-            key: "X-Frame-Options",
-            value: "ALLOWALL",
-          },
-          {
-            key: "Content-Security-Policy",
-            value: "frame-ancestors *",
           },
         ],
       },

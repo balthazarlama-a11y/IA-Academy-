@@ -73,3 +73,12 @@
  GET /areas 200 in 39ms (compile: 6ms, render: 33ms)
  GET /areas 200 in 186ms (compile: 100ms, render: 85ms)
  GET /areas 200 in 212ms (compile: 121ms, render: 91ms)
+ GET /areas 200 in 72ms (compile: 9ms, render: 62ms)
+▲ Next.js 16.1.6 (webpack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.100.29:3000
+- Environments: .env
+
+✓ Starting...
+✓ Ready in 1568ms
+ GET /areas 200 in 3.2s (compile: 1736ms, render: 1423ms)

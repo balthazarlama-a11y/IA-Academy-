@@ -40,10 +40,13 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# dev server logs
-dev-server.err.log
-dev-server.log
-
 /.playwright-cli
+
+dev-server.log
+dev-server.err.log
+INSPECCION_REPO.md
+.vscode
+.agent
+.agent-workspace
 
 /output
