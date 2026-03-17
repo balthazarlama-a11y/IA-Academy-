@@ -1,0 +1,31 @@
+{
+  "manifest_version": 3,
+  "name": "IA NEXUS - Skills Inyector",
+  "version": "1.0",
+  "description": "Inyecta Skills avanzadas de IA NEXUS directamente en ChatGPT, Gemini y Claude.",
+  "permissions": [
+    "storage",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "https://chatgpt.com/*",
+    "https://gemini.google.com/*",
+    "https://claude.ai/*",
+    "http://localhost:3000/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "IA NEXUS Skills"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://chatgpt.com/*",
+        "https://gemini.google.com/*",
+        "https://claude.ai/*"
+      ],
+      "js": ["content.js"],
+      "css": ["styles.css"]
+    }
+  ]
+}
