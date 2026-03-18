@@ -188,21 +188,21 @@ export default function Header() {
 
   return (
     <header className="relative z-50 px-4 pt-3">
-      <div className="relative mx-auto w-full max-w-6xl">
-        <div className="relative overflow-hidden rounded-2xl border border-slate-200/90 bg-white/82 shadow-[0_14px_40px_rgba(15,23,42,0.08)] backdrop-blur-md">
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.95),rgba(255,255,255,0.78))]" />
+      <div className="relative mx-auto w-full max-w-5xl">
+        <div className="relative overflow-hidden rounded-xl border border-slate-200/80 bg-white/88 shadow-[0_10px_28px_rgba(15,23,42,0.06)] backdrop-blur-md editorial-surface">
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(255,255,255,0.84))]" />
           <div className="relative z-10 px-4 py-3 md:px-5">
             <div className="flex items-center justify-between gap-3">
               <Link
                 href="/"
-                className="flex items-center gap-3 flex-none"
+                className="flex min-w-0 items-center gap-3 flex-none"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-slate-900 text-white shadow-sm">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-slate-900 text-white shadow-sm">
                   <BookOpen className="h-5 w-5" />
                 </div>
                 <div className="flex flex-col leading-tight">
-                  <span className="text-[0.95rem] font-semibold tracking-tight text-slate-900">
+                  <span className="text-[0.92rem] font-semibold tracking-tight text-slate-900">
                     IA NEXUS
                   </span>
                   <span className="hidden text-[11px] text-slate-500 md:block">
@@ -326,8 +326,8 @@ export default function Header() {
         </div>
 
         {mobileMenuOpen ? (
-          <div className="mt-2 overflow-hidden rounded-2xl border border-slate-200 bg-white/95 shadow-[0_18px_40px_rgba(15,23,42,0.12)] backdrop-blur-md md:hidden">
-            <nav className="flex flex-col p-2">
+          <div className="mt-2 overflow-hidden rounded-xl border border-slate-200 bg-white/96 shadow-[0_14px_32px_rgba(15,23,42,0.1)] backdrop-blur-md md:hidden">
+            <nav className="grid grid-cols-2 gap-2 p-2">
               {NAV_LINKS.map((item) => {
                 const isActive =
                   pathname === item.href ||
@@ -337,7 +337,7 @@ export default function Header() {
                     key={item.href}
                     href={item.href}
                     onClick={() => setMobileMenuOpen(false)}
-                    className={`rounded-xl px-3 py-3 text-sm font-medium transition-colors ${
+                    className={`min-h-11 rounded-xl px-3 py-3 text-sm font-medium transition-colors ${
                       isActive
                         ? "bg-slate-900 text-white"
                         : "text-slate-700 hover:bg-slate-100"
