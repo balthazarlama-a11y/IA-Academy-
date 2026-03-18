@@ -5,15 +5,15 @@ export default function WhatsAppStickyButton() {
     <TrackedWhatsAppLink
       location="sticky"
       aria-label="Abrir grupo de WhatsApp de IA NEXUS"
-      className="fixed bottom-4 right-4 z-50 inline-flex h-14 w-14 items-center justify-center rounded-full text-white shadow-lg transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 md:bottom-6 md:right-6"
+      className="fixed bottom-4 right-4 z-40 inline-flex h-12 w-12 items-center justify-center rounded-full text-white shadow-md transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 md:bottom-6 md:right-6"
       style={{
         background: "linear-gradient(135deg, #22c55e, #16a34a)",
-        boxShadow: "0 12px 24px rgba(34,197,94,0.35)",
+        boxShadow: "0 10px 18px rgba(34,197,94,0.22)",
       }}
     >
       <svg
         viewBox="0 0 24 24"
-        className="h-7 w-7"
+        className="h-6 w-6"
         fill="currentColor"
         aria-hidden="true"
       >
