@@ -1,8 +1,8 @@
 import type { ToolLevel, ToolPlan } from "@/lib/types/tool";
 
-export type CareerSource = "career_paths" | "tool_categories";
+export type CareerPathSource = "career_paths" | "tool_categories";
 
-export type Career = {
+export type CareerPath = {
   id: string;
   name: string;
   slug: string;
@@ -10,8 +10,10 @@ export type Career = {
   color_accent: string | null;
   icon_name: string | null;
   sort_order: number;
-  source: CareerSource;
+  source: CareerPathSource;
 };
+
+export type Career = CareerPath;
 
 export type CareerFilters = {
   search?: string;

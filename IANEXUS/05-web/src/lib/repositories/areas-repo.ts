@@ -1,26 +1,23 @@
 import { getSupabaseServerClient } from "@/lib/supabase/server";
-import { resolveCareerToolIds } from "@/lib/repositories/careers-repo";
+import { resolveCareerPathToolIds } from "@/lib/repositories/careers-repo";
+import type { CareerFilters as BaseCareerFilters } from "@/lib/types/career";
 import type { Tool, ToolCategory, ToolLevel, ToolPlan } from "@/lib/types/tool";
 
 export type { ToolLevel, ToolPlan };
+export type CareerFilters = BaseCareerFilters;
+export type AreaFilters = CareerFilters;
 
-export type AreaFilters = {
-  search?: string;
-  careerSlugs?: string[];
-  categorySlugs?: string[];
-  plans?: ToolPlan[];
-  levels?: ToolLevel[];
-};
-
-export type AreasPage = {
+export type CareerPage = {
   tools: Tool[];
   hasMore: boolean;
   nextOffset: number | null;
 };
 
+export type AreasPage = CareerPage;
+
 const PAGE_SIZE = 50;
 
-const AREAS_SELECT = [
+const CAREER_SELECT = [
   "id, name, slug, description, url, cover_image_url, plan, level, ia_type, verified, edu_verified, featured, category_id",
   "tool_categories(id, name, slug, description, color_accent, icon_name, sort_order)",
 ].join(", ");
@@ -35,7 +32,7 @@ type RawCategory = {
   sort_order: number;
 };
 
-type RawAreaTool = {
+type RawCareerTool = {
   id: string;
   name: string;
   slug: string;
@@ -64,10 +61,11 @@ function mapCategory(row: RawCategory | null): ToolCategory {
       sort_order: 0,
     };
   }
+
   return row;
 }
 
-function mapTool(row: RawAreaTool): Tool {
+function mapTool(row: RawCareerTool): Tool {
   return {
     id: row.id,
     name: row.name,
@@ -97,46 +95,25 @@ function normalizeList(values: string[] | undefined | null): string[] {
   return [...new Set(values.map((value) => value.trim()).filter(Boolean))];
 }
 
-export async function getAreasPage(
-  filters: AreaFilters = {},
+export async function getCareerPage(
+  filters: CareerFilters = {},
   options: { limit?: number; offset?: number } = {},
-): Promise<AreasPage> {
+): Promise<CareerPage> {
   const limit = Math.min(PAGE_SIZE, Math.max(1, options.limit ?? PAGE_SIZE));
   const offset = Math.max(0, options.offset ?? 0);
-
   const supabase = getSupabaseServerClient();
 
   let query = supabase
     .from("tools")
-    .select(AREAS_SELECT)
+    .select(CAREER_SELECT)
     .eq("status", "published")
     .order("featured", { ascending: false })
     .order("sort_order", { ascending: true })
     .order("created_at", { ascending: false });
 
-  const categorySlugs = normalizeList(filters.categorySlugs);
-  if (categorySlugs.length > 0) {
-    const { data: categories, error: categoriesError } = await supabase
-      .from("tool_categories")
-      .select("id")
-      .in("slug", categorySlugs);
-
-    if (categoriesError) {
-      console.error("[areas-repo] getAreasPage categories:", categoriesError.message);
-      return { tools: [], hasMore: false, nextOffset: null };
-    }
-
-    const categoryIds = (categories ?? []).map((category) => category.id);
-    if (categoryIds.length === 0) {
-      return { tools: [], hasMore: false, nextOffset: null };
-    }
-
-    query = query.in("category_id", categoryIds);
-  }
-
-  const careerSlugs = normalizeList(filters.careerSlugs);
+  const careerSlugs = normalizeList(filters.careerSlugs ?? filters.categorySlugs);
   if (careerSlugs.length > 0) {
-    const careerToolIds = await resolveCareerToolIds(careerSlugs);
+    const careerToolIds = await resolveCareerPathToolIds(careerSlugs);
 
     if (careerToolIds.length === 0) {
       return { tools: [], hasMore: false, nextOffset: null };
@@ -169,11 +146,11 @@ export async function getAreasPage(
   const { data, error } = await query;
 
   if (error) {
-    console.error("[areas-repo] getAreasPage:", error.message);
+    console.error("[areas-repo] getCareerPage:", error.message);
     return { tools: [], hasMore: false, nextOffset: null };
   }
 
-  const rows = ((data as unknown as RawAreaTool[]) ?? []).map(mapTool);
+  const rows = ((data as unknown as RawCareerTool[]) ?? []).map(mapTool);
   const hasMore = rows.length === limit;
 
   return {
@@ -181,4 +158,18 @@ export async function getAreasPage(
     hasMore,
     nextOffset: hasMore ? offset + limit : null,
   };
+}
+
+export async function getAreasPage(
+  filters: CareerFilters = {},
+  options: { limit?: number; offset?: number } = {},
+): Promise<AreasPage> {
+  return getCareerPage(filters, options);
+}
+
+export async function getCareerToolsPage(
+  filters: CareerFilters = {},
+  options: { limit?: number; offset?: number } = {},
+): Promise<CareerPage> {
+  return getCareerPage(filters, options);
 }
