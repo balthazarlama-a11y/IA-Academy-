@@ -20,7 +20,7 @@ function AreaToolsGrid({
   return (
     <>
       <div
-        className={`grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 transition-opacity duration-150 ${
+        className={`grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 transition-opacity duration-150 ${
           isLoading ? "pointer-events-none opacity-50" : "opacity-100"
         }`}
       >

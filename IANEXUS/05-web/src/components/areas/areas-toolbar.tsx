@@ -10,11 +10,11 @@ import AreaToolsGrid from "./area-tools-grid";
 import AreasEmptyState from "./areas-empty-state";
 
 const AREA_OPTIONS = [
-  { slug: "programacion", label: "Programacion", accent: "#3b82f6" },
-  { slug: "salud", label: "Salud", accent: "#10b981" },
-  { slug: "investigacion", label: "Investigacion", accent: "#8b5cf6" },
-  { slug: "diseno", label: "Diseno", accent: "#ec4899" },
-  { slug: "escritura", label: "Escritura", accent: "#f97316" },
+  { slug: "programacion", label: "Programacion", accent: "#3b82f6", hint: "Codigo, debugging y producto" },
+  { slug: "salud", label: "Salud", accent: "#10b981", hint: "Estudio, resumen y apoyo clinico" },
+  { slug: "investigacion", label: "Investigacion", accent: "#8b5cf6", hint: "Lectura, evidencia y sintesis" },
+  { slug: "diseno", label: "Diseno", accent: "#ec4899", hint: "Creatividad visual y prototipos" },
+  { slug: "escritura", label: "Escritura", accent: "#f97316", hint: "Texto, claridad y redaccion" },
 ] as const;
 
 const AREA_SLUGS = new Set<string>(AREA_OPTIONS.map((option) => option.slug));
@@ -505,19 +505,19 @@ export default function AreasToolbar({
 
   return (
     <div className="w-full flex flex-col gap-5">
-      <section className="overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-[0_18px_50px_rgba(15,23,42,0.05)]">
+      <section className="overflow-hidden rounded-[24px] border border-slate-200 bg-white shadow-[0_14px_38px_rgba(15,23,42,0.05)]">
         <div className="border-b border-slate-200 px-5 py-4 md:px-6">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
             <div>
               <p className="text-xs uppercase tracking-[0.16em] text-slate-500">
-                Curadoria por especialidad
+                Curadoria por carrera
               </p>
               <h2 className="mt-1 text-lg font-semibold text-slate-900">
-                Combina area, plan y nivel
+                Combina carrera, plan y nivel
               </h2>
               <p className="mt-1 max-w-2xl text-sm leading-relaxed text-slate-600">
-                Selecciona una o varias especialidades para afinar el catalogo. Puedes cruzar
-                area, acceso y complejidad sin perder contexto editorial.
+                Selecciona una o varias carreras para afinar el catalogo. Puedes cruzar
+                profesiones, acceso y complejidad sin perder contexto editorial.
               </p>
             </div>
 
@@ -534,60 +534,60 @@ export default function AreasToolbar({
               htmlFor="area-search"
               className="mb-2 block text-xs uppercase tracking-[0.12em] text-slate-600"
             >
-              Buscador
+              Buscar por nombre o tema
             </label>
             <input
               id="area-search"
               type="text"
-              placeholder="Buscar herramienta..."
+              placeholder="Buscar herramienta, carrera o tema..."
               value={searchText}
               onChange={(event) => onSearchChange(event.target.value)}
-              className="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 outline-none transition-all focus:border-slate-400"
+              className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 outline-none transition-all focus:border-slate-400"
             />
           </div>
 
-          <div className="rounded-[24px] border border-slate-200 bg-slate-50 p-4">
+          <div className="rounded-[20px] border border-slate-200 bg-slate-50 p-4">
             <div className="mb-3 flex items-center justify-between gap-3">
               <div>
-                <p className="text-xs uppercase tracking-[0.14em] text-slate-500">Areas</p>
+                <p className="text-xs uppercase tracking-[0.14em] text-slate-500">Carreras</p>
                 <p className="mt-1 text-sm font-semibold text-slate-900">
-                  Selecciona una o varias especialidades
+                  Selecciona una o varias profesiones
                 </p>
               </div>
             </div>
-            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-3">
               {AREA_OPTIONS.map((area) => {
                 const checked = selectedAreas.includes(area.slug);
                 return (
                   <label
                     key={area.slug}
-                    className="flex cursor-pointer items-start gap-3 rounded-2xl border px-3 py-3 text-sm transition-colors"
+                    className="flex cursor-pointer items-start gap-3 rounded-xl border px-3 py-3 text-sm transition-colors"
                     style={{
                       borderColor: checked ? `${area.accent}66` : "rgba(148,163,184,0.32)",
                       background: checked ? `${area.accent}18` : "rgba(255,255,255,0.95)",
                       color: checked ? area.accent : "rgba(51,65,85,0.88)",
                     }}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={checked}
-                      onChange={() => onToggleArea(area.slug)}
-                      className="mt-1 h-4 w-4 accent-blue-600"
-                    />
-                    <span>
-                      <span className="block font-medium">{area.label}</span>
-                      <span className="block text-xs leading-relaxed text-slate-500">
-                        Curado para encontrar herramientas utiles en esta disciplina.
+                    >
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={() => onToggleArea(area.slug)}
+                        className="mt-1 h-4 w-4 accent-blue-600"
+                      />
+                      <span>
+                        <span className="block font-medium">{area.label}</span>
+                        <span className="block text-xs leading-relaxed text-slate-500">
+                          {area.hint}
+                        </span>
                       </span>
-                    </span>
-                  </label>
-                );
-              })}
-            </div>
+                    </label>
+                  );
+                })}
+              </div>
           </div>
 
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-            <div className="rounded-[24px] border border-slate-200 bg-white p-4">
+            <div className="rounded-[20px] border border-slate-200 bg-white p-4">
               <p className="mb-3 text-xs font-medium uppercase tracking-[0.14em] text-slate-500">
                 Plan
               </p>
@@ -597,7 +597,7 @@ export default function AreasToolbar({
                   return (
                     <label
                       key={plan.value}
-                      className="flex cursor-pointer items-center gap-2 rounded-2xl border border-slate-200 bg-white px-3 py-3 text-sm text-slate-700 transition hover:border-slate-300"
+                      className="flex cursor-pointer items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 transition hover:border-slate-300"
                     >
                       <input
                         type="checkbox"
@@ -612,7 +612,7 @@ export default function AreasToolbar({
               </div>
             </div>
 
-            <div className="rounded-[24px] border border-slate-200 bg-white p-4">
+            <div className="rounded-[20px] border border-slate-200 bg-white p-4">
               <p className="mb-3 text-xs font-medium uppercase tracking-[0.14em] text-slate-500">
                 Nivel
               </p>
@@ -622,7 +622,7 @@ export default function AreasToolbar({
                   return (
                     <label
                       key={level.value}
-                      className="flex cursor-pointer items-center gap-2 rounded-2xl border border-slate-200 bg-white px-3 py-3 text-sm text-slate-700 transition hover:border-slate-300"
+                      className="flex cursor-pointer items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 transition hover:border-slate-300"
                     >
                       <input
                         type="checkbox"

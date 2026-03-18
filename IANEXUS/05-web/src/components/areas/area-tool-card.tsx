@@ -25,7 +25,8 @@ function AreaToolCard({ tool }: { tool: Tool }) {
     tool.category.description ?? "Curada para esta especialidad y pensada para uso practico.";
 
   return (
-    <article className="group relative flex flex-col overflow-hidden rounded-[28px] border border-slate-200 p-6 transition-all duration-150 hover:-translate-y-0.5 hover:border-slate-300 hover:bg-white shadow-[0_14px_26px_rgba(15,23,42,0.10)]"
+    <article
+      className="group relative flex flex-col overflow-hidden rounded-[20px] border border-slate-200 p-5 transition-all duration-150 hover:-translate-y-0.5 hover:border-slate-300 hover:bg-white shadow-[0_10px_22px_rgba(15,23,42,0.08)]"
       style={{
         background: "linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(248,250,252,0.9) 100%)",
         contain: "layout style paint",
@@ -33,7 +34,7 @@ function AreaToolCard({ tool }: { tool: Tool }) {
     >
       {/* Barra de color superior */}
       <div
-        className="absolute top-0 inset-x-0 h-1 rounded-t-3xl"
+        className="absolute top-0 inset-x-0 h-1 rounded-t-2xl"
         style={{ background: accentColor, opacity: 0.8 }}
       />
 
@@ -46,7 +47,7 @@ function AreaToolCard({ tool }: { tool: Tool }) {
       <div className="relative z-10 flex h-full flex-col gap-4">
         <div className="flex items-start justify-between gap-3">
           {tool.cover_image_url ? (
-            <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+            <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
               <img
                 src={tool.cover_image_url}
                 alt={`${tool.name} logo`}
@@ -55,7 +56,7 @@ function AreaToolCard({ tool }: { tool: Tool }) {
               />
             </div>
           ) : (
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-slate-200 bg-slate-50">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-slate-200 bg-slate-50">
               <span className="text-xl font-bold text-slate-300">
                 {tool.name.charAt(0).toUpperCase()}
               </span>
@@ -64,7 +65,7 @@ function AreaToolCard({ tool }: { tool: Tool }) {
         </div>
 
         <div className="flex items-start justify-between gap-3">
-          <h3 className="text-lg font-semibold text-slate-900 leading-snug transition-colors duration-150 group-hover:text-slate-900">
+          <h3 className="text-base font-semibold text-slate-900 leading-snug transition-colors duration-150 group-hover:text-slate-900">
             {tool.name}
           </h3>
           <span
@@ -103,14 +104,14 @@ function AreaToolCard({ tool }: { tool: Tool }) {
         </div>
 
         {tool.description && (
-          <p className="text-sm text-slate-600 line-clamp-3 leading-relaxed">
+          <p className="text-sm text-slate-600 line-clamp-2 leading-relaxed">
             {tool.description}
           </p>
         )}
 
-        <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+        <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
           <p className="text-[11px] uppercase tracking-[0.14em] text-slate-500">Lectura rapida</p>
-          <p className="mt-1 text-sm font-medium text-slate-900">{categorySummary}</p>
+          <p className="mt-1 text-sm font-medium text-slate-900 line-clamp-2">{categorySummary}</p>
         </div>
 
         <div className="flex items-center gap-3 mt-auto pt-5 border-t border-slate-200">
@@ -136,7 +137,7 @@ function AreaToolCard({ tool }: { tool: Tool }) {
         <div className="mt-2 flex gap-2">
           <Link
             href={`/herramientas/${tool.slug}`}
-            className="flex-1 inline-flex items-center justify-center gap-2 rounded-2xl px-4 py-2.5 text-sm font-semibold transition-colors duration-150"
+            className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors duration-150"
             style={{
               background: `${accentColor}22`,
               border: `1px solid ${accentColor}40`,
@@ -150,7 +151,7 @@ function AreaToolCard({ tool }: { tool: Tool }) {
             href={tool.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center justify-center gap-1.5 rounded-xl px-3.5 py-2.5 text-sm font-semibold text-slate-600 transition-colors duration-150 hover:text-slate-900"
+            className="inline-flex items-center justify-center gap-1.5 rounded-lg px-3.5 py-2.5 text-sm font-semibold text-slate-600 transition-colors duration-150 hover:text-slate-900"
             style={{ background: "rgba(241,245,249,0.92)", border: "1px solid rgba(148, 163, 184, 0.30)" }}
           >
             <ExternalLink className="h-4 w-4" />
