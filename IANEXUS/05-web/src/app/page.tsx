@@ -208,65 +208,64 @@ export default async function Home() {
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#f6efe7] text-slate-950">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-[38rem] bg-[radial-gradient(circle_at_top_left,rgba(125,92,255,0.13),transparent_38%),radial-gradient(circle_at_top_right,rgba(3,105,161,0.12),transparent_34%),radial-gradient(circle_at_center,rgba(251,146,60,0.08),transparent_42%)]" />
-      <div className="pointer-events-none absolute -left-28 top-28 h-80 w-80 rounded-full bg-violet-200/35 blur-3xl" />
-      <div className="pointer-events-none absolute -right-28 top-40 h-96 w-96 rounded-full bg-sky-200/35 blur-3xl" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-[30rem] bg-[linear-gradient(180deg,rgba(255,255,255,0.42)_0%,rgba(246,239,231,0.94)_38%,rgba(246,239,231,0.98)_100%)]" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-[20rem] bg-[radial-gradient(circle_at_top,rgba(125,92,255,0.08),transparent_38%)]" />
 
       <div className="relative z-10">
         <EditorialTopbar />
 
-        <section className="mx-auto w-full max-w-5xl px-6 pb-6 pt-6 md:pb-8 md:pt-8">
-          <div className="grid gap-4 lg:grid-cols-[0.96fr_1.04fr]">
-            <div className="rounded-2xl border border-slate-200 bg-white/94 p-5 shadow-[0_18px_40px_rgba(15,23,42,0.05)] md:p-6 lg:p-7">
-              <p className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+        <section className="mx-auto w-full max-w-5xl px-6 pb-5 pt-5 md:pb-6 md:pt-6">
+          <div className="grid gap-3 lg:grid-cols-[0.93fr_1.07fr]">
+            <div className="rounded-xl border border-slate-200 bg-white/96 p-4 shadow-[0_12px_28px_rgba(15,23,42,0.045)] md:p-5 lg:p-6">
+              <p className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">
                 <Sparkles className="h-3.5 w-3.5 text-sky-600" />
                 Portada editorial de IA
               </p>
 
-              <h1 className="mt-4 max-w-2xl text-3xl font-semibold leading-[1.03] tracking-tight text-slate-950 md:text-[3.25rem] lg:text-[3.7rem]">
+              <h1 className="mt-4 max-w-2xl text-[2.15rem] font-semibold leading-[1.04] tracking-tight text-slate-950 md:text-[2.95rem] lg:text-[3.35rem]">
                 Descubre las IAs que si valen la pena
               </h1>
 
-              <p className="mt-4 max-w-xl text-sm leading-6 text-slate-600 md:text-[1.03rem] md:leading-7">
+              <p className="mt-4 max-w-xl text-[0.92rem] leading-6 text-slate-600 md:text-[0.98rem] md:leading-7">
                 Herramientas, guias y novedades curadas para estudiantes y usuarios que quieren
                 usar IA con criterio, no por ruido.
               </p>
 
               <div className="mt-5 flex flex-wrap gap-2">
-                <span className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs text-slate-700 md:text-sm">
+                <span className="rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-[11px] text-slate-700 md:text-sm">
                   Noticias curadas
                 </span>
-                <span className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs text-slate-700 md:text-sm">
+                <span className="rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-[11px] text-slate-700 md:text-sm">
                   Gratis y freemium
                 </span>
-                <span className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs text-slate-700 md:text-sm">
+                <span className="rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-[11px] text-slate-700 md:text-sm">
                   Por area y necesidad
                 </span>
               </div>
 
-              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+              <div className="mt-5 flex flex-col gap-3 sm:flex-row">
                 <Link
                   href="/blog"
-                  className="inline-flex items-center justify-center gap-2 rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-slate-800"
+                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-slate-950 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-slate-800"
                 >
                   Explorar portada
                   <ArrowRight className="h-4 w-4" />
                 </Link>
                 <Link
                   href="/estudiantes"
-                  className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50"
+                  className="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50"
                 >
                   Ver herramientas para estudiantes
                 </Link>
               </div>
 
-              <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4">
+              <div className="mt-5 grid grid-cols-2 gap-2.5 md:grid-cols-4">
                 {routeStats.map((stat) => (
                   <div
                     key={stat.label}
-                    className="rounded-xl border border-slate-200 bg-slate-50/80 px-3.5 py-2.5"
+                    className="rounded-lg border border-slate-200 bg-slate-50/80 px-3 py-2"
                   >
-                    <p className="text-xl font-semibold tracking-tight text-slate-950 md:text-[1.7rem]">
+                    <p className="text-lg font-semibold tracking-tight text-slate-950 md:text-[1.45rem]">
                       {stat.value}
                     </p>
                     <p className="mt-1 text-[10px] uppercase tracking-[0.14em] text-slate-500 md:text-xs">
@@ -296,17 +295,17 @@ export default async function Home() {
                   mediaUrl={featuredPost.cover_image_url}
                   icon={BookOpen}
                   variant="featured"
-                  className="min-h-[20rem]"
+                  className="min-h-[17rem]"
                 />
               ) : (
-                <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_18px_40px_rgba(15,23,42,0.05)]">
+                <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-[0_12px_28px_rgba(15,23,42,0.045)]">
                   <p className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
                     Portada principal
                   </p>
-                  <h2 className="mt-3 text-xl font-semibold text-slate-950 md:text-2xl">
+                  <h2 className="mt-3 text-lg font-semibold text-slate-950 md:text-[1.45rem]">
                     La lectura principal de IA NEXUS aparecera aqui
                   </h2>
-                  <p className="mt-2 text-sm leading-6 text-slate-600">
+                  <p className="mt-2 text-[0.92rem] leading-6 text-slate-600">
                     Cuando haya publicaciones activas, esta zona mostrara la historia o actualizacion
                     mas relevante del momento.
                   </p>
@@ -314,8 +313,8 @@ export default async function Home() {
               )}
 
               <div className="grid gap-3 sm:grid-cols-2">
-                <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-[0_10px_24px_rgba(15,23,42,0.04)]">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
+                <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-[0_8px_18px_rgba(15,23,42,0.035)]">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500">
                     Ruta rapida
                   </p>
                   <div className="mt-3 grid gap-2">
@@ -325,10 +324,10 @@ export default async function Home() {
                         <Link
                           key={route.href}
                           href={route.href}
-                          className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 transition-colors hover:bg-white"
+                          className="flex items-center justify-between gap-3 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 transition-colors hover:bg-white"
                         >
                           <div className="flex items-center gap-3">
-                            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-white text-slate-900 shadow-sm">
+                            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-slate-900 shadow-sm">
                               <Icon className="h-3.5 w-3.5" />
                             </span>
                             <div>
@@ -343,8 +342,8 @@ export default async function Home() {
                   </div>
                 </div>
 
-                <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-[0_10px_24px_rgba(15,23,42,0.04)]">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
+                <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-[0_8px_18px_rgba(15,23,42,0.035)]">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500">
                     Mas visto
                   </p>
                   <div className="mt-3 grid gap-2">
@@ -354,10 +353,10 @@ export default async function Home() {
                         <Link
                           key={route.href}
                           href={route.href}
-                          className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 transition-colors hover:bg-white"
+                          className="flex items-center justify-between gap-3 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 transition-colors hover:bg-white"
                         >
                           <div className="flex items-center gap-3">
-                            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-white text-slate-900 shadow-sm">
+                            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-slate-900 shadow-sm">
                               <Icon className="h-3.5 w-3.5" />
                             </span>
                             <div>
@@ -376,7 +375,7 @@ export default async function Home() {
           </div>
         </section>
 
-        <section className="mx-auto w-full max-w-5xl px-6 py-6 md:py-8">
+        <section className="mx-auto w-full max-w-5xl px-6 py-5 md:py-6">
           <EditorialSectionHeader
             eyebrow="Ultimas novedades"
             title="Lo nuevo en IA"
@@ -385,7 +384,7 @@ export default async function Home() {
             cta="Ver blog"
           />
 
-          <div className="mt-5 grid gap-3 md:grid-cols-3">
+          <div className="mt-4 grid gap-3 md:grid-cols-3">
             {(newsPosts.length > 0 ? newsPosts : guidePosts.slice(0, 3)).map((post) => (
               <EditorialCard
                 key={post.id}
@@ -406,7 +405,7 @@ export default async function Home() {
           </div>
         </section>
 
-        <section className="mx-auto w-full max-w-5xl px-6 py-6 md:py-8">
+        <section className="mx-auto w-full max-w-5xl px-6 py-5 md:py-6">
           <EditorialSectionHeader
             eyebrow="Herramientas"
             title="Herramientas destacadas esta semana"
@@ -415,7 +414,7 @@ export default async function Home() {
             cta="Explorar areas"
           />
 
-          <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+          <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
             {featuredTools.map((tool) => (
               <EditorialCard
                 key={tool.id}
@@ -449,7 +448,7 @@ export default async function Home() {
           </div>
         </section>
 
-        <section className="mx-auto w-full max-w-5xl px-6 py-6 md:py-8">
+        <section className="mx-auto w-full max-w-5xl px-6 py-5 md:py-6">
           <EditorialSectionHeader
             eyebrow="Para estudiantes"
             title="Gratis, freemium y utilidades para estudiar mejor"
@@ -458,7 +457,7 @@ export default async function Home() {
             cta="Ver todo para estudiantes"
           />
 
-          <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+          <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
             {studentTools.length > 0 ? (
               studentTools.map((tool) => (
                 <EditorialCard
@@ -478,14 +477,14 @@ export default async function Home() {
                 />
               ))
             ) : (
-              <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6 text-sm text-slate-600">
+              <div className="rounded-xl border border-slate-200 bg-white p-5 text-sm text-slate-600">
                 Todavia no hay herramientas marcadas para estudiantes.
               </div>
             )}
           </div>
         </section>
 
-        <section className="mx-auto w-full max-w-5xl px-6 py-6 md:py-8">
+        <section className="mx-auto w-full max-w-5xl px-6 py-5 md:py-6">
           <EditorialSectionHeader
             eyebrow="Por areas"
             title="Explora segun tu area"
@@ -494,7 +493,7 @@ export default async function Home() {
             cta="Ver todas las areas"
           />
 
-          <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+          <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
             {areaRoutes.map((area) => {
               const Icon = area.icon;
 
@@ -515,7 +514,7 @@ export default async function Home() {
           </div>
         </section>
 
-        <section className="mx-auto w-full max-w-5xl px-6 py-6 md:py-8">
+        <section className="mx-auto w-full max-w-5xl px-6 py-5 md:py-6">
           <EditorialSectionHeader
             eyebrow="Guia y contexto"
             title="Guias para usar mejor la IA"
@@ -524,7 +523,7 @@ export default async function Home() {
             cta="Ir al archivo"
           />
 
-          <div className="mt-5 grid gap-3 lg:grid-cols-[1.18fr_0.82fr]">
+          <div className="mt-4 grid gap-3 lg:grid-cols-[1.14fr_0.86fr]">
             {guidePosts.length > 0 ? (
               <EditorialCard
                 href={`/blog/${guidePosts[0].slug}`}
@@ -543,9 +542,9 @@ export default async function Home() {
                 variant="featured"
               />
             ) : (
-              <div className="rounded-[2.25rem] border border-slate-200 bg-white p-6 shadow-[0_20px_50px_rgba(15,23,42,0.06)]">
-                <h3 className="text-xl font-semibold text-slate-950">Guia principal pendiente</h3>
-                <p className="mt-2 text-sm leading-6 text-slate-600">
+              <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-[0_12px_28px_rgba(15,23,42,0.045)]">
+                <h3 className="text-lg font-semibold text-slate-950">Guia principal pendiente</h3>
+                <p className="mt-2 text-[0.92rem] leading-6 text-slate-600">
                   Cuando haya contenidos publicados, esta zona mostrara una lectura mas profunda.
                 </p>
               </div>
@@ -573,17 +572,17 @@ export default async function Home() {
           </div>
         </section>
 
-        <section className="mx-auto w-full max-w-5xl px-6 pb-12 pt-6 md:pb-16 md:pt-8">
-          <div className="rounded-2xl border border-slate-200 bg-slate-950 px-5 py-7 text-white shadow-[0_18px_48px_rgba(15,23,42,0.16)] md:px-7 md:py-8">
+        <section className="mx-auto w-full max-w-5xl px-6 pb-12 pt-5 md:pb-14 md:pt-6">
+          <div className="rounded-xl border border-slate-200 bg-slate-950 px-5 py-6 text-white shadow-[0_14px_34px_rgba(15,23,42,0.14)] md:px-6 md:py-7">
             <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
               <div>
-                <p className="inline-flex items-center rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-300">
+                <p className="inline-flex items-center rounded-lg border border-white/15 bg-white/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-300">
                   Comienza aqui
                 </p>
-                <h2 className="mt-3 max-w-2xl text-2xl font-semibold tracking-tight md:text-[2.35rem]">
+                <h2 className="mt-3 max-w-2xl text-xl font-semibold tracking-tight md:text-[2rem]">
                   Entra a la comunidad y recibe novedades utiles sin perder el hilo.
                 </h2>
-                <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-300">
+                <p className="mt-2 max-w-2xl text-[0.92rem] leading-6 text-slate-300">
                   Si quieres descubrir mejores herramientas, guias y planes gratis antes que el ruido,
                   este es el punto de entrada.
                 </p>
@@ -592,13 +591,13 @@ export default async function Home() {
               <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
                 <TrackedWhatsAppLink
                   location="hero"
-                  className="inline-flex items-center justify-center rounded-full bg-white px-5 py-3 text-sm font-semibold text-slate-950 transition-opacity hover:opacity-90"
+                  className="inline-flex items-center justify-center rounded-lg bg-white px-4 py-2.5 text-sm font-semibold text-slate-950 transition-opacity hover:opacity-90"
                 >
                   Entrar a la comunidad
                 </TrackedWhatsAppLink>
                 <Link
                   href="/login"
-                  className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/10"
+                  className="inline-flex items-center justify-center rounded-lg border border-white/15 bg-white/5 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white/10"
                 >
                   Iniciar sesion
                 </Link>
