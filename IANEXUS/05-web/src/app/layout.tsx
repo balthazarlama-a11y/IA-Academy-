@@ -29,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="es" className={inter.variable}>
       <body
-        className={`min-h-screen bg-[#f5f1eb] text-slate-900 antialiased ${inter.className}`}
+        className={`min-h-screen bg-[#f7f4ee] text-slate-900 antialiased ${inter.className}`}
       >
         {children}
         <WhatsAppStickyButton />
