@@ -15,6 +15,11 @@ import { fetchPublishedPosts } from "@/lib/supabase/server";
 import { getToolsPage } from "@/lib/repositories/tools-repo";
 
 export const revalidate = 300;
+export const metadata = {
+  title: "IA NEXUS | Portada editorial de inteligencia artificial",
+  description:
+    "Descubre herramientas, guias y novedades de inteligencia artificial curadas por carrera y necesidad, con foco en utilidad real para estudiantes y profesionales.",
+};
 
 type HomeIconProps = {
   className?: string;
@@ -199,13 +204,6 @@ export default async function Home() {
     .filter((tool) => tool.plan === "free" || tool.plan === "edu_free" || tool.edu_verified)
     .slice(0, 4);
 
-  const routeStats = [
-    { label: "Publicaciones", value: posts.length },
-    { label: "Herramientas", value: toolsPage.tools.length },
-    { label: "Gratis para estudiantes", value: studentTools.length },
-    { label: "Guias y actualizaciones", value: guidePosts.length },
-  ];
-
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#f6efe7] text-slate-950">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-[30rem] bg-[linear-gradient(180deg,rgba(255,255,255,0.42)_0%,rgba(246,239,231,0.94)_38%,rgba(246,239,231,0.98)_100%)]" />
@@ -215,64 +213,75 @@ export default async function Home() {
         <EditorialTopbar />
 
         <section className="editorial-frame px-5 pb-6 pt-5 md:px-6 md:pb-7 md:pt-6 xl:px-8">
-          <div className="grid gap-4 xl:grid-cols-[0.88fr_1.12fr]">
-            <div className="rounded-xl border border-slate-200 bg-white/96 p-4 shadow-[0_12px_28px_rgba(15,23,42,0.045)] md:p-5 lg:p-6">
-              <p className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+          <div className="grid gap-4 xl:grid-cols-[0.78fr_1.22fr]">
+            <div className="rounded-lg border border-slate-200 bg-white/96 p-4 shadow-[0_10px_24px_rgba(15,23,42,0.04)] md:p-5">
+              <p className="inline-flex items-center gap-2 rounded-md border border-slate-200 bg-slate-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">
                 <Sparkles className="h-3.5 w-3.5 text-sky-600" />
                 Portada editorial de IA
               </p>
 
-              <h1 className="mt-4 max-w-2xl text-[2.15rem] font-semibold leading-[1.04] tracking-tight text-slate-950 md:text-[2.95rem] lg:text-[3.35rem]">
+              <h1 className="mt-3 max-w-xl text-[1.95rem] font-semibold leading-[1.02] tracking-tight text-slate-950 md:text-[2.45rem] lg:text-[2.7rem]">
                 Descubre las IAs que si valen la pena
               </h1>
 
-              <p className="mt-4 max-w-xl text-[0.92rem] leading-6 text-slate-600 md:text-[0.98rem] md:leading-7">
+              <p className="mt-3 max-w-lg text-[0.92rem] leading-6 text-slate-600 md:text-[0.96rem] md:leading-7">
                 Herramientas, guias y novedades curadas para estudiantes y usuarios que quieren
                 usar IA con criterio, no por ruido.
               </p>
 
-              <div className="mt-5 flex flex-wrap gap-2">
-                <span className="rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-[11px] text-slate-700 md:text-sm">
-                  Noticias curadas
+              <div className="mt-4 flex flex-wrap gap-2">
+                <span className="rounded-md border border-slate-200 bg-white px-2.5 py-1 text-[11px] text-slate-700 md:text-sm">
+                  Curacion por carrera y necesidad
                 </span>
-                <span className="rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-[11px] text-slate-700 md:text-sm">
-                  Gratis y freemium
-                </span>
-                <span className="rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-[11px] text-slate-700 md:text-sm">
-                  Por carrera y necesidad
+                <span className="rounded-md border border-slate-200 bg-white px-2.5 py-1 text-[11px] text-slate-700 md:text-sm">
+                  Herramientas y guias en el mismo flujo
                 </span>
               </div>
 
-              <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+              <div className="mt-4 flex flex-col gap-3 sm:flex-row">
                 <Link
                   href="/blog"
-                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-slate-950 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-slate-800"
+                  className="inline-flex items-center justify-center gap-2 rounded-md bg-slate-950 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-slate-800"
                 >
-                  Explorar portada
+                  Ver lo ultimo
                   <ArrowRight className="h-4 w-4" />
                 </Link>
                 <Link
                   href="/estudiantes"
-                  className="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50"
+                  className="inline-flex items-center justify-center rounded-md border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50"
                 >
-                  Ver herramientas para estudiantes
+                  Beneficios estudiantiles
                 </Link>
               </div>
 
-              <div className="mt-5 grid grid-cols-2 gap-2.5 md:grid-cols-4">
-                {routeStats.map((stat) => (
-                  <div
-                    key={stat.label}
-                    className="rounded-lg border border-slate-200 bg-slate-50/80 px-3 py-2"
-                  >
-                    <p className="text-lg font-semibold tracking-tight text-slate-950 md:text-[1.45rem]">
-                      {stat.value}
-                    </p>
-                    <p className="mt-1 text-[10px] uppercase tracking-[0.14em] text-slate-500 md:text-xs">
-                      {stat.label}
-                    </p>
-                  </div>
-                ))}
+              <div className="mt-5 border-t border-slate-200 pt-4">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+                  Empieza por aqui
+                </p>
+                <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                  {editorialRoutes.map((route) => {
+                    const Icon = route.icon;
+
+                    return (
+                      <Link
+                        key={route.href}
+                        href={route.href}
+                        className="flex items-center justify-between gap-3 rounded-md border border-slate-200 bg-slate-50 px-3 py-2.5 transition-colors hover:bg-white"
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className="flex h-8 w-8 items-center justify-center rounded-md bg-white text-slate-900 shadow-sm">
+                            <Icon className="h-3.5 w-3.5" />
+                          </span>
+                          <div>
+                            <p className="text-sm font-medium text-slate-950">{route.label}</p>
+                            <p className="text-[11px] text-slate-500">{route.blurb}</p>
+                          </div>
+                        </div>
+                        <ArrowRight className="h-4 w-4 text-slate-400" />
+                      </Link>
+                    );
+                  })}
+                </div>
               </div>
             </div>
 
@@ -295,11 +304,11 @@ export default async function Home() {
                   mediaUrl={featuredPost.cover_image_url}
                   icon={BookOpen}
                   variant="featured"
-                  className="min-h-[17rem]"
+                  className="min-h-[15rem]"
                 />
               ) : (
-                <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-[0_12px_28px_rgba(15,23,42,0.045)]">
-                  <p className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+                <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-[0_10px_24px_rgba(15,23,42,0.04)]">
+                  <p className="inline-flex items-center rounded-md border border-slate-200 bg-slate-50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">
                     Portada principal
                   </p>
                   <h2 className="mt-3 text-lg font-semibold text-slate-950 md:text-[1.45rem]">
@@ -312,63 +321,42 @@ export default async function Home() {
                 </div>
               )}
 
-              <div className="grid gap-3 sm:grid-cols-2">
-                <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-[0_8px_18px_rgba(15,23,42,0.035)]">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500">
-                    Ruta rapida
-                  </p>
-                  <div className="mt-3 grid gap-2">
-                    {editorialRoutes.slice(0, 2).map((route) => {
-                      const Icon = route.icon;
-                      return (
-                        <Link
-                          key={route.href}
-                          href={route.href}
-                          className="flex items-center justify-between gap-3 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 transition-colors hover:bg-white"
-                        >
-                          <div className="flex items-center gap-3">
-                            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-slate-900 shadow-sm">
-                              <Icon className="h-3.5 w-3.5" />
-                            </span>
-                            <div>
-                              <p className="text-sm font-medium text-slate-950">{route.label}</p>
-                              <p className="text-[11px] text-slate-500">{route.blurb}</p>
-                            </div>
-                          </div>
-                          <ArrowRight className="h-4 w-4 text-slate-400" />
-                        </Link>
-                      );
-                    })}
+              <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-[0_8px_18px_rgba(15,23,42,0.03)]">
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500">
+                      Siguiente lectura
+                    </p>
+                    <p className="mt-1 text-sm text-slate-600">
+                      Sigue explorando por seccion sin perderte en bloques de marketing.
+                    </p>
                   </div>
+                  <Link
+                    href="/blog"
+                    className="hidden rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-white sm:inline-flex"
+                  >
+                    Ir al blog
+                  </Link>
                 </div>
 
-                <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-[0_8px_18px_rgba(15,23,42,0.035)]">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500">
-                    Mas visto
-                  </p>
-                  <div className="mt-3 grid gap-2">
-                    {editorialRoutes.slice(2).map((route) => {
-                      const Icon = route.icon;
-                      return (
-                        <Link
-                          key={route.href}
-                          href={route.href}
-                          className="flex items-center justify-between gap-3 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 transition-colors hover:bg-white"
-                        >
-                          <div className="flex items-center gap-3">
-                            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-slate-900 shadow-sm">
-                              <Icon className="h-3.5 w-3.5" />
-                            </span>
-                            <div>
-                              <p className="text-sm font-medium text-slate-950">{route.label}</p>
-                              <p className="text-[11px] text-slate-500">{route.blurb}</p>
-                            </div>
-                          </div>
-                          <ArrowRight className="h-4 w-4 text-slate-400" />
-                        </Link>
-                      );
-                    })}
-                  </div>
+                <div className="mt-4 grid gap-2 sm:grid-cols-2">
+                  {newsPosts.slice(0, 2).map((post) => (
+                    <EditorialCard
+                      key={post.id}
+                      href={`/blog/${post.slug}`}
+                      eyebrow={getPostLabel(post.post_kind)}
+                      title={post.title}
+                      description={
+                        post.excerpt ??
+                        "Una lectura breve para entender rapido lo que cambia y por que importa."
+                      }
+                      meta={[formatDate(post.published_at), post.ia_type].filter(Boolean).join(" / ")}
+                      footer="Leer"
+                      mediaUrl={post.cover_image_url}
+                      icon={BookOpen}
+                      variant="compact"
+                    />
+                  ))}
                 </div>
               </div>
             </div>
@@ -433,12 +421,11 @@ export default async function Home() {
               >
                 <div className="flex flex-wrap gap-2">
                   {tool.guide_slug ? (
-                    <span className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[11px] font-medium text-slate-600">
+                    <span className="inline-flex items-center rounded-md border border-slate-200 bg-slate-50 px-2.5 py-1 text-[11px] font-medium text-slate-600">
                       Tiene guia
                     </span>
-                  ) : null}
-                  {tool.edu_verified ? (
-                    <span className="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-[11px] font-medium text-emerald-700">
+                  ) : tool.edu_verified ? (
+                    <span className="inline-flex items-center rounded-md border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-[11px] font-medium text-emerald-700">
                       Para estudiantes
                     </span>
                   ) : null}
@@ -477,7 +464,7 @@ export default async function Home() {
                 />
               ))
             ) : (
-              <div className="rounded-xl border border-slate-200 bg-white p-5 text-sm text-slate-600">
+              <div className="rounded-lg border border-slate-200 bg-white p-5 text-sm text-slate-600">
                 Todavia no hay herramientas marcadas para estudiantes.
               </div>
             )}
@@ -542,7 +529,7 @@ export default async function Home() {
                 variant="featured"
               />
             ) : (
-              <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-[0_12px_28px_rgba(15,23,42,0.045)]">
+              <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-[0_10px_24px_rgba(15,23,42,0.04)]">
                 <h3 className="text-lg font-semibold text-slate-950">Guia principal pendiente</h3>
                 <p className="mt-2 text-[0.92rem] leading-6 text-slate-600">
                   Cuando haya contenidos publicados, esta zona mostrara una lectura mas profunda.
@@ -573,10 +560,10 @@ export default async function Home() {
         </section>
 
         <section className="editorial-frame px-5 pb-12 pt-5 md:px-6 md:pb-14 md:pt-6 xl:px-8">
-          <div className="rounded-xl border border-slate-200 bg-slate-950 px-5 py-6 text-white shadow-[0_14px_34px_rgba(15,23,42,0.14)] md:px-6 md:py-7">
+          <div className="rounded-lg border border-slate-200 bg-slate-950 px-5 py-6 text-white shadow-[0_12px_28px_rgba(15,23,42,0.14)] md:px-6 md:py-7">
             <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
               <div>
-                <p className="inline-flex items-center rounded-lg border border-white/15 bg-white/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-300">
+                <p className="inline-flex items-center rounded-md border border-white/15 bg-white/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-300">
                   Comienza aqui
                 </p>
                 <h2 className="mt-3 max-w-2xl text-xl font-semibold tracking-tight md:text-[2rem]">

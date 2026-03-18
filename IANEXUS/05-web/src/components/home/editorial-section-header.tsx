@@ -22,13 +22,13 @@ export function EditorialSectionHeader({
   return (
     <div className={cn("flex flex-col gap-3 md:flex-row md:items-end md:justify-between", className)}>
       <div className="max-w-2xl">
-        <p className="inline-flex items-center rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
           {eyebrow}
         </p>
-        <h2 className="mt-3 text-lg font-semibold tracking-tight text-slate-950 md:text-[1.65rem]">
+        <h2 className="mt-2 text-lg font-semibold tracking-tight text-slate-950 md:text-[1.45rem]">
           {title}
         </h2>
-        <p className="mt-2 text-[0.92rem] leading-6 text-slate-600 md:text-[0.94rem]">
+        <p className="mt-1.5 text-[0.9rem] leading-6 text-slate-600 md:text-[0.93rem]">
           {description}
         </p>
       </div>
@@ -36,7 +36,7 @@ export function EditorialSectionHeader({
       {href && cta ? (
         <Link
           href={href}
-          className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50"
+          className="inline-flex items-center gap-2 rounded-md border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50"
         >
           {cta}
           <ArrowUpRight className="h-4 w-4" />
