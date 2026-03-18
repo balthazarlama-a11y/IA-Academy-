@@ -14,24 +14,48 @@ function formatDate(dateString: string | null) {
   }).format(date);
 }
 
+function formatLabel(kind: Post["post_kind"]) {
+  switch (kind) {
+    case "news":
+      return "Actualizacion";
+    case "guide":
+      return "Guia";
+    case "tool":
+      return "Herramienta";
+    default:
+      return "Articulo";
+  }
+}
+
+function kindTone(kind: Post["post_kind"]) {
+  switch (kind) {
+    case "news":
+      return "border-amber-200 bg-amber-50 text-amber-700";
+    case "guide":
+      return "border-cyan-200 bg-cyan-50 text-cyan-800";
+    case "tool":
+      return "border-emerald-200 bg-emerald-50 text-emerald-800";
+    default:
+      return "border-slate-200 bg-slate-50 text-slate-700";
+  }
+}
+
 export default function BlogPostCard({ post }: { post: Post }) {
   const isNews = post.post_kind === "news";
 
   return (
-    <article className="group relative rounded-2xl border border-slate-200 bg-white transition-colors duration-150 hover:border-slate-200 hover:bg-white">
+    <article className="group relative overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-[0_1px_0_rgba(15,23,42,0.04)] transition-all duration-200 hover:-translate-y-1 hover:border-slate-300 hover:shadow-[0_24px_60px_rgba(15,23,42,0.08)]">
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
+
       <StaffEditButton
         href={`/admin/posts?q=${encodeURIComponent(post.slug)}`}
         label={`Editar post "${post.title}" en Admin`}
-        className="absolute right-3 top-3 z-10"
+        className="absolute right-3 top-3 z-20"
       />
-      <Link
-        href={`/blog/${post.slug}`}
-        prefetch={true}
-        className="block p-5"
-      >
-        {/* Cover image */}
+
+      <Link href={`/blog/${post.slug}`} prefetch={true} className="block h-full">
         {post.cover_image_url ? (
-          <div className="relative mb-4 h-32 w-full overflow-hidden rounded-xl">
+          <div className="relative aspect-[16/10] overflow-hidden bg-slate-100">
             <Image
               src={post.cover_image_url}
               alt={post.title}
@@ -39,55 +63,65 @@ export default function BlogPostCard({ post }: { post: Post }) {
               unoptimized
               loading="lazy"
               sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"
-              className="object-cover"
-              style={{ opacity: 0.8 }}
+              className="object-cover transition duration-500 group-hover:scale-[1.04]"
             />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/20 via-transparent to-transparent opacity-70" />
           </div>
-        ) : null}
+        ) : (
+          <div className="grid aspect-[16/10] place-items-center bg-[linear-gradient(135deg,rgba(241,245,249,0.95),rgba(255,255,255,0.85))]">
+            <Sparkles className="h-10 w-10 text-slate-300" />
+          </div>
+        )}
 
-        <div className="flex flex-col">
-          <div className="flex items-start justify-between gap-3">
+        <div className="space-y-4 p-5 md:p-6">
+          <div className="flex flex-wrap items-start justify-between gap-3">
             <span
-              className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] uppercase tracking-[0.12em] ${
-                isNews
-                  ? "border border-amber-200 bg-amber-50 text-amber-700"
-                  : "border border-slate-200 bg-white text-slate-600"
-              }`}
+              className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[10px] uppercase tracking-[0.14em] ${kindTone(
+                post.post_kind,
+              )}`}
             >
               <Sparkles className="h-2.5 w-2.5" />
-              {isNews ? "News" : "Post"}
+              {formatLabel(post.post_kind)}
             </span>
-            <ArrowUpRight className="h-4 w-4 text-slate-500" />
+            <ArrowUpRight className="h-4 w-4 text-slate-400 transition group-hover:text-slate-700" />
           </div>
 
-          <h2 className="mt-3 text-lg font-medium leading-snug text-slate-900">
-            {post.title}
-          </h2>
+          <div className="space-y-2">
+            <h2 className="text-xl font-semibold leading-snug text-slate-950 md:text-[1.35rem]">
+              {post.title}
+            </h2>
 
-          {post.excerpt ? (
-            <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-slate-600">
-              {post.excerpt}
-            </p>
-          ) : null}
+            {post.excerpt ? (
+              <p className="line-clamp-3 text-sm leading-relaxed text-slate-600 md:text-[0.95rem]">
+                {post.excerpt}
+              </p>
+            ) : (
+              <p className="line-clamp-3 text-sm leading-relaxed text-slate-500 md:text-[0.95rem]">
+                Una pieza curada para entender mejor el movimiento de la IA y tomar
+                decisiones con mas contexto.
+              </p>
+            )}
+          </div>
 
-          <div className="mt-4 flex items-center justify-between border-t border-slate-200 pt-3">
-            <div className="flex items-center gap-2">
-              <time className="text-xs text-slate-500">{formatDate(post.published_at)}</time>
-              {isNews ? (
-                <span className="inline-flex items-center rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[11px] text-amber-700">
-                  Update corto
-                </span>
-              ) : null}
+          <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 pt-4">
+            <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500">
+              <time>{formatDate(post.published_at)}</time>
+              <span className="text-slate-300">/</span>
+              <span>{post.ia_type || "IA"}</span>
             </div>
-            {post.ia_type ? (
-              <span className="inline-flex items-center rounded-full border border-slate-200 bg-white px-2 py-0.5 text-[11px] text-slate-600">
-                {post.ia_type}
-              </span>
-            ) : null}
+
+            <span className="inline-flex items-center rounded-full border border-slate-200 bg-white px-3 py-1 text-[11px] font-medium text-slate-600 transition group-hover:border-slate-300 group-hover:text-slate-800">
+              Leer nota
+            </span>
           </div>
+
+          {isNews ? (
+            <div className="inline-flex items-center rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-[11px] font-medium text-amber-700">
+              Update corto
+            </div>
+          ) : null}
         </div>
       </Link>
     </article>
   );
 }
-
