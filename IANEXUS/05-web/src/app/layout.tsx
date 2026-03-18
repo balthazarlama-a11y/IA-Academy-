@@ -28,7 +28,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" className={inter.variable}>
-      <body className={`antialiased ${inter.className}`}>
+      <body
+        className={`min-h-screen bg-[#f5f1eb] text-slate-900 antialiased ${inter.className}`}
+      >
         {children}
         <WhatsAppStickyButton />
       </body>

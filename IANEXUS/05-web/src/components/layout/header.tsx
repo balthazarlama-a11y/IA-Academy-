@@ -1,9 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState, useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { BookOpen, LogIn, LogOut, PenSquare, Shield, Wrench, X } from "lucide-react";
+import {
+  BookOpen,
+  LogIn,
+  LogOut,
+  PenSquare,
+  Shield,
+  Wrench,
+  X,
+} from "lucide-react";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import type { AppRole } from "@/lib/auth/roles";
 
@@ -22,7 +30,8 @@ type CachedHeaderSession = {
 const HEADER_SESSION_CACHE_KEY = "ianexus:header-session:v1";
 const HEADER_CACHE_TTL_MS = 120_000;
 const NAV_LINKS = [
-  { href: "/estudiantes", label: "Estudiantes" },
+  { href: "/", label: "Inicio" },
+  { href: "/estudiantes", label: "Gratis para estudiantes" },
   { href: "/areas", label: "Áreas" },
   { href: "/dia-a-dia", label: "Día a Día" },
   { href: "/blog", label: "Blog" },
@@ -63,8 +72,31 @@ function writeCachedHeaderSession(value: HeaderSession | null) {
   try {
     window.sessionStorage.setItem(HEADER_SESSION_CACHE_KEY, JSON.stringify(payload));
   } catch {
-    // Ignore storage errors so auth UI never crashes.
+    // Keep auth UI resilient if storage is unavailable.
   }
+}
+
+function HeaderBadge({
+  children,
+  tone = "slate",
+}: {
+  children: React.ReactNode;
+  tone?: "slate" | "blue" | "emerald" | "violet";
+}) {
+  const tones = {
+    slate: "border-slate-300 bg-white/75 text-slate-700",
+    blue: "border-blue-200 bg-blue-50 text-blue-700",
+    emerald: "border-emerald-200 bg-emerald-50 text-emerald-700",
+    violet: "border-violet-200 bg-violet-50 text-violet-700",
+  } as const;
+
+  return (
+    <span
+      className={`inline-flex items-center rounded-full border px-3 py-1 text-[11px] font-medium tracking-wide ${tones[tone]}`}
+    >
+      {children}
+    </span>
+  );
 }
 
 export default function Header() {
@@ -156,57 +188,160 @@ export default function Header() {
 
   return (
     <header className="relative z-50 px-4 pt-3">
-      <div className="relative mx-auto w-full max-w-5xl">
-        <div
-          className="relative overflow-hidden rounded-full"
-          style={{
-            border: "1px solid rgba(148, 163, 184, 0.35)",
-            boxShadow:
-              "0 12px 28px rgba(15,23,42,0.10), inset 0 1px 0 rgba(255,255,255,0.85)",
-          }}
-        >
-          <div
-            className="absolute inset-0 z-0 rounded-[inherit]"
-            style={{
-              backdropFilter: "blur(16px) saturate(140%)",
-              isolation: "isolate",
-              contain: "layout style paint",
-            }}
-          />
-          <div
-            className="absolute inset-0 z-10 rounded-[inherit]"
-            style={{ background: "rgba(255, 255, 255, 0.82)" }}
-          />
-          <div
-            className="absolute inset-0 z-20 rounded-[inherit]"
-            style={{
-              boxShadow:
-                "inset 1px 1px 0 rgba(255,255,255,0.78), inset -1px -1px 0 rgba(148,163,184,0.20)",
-            }}
-          />
-
-          <div className="relative z-30 flex items-center justify-between gap-3 px-4 py-3 md:px-5">
-            <Link href="/" className="flex items-center gap-3 flex-none" onClick={() => setMobileMenuOpen(false)}>
-              <div className="flex items-center justify-center h-10 w-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white flex-shrink-0">
-                <BookOpen className="h-5 w-5" />
-              </div>
-              <span
-                className="text-base font-semibold tracking-tight"
-                style={{ color: "rgba(15,23,42,0.92)" }}
+      <div className="relative mx-auto w-full max-w-6xl">
+        <div className="relative overflow-hidden rounded-2xl border border-slate-200/90 bg-white/82 shadow-[0_14px_40px_rgba(15,23,42,0.08)] backdrop-blur-md">
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.95),rgba(255,255,255,0.78))]" />
+          <div className="relative z-10 px-4 py-3 md:px-5">
+            <div className="flex items-center justify-between gap-3">
+              <Link
+                href="/"
+                className="flex items-center gap-3 flex-none"
+                onClick={() => setMobileMenuOpen(false)}
               >
-                IA NEXUS
-              </span>
-            </Link>
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-slate-900 text-white shadow-sm">
+                  <BookOpen className="h-5 w-5" />
+                </div>
+                <div className="flex flex-col leading-tight">
+                  <span className="text-[0.95rem] font-semibold tracking-tight text-slate-900">
+                    IA NEXUS
+                  </span>
+                  <span className="hidden text-[11px] text-slate-500 md:block">
+                    Curación editorial de IA
+                  </span>
+                </div>
+              </Link>
 
-            <nav className="hidden md:flex gap-8 items-center">
+              <nav className="hidden items-center gap-1 rounded-full border border-slate-200 bg-slate-50/80 px-1.5 py-1 md:flex">
+                {NAV_LINKS.map((item) => {
+                  const isActive =
+                    pathname === item.href ||
+                    (item.href !== "/" && pathname.startsWith(item.href + "/"));
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className={`rounded-full px-3 py-2 text-sm font-medium transition-colors ${
+                        isActive
+                          ? "bg-white text-slate-950 shadow-sm"
+                          : "text-slate-600 hover:bg-white/75 hover:text-slate-900"
+                      }`}
+                    >
+                      {item.label}
+                    </Link>
+                  );
+                })}
+              </nav>
+
+              <div className="hidden items-center gap-2 md:flex">
+                {isLoading ? (
+                  <div className="h-9 w-28 rounded-full bg-slate-200 animate-pulse" />
+                ) : !session ? (
+                  <Link
+                    href={loginHref}
+                    className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-800 transition-colors hover:bg-slate-50"
+                  >
+                    <LogIn className="h-4 w-4" />
+                    Iniciar sesión
+                  </Link>
+                ) : (
+                  <>
+                    <div className="hidden items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-2 lg:flex">
+                      {isStaff ? <Shield className="h-3.5 w-3.5 text-blue-700" /> : null}
+                      <div className="flex flex-col leading-tight">
+                        <span className="text-[11px] font-medium text-slate-500">
+                          Sesión activa
+                        </span>
+                        <span className="text-sm text-slate-800">{displayName}</span>
+                      </div>
+                    </div>
+
+                    {isStaff ? (
+                      <>
+                        <Link
+                          href="/admin/tools"
+                          className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs font-medium text-emerald-700 transition-colors hover:bg-emerald-100"
+                          title="Añadir tool"
+                        >
+                          <Wrench className="h-3.5 w-3.5" />
+                          <span className="hidden xl:inline">Añadir tool</span>
+                        </Link>
+                        <Link
+                          href="/admin/posts"
+                          className="inline-flex items-center gap-1.5 rounded-full border border-violet-200 bg-violet-50 px-3 py-2 text-xs font-medium text-violet-700 transition-colors hover:bg-violet-100"
+                          title="Subir post"
+                        >
+                          <PenSquare className="h-3.5 w-3.5" />
+                          <span className="hidden xl:inline">Subir post</span>
+                        </Link>
+                        <Link
+                          href="/admin"
+                          className="inline-flex items-center rounded-full border border-blue-200 bg-blue-50 px-3 py-2 text-xs font-medium text-blue-700 transition-colors hover:bg-blue-100"
+                        >
+                          Admin
+                        </Link>
+                      </>
+                    ) : null}
+
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        await supabase.auth.signOut();
+                        setSession(null);
+                        writeCachedHeaderSession(null);
+                        router.refresh();
+                      }}
+                      className="inline-flex items-center gap-1.5 rounded-full border border-slate-300 bg-white px-3 py-2 text-xs font-medium text-slate-700 transition-colors hover:bg-slate-50"
+                    >
+                      <LogOut className="h-3.5 w-3.5" />
+                      Salir
+                    </button>
+                  </>
+                )}
+              </div>
+
+              <div className="md:hidden">
+                <button
+                  type="button"
+                  onClick={() => setMobileMenuOpen((v) => !v)}
+                  aria-label={mobileMenuOpen ? "Cerrar menu" : "Abrir menu"}
+                  aria-expanded={mobileMenuOpen}
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-300 bg-white text-slate-700 shadow-sm"
+                >
+                  {mobileMenuOpen ? (
+                    <X className="h-5 w-5" />
+                  ) : (
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path
+                        d="M4 7h16M4 12h16M4 17h16"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {mobileMenuOpen ? (
+          <div className="mt-2 overflow-hidden rounded-2xl border border-slate-200 bg-white/95 shadow-[0_18px_40px_rgba(15,23,42,0.12)] backdrop-blur-md md:hidden">
+            <nav className="flex flex-col p-2">
               {NAV_LINKS.map((item) => {
-                const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
+                const isActive =
+                  pathname === item.href ||
+                  (item.href !== "/" && pathname.startsWith(item.href + "/"));
                 return (
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`nav-link text-sm font-medium transition-colors hover:opacity-100${isActive ? " active" : ""}`}
-                    style={{ color: isActive ? "rgba(37,99,235,0.9)" : "rgba(51,65,85,0.82)" }}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`rounded-xl px-3 py-3 text-sm font-medium transition-colors ${
+                      isActive
+                        ? "bg-slate-900 text-white"
+                        : "text-slate-700 hover:bg-slate-100"
+                    }`}
                   >
                     {item.label}
                   </Link>
@@ -214,74 +349,58 @@ export default function Header() {
               })}
             </nav>
 
-            <div className="hidden md:flex items-center gap-2 flex-none">
+            <div className="border-t border-slate-200 p-3">
               {isLoading ? (
-                <div className="h-9 w-24 rounded-full bg-slate-200 animate-pulse" />
+                <div className="h-9 w-28 rounded-full bg-slate-200 animate-pulse" />
               ) : !session ? (
                 <Link
                   href={loginHref}
-                  className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold text-white transition-opacity duration-200 hover:opacity-90"
-                  style={{
-                    background: "linear-gradient(135deg, #2563eb, #7c3aed)",
-                    border: "1px solid rgba(99,102,241,0.30)",
-                    touchAction: "manipulation",
-                  }}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-800"
                 >
                   <LogIn className="h-4 w-4" />
-                  Login
+                  Iniciar sesión
                 </Link>
               ) : (
-                <>
-                  <div
-                    className="hidden lg:flex items-center gap-2 rounded-full px-3 py-1.5"
-                    style={{
-                      background: "rgba(241,245,249,0.92)",
-                      border: "1px solid rgba(148,163,184,0.30)",
-                    }}
-                  >
-                    {isStaff ? <Shield className="h-3.5 w-3.5 text-blue-700" /> : null}
-                    <span className="text-xs text-slate-700">{displayName}</span>
+                <div className="flex flex-col gap-3">
+                  <div className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-3">
+                    <div className="min-w-0">
+                      <div className="text-[11px] font-medium uppercase tracking-widest text-slate-500">
+                        {isStaff ? "Editor" : "Cuenta"}
+                      </div>
+                      <div className="truncate text-sm text-slate-800">{displayName}</div>
+                    </div>
+                    <HeaderBadge tone={isStaff ? "blue" : "slate"}>
+                      {isStaff ? "Staff" : "Activo"}
+                    </HeaderBadge>
                   </div>
 
                   {isStaff ? (
-                    <>
+                    <div className="grid grid-cols-2 gap-2">
                       <Link
                         href="/admin/tools"
-                        className="inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-semibold text-emerald-700 transition-opacity hover:opacity-90"
-                        style={{
-                          background: "rgba(16,185,129,0.14)",
-                          border: "1px solid rgba(16,185,129,0.34)",
-                          touchAction: "manipulation",
-                        }}
-                        title="Añadir Tool"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="inline-flex items-center justify-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2.5 text-sm font-medium text-emerald-700"
                       >
-                        <Wrench className="h-3.5 w-3.5" />
-                        <span className="hidden lg:inline">Añadir Tool</span>
+                        <Wrench className="h-4 w-4" />
+                        Tool
                       </Link>
                       <Link
                         href="/admin/posts"
-                        className="inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-semibold text-violet-700 transition-opacity hover:opacity-90"
-                        style={{
-                          background: "rgba(124,58,237,0.14)",
-                          border: "1px solid rgba(124,58,237,0.30)",
-                          touchAction: "manipulation",
-                        }}
-                        title="Subir Post"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="inline-flex items-center justify-center gap-2 rounded-xl border border-violet-200 bg-violet-50 px-3 py-2.5 text-sm font-medium text-violet-700"
                       >
-                        <PenSquare className="h-3.5 w-3.5" />
-                        <span className="hidden lg:inline">Subir Post</span>
+                        <PenSquare className="h-4 w-4" />
+                        Post
                       </Link>
                       <Link
                         href="/admin"
-                        className="inline-flex items-center gap-1 rounded-full px-3 py-2 text-xs font-semibold text-blue-700"
-                        style={{
-                          background: "rgba(37,99,235,0.14)",
-                          border: "1px solid rgba(37,99,235,0.32)",
-                        }}
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="col-span-2 inline-flex items-center justify-center rounded-xl border border-blue-200 bg-blue-50 px-3 py-2.5 text-sm font-medium text-blue-700"
                       >
                         Admin
                       </Link>
-                    </>
+                    </div>
                   ) : null}
 
                   <button
@@ -290,135 +409,14 @@ export default function Header() {
                       await supabase.auth.signOut();
                       setSession(null);
                       writeCachedHeaderSession(null);
+                      setMobileMenuOpen(false);
                       router.refresh();
                     }}
-                    className="inline-flex items-center gap-1 rounded-full px-3 py-2 text-xs font-semibold text-slate-700"
-                    style={{
-                      background: "rgba(241,245,249,0.92)",
-                      border: "1px solid rgba(148,163,184,0.30)",
-                    }}
+                    className="inline-flex items-center justify-center gap-1.5 rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700"
                   >
-                    <LogOut className="h-3.5 w-3.5" />
+                    <LogOut className="h-4 w-4" />
                     Salir
                   </button>
-                </>
-              )}
-            </div>
-
-            <div className="md:hidden flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => setMobileMenuOpen((v) => !v)}
-                aria-label={mobileMenuOpen ? "Cerrar menu" : "Abrir menu"}
-                aria-expanded={mobileMenuOpen}
-                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-700"
-              >
-                {mobileMenuOpen ? (
-                  <X className="h-5 w-5" />
-                ) : (
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                    <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-                  </svg>
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {mobileMenuOpen ? (
-          <div
-            className="mt-2 rounded-2xl border border-slate-200 bg-white/95 p-3 backdrop-blur-xl md:hidden"
-            style={{ boxShadow: "0 12px 30px rgba(15,23,42,0.12)" }}
-          >
-            <nav className="flex flex-col gap-1">
-              {NAV_LINKS.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="rounded-xl px-3 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100"
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </nav>
-
-            {isStaff ? (
-              <div className="mt-2 flex flex-col gap-1 border-t border-slate-200 pt-2">
-                <p className="px-3 pb-1 text-[10px] font-semibold uppercase tracking-widest text-slate-400">
-                  Acciones rápidas
-                </p>
-                <Link
-                  href="/admin/tools"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100"
-                >
-                  <Wrench className="h-4 w-4 text-emerald-600" />
-                  Añadir Tool
-                </Link>
-                <Link
-                  href="/admin/posts"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100"
-                >
-                  <PenSquare className="h-4 w-4 text-violet-700" />
-                  Subir Post
-                </Link>
-              </div>
-            ) : null}
-
-            <div className="mt-3 border-t border-slate-200 pt-3">
-              {isLoading ? (
-                <div className="h-9 w-24 rounded-full bg-slate-200 animate-pulse" />
-              ) : !session ? (
-                <Link
-                  href={loginHref}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold text-white"
-                  style={{
-                    background: "linear-gradient(135deg, #2563eb, #7c3aed)",
-                    border: "1px solid rgba(99,102,241,0.30)",
-                  }}
-                >
-                  <LogIn className="h-4 w-4" />
-                  Login
-                </Link>
-              ) : (
-                <div className="flex items-center justify-between gap-3">
-                  <div className="text-sm text-slate-700 truncate">{displayName}</div>
-                  <div className="flex items-center gap-2">
-                    {isStaff ? (
-                      <Link
-                        href="/admin"
-                        onClick={() => setMobileMenuOpen(false)}
-                        className="inline-flex items-center rounded-full px-3 py-2 text-xs font-semibold text-blue-700"
-                        style={{
-                          background: "rgba(37,99,235,0.14)",
-                          border: "1px solid rgba(37,99,235,0.32)",
-                        }}
-                      >
-                        Admin
-                      </Link>
-                    ) : null}
-                    <button
-                      type="button"
-                      onClick={async () => {
-                        await supabase.auth.signOut();
-                        setSession(null);
-                        writeCachedHeaderSession(null);
-                        setMobileMenuOpen(false);
-                        router.refresh();
-                      }}
-                      className="inline-flex items-center gap-1 rounded-full px-3 py-2 text-xs font-semibold text-slate-700"
-                      style={{
-                        background: "rgba(241,245,249,0.92)",
-                        border: "1px solid rgba(148,163,184,0.30)",
-                      }}
-                    >
-                      <LogOut className="h-3.5 w-3.5" />
-                      Salir
-                    </button>
-                  </div>
                 </div>
               )}
             </div>
