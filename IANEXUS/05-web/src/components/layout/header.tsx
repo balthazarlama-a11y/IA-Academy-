@@ -188,7 +188,7 @@ export default function Header() {
 
   return (
     <header className="relative z-50 px-4 pt-3">
-      <div className="relative mx-auto w-full max-w-5xl">
+      <div className="editorial-frame relative">
         <div className="relative overflow-hidden rounded-xl border border-slate-200/80 bg-white/88 shadow-[0_10px_28px_rgba(15,23,42,0.06)] backdrop-blur-md editorial-surface">
           <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(255,255,255,0.84))]" />
           <div className="relative z-10 px-4 py-3 md:px-5">

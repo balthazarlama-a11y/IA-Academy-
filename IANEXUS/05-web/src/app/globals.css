@@ -124,6 +124,23 @@ body {
   box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
 }
 
+.editorial-frame {
+  width: min(100% - 2rem, 92rem);
+  margin-inline: auto;
+}
+
+@media (min-width: 768px) {
+  .editorial-frame {
+    width: min(100% - 3rem, 92rem);
+  }
+}
+
+@media (min-width: 1280px) {
+  .editorial-frame {
+    width: min(100% - 4rem, 92rem);
+  }
+}
+
 @keyframes page-fade-in {
   from {
     opacity: 0;

@@ -72,7 +72,7 @@ export default async function BlogPage() {
       <Header />
 
       <section className="relative flex-1 w-full px-4 py-8 md:px-6 md:py-12">
-        <div className="mx-auto flex w-full max-w-5xl flex-col gap-7">
+        <div className="editorial-frame flex flex-col gap-7">
           <header className="overflow-hidden rounded-2xl border border-white/80 bg-white/92 shadow-[0_22px_60px_rgba(15,23,42,0.07)] backdrop-blur-sm">
             <div className="grid gap-0 lg:grid-cols-[1.15fr_0.85fr]">
               <div className="p-5 md:p-6 lg:p-8">

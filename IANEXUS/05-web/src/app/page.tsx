@@ -214,8 +214,8 @@ export default async function Home() {
       <div className="relative z-10">
         <EditorialTopbar />
 
-        <section className="mx-auto w-full max-w-5xl px-6 pb-5 pt-5 md:pb-6 md:pt-6">
-          <div className="grid gap-3 lg:grid-cols-[0.93fr_1.07fr]">
+        <section className="editorial-frame px-5 pb-6 pt-5 md:px-6 md:pb-7 md:pt-6 xl:px-8">
+          <div className="grid gap-4 xl:grid-cols-[0.88fr_1.12fr]">
             <div className="rounded-xl border border-slate-200 bg-white/96 p-4 shadow-[0_12px_28px_rgba(15,23,42,0.045)] md:p-5 lg:p-6">
               <p className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">
                 <Sparkles className="h-3.5 w-3.5 text-sky-600" />
@@ -375,7 +375,7 @@ export default async function Home() {
           </div>
         </section>
 
-        <section className="mx-auto w-full max-w-5xl px-6 py-5 md:py-6">
+        <section className="editorial-frame px-5 py-5 md:px-6 md:py-6 xl:px-8">
           <EditorialSectionHeader
             eyebrow="Ultimas novedades"
             title="Lo nuevo en IA"
@@ -405,7 +405,7 @@ export default async function Home() {
           </div>
         </section>
 
-        <section className="mx-auto w-full max-w-5xl px-6 py-5 md:py-6">
+        <section className="editorial-frame px-5 py-5 md:px-6 md:py-6 xl:px-8">
           <EditorialSectionHeader
             eyebrow="Herramientas"
             title="Herramientas destacadas esta semana"
@@ -448,7 +448,7 @@ export default async function Home() {
           </div>
         </section>
 
-        <section className="mx-auto w-full max-w-5xl px-6 py-5 md:py-6">
+        <section className="editorial-frame px-5 py-5 md:px-6 md:py-6 xl:px-8">
           <EditorialSectionHeader
             eyebrow="Para estudiantes"
             title="Gratis, freemium y utilidades para estudiar mejor"
@@ -484,7 +484,7 @@ export default async function Home() {
           </div>
         </section>
 
-        <section className="mx-auto w-full max-w-5xl px-6 py-5 md:py-6">
+        <section className="editorial-frame px-5 py-5 md:px-6 md:py-6 xl:px-8">
           <EditorialSectionHeader
             eyebrow="Por carreras"
             title="Explora segun tu carrera"
@@ -514,7 +514,7 @@ export default async function Home() {
           </div>
         </section>
 
-        <section className="mx-auto w-full max-w-5xl px-6 py-5 md:py-6">
+        <section className="editorial-frame px-5 py-5 md:px-6 md:py-6 xl:px-8">
           <EditorialSectionHeader
             eyebrow="Guia y contexto"
             title="Guias para usar mejor la IA"
@@ -572,7 +572,7 @@ export default async function Home() {
           </div>
         </section>
 
-        <section className="mx-auto w-full max-w-5xl px-6 pb-12 pt-5 md:pb-14 md:pt-6">
+        <section className="editorial-frame px-5 pb-12 pt-5 md:px-6 md:pb-14 md:pt-6 xl:px-8">
           <div className="rounded-xl border border-slate-200 bg-slate-950 px-5 py-6 text-white shadow-[0_14px_34px_rgba(15,23,42,0.14)] md:px-6 md:py-7">
             <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
               <div>

@@ -21,7 +21,7 @@ export default async function DiaADiaPage() {
       <section className="relative flex-1 px-4 py-6 sm:px-6 md:py-10">
         <div className="absolute inset-x-0 top-0 h-64 bg-[radial-gradient(circle_at_top_left,_rgba(56,189,248,0.14),_transparent_45%),radial-gradient(circle_at_top_right,_rgba(99,102,241,0.12),_transparent_40%),radial-gradient(circle_at_center,_rgba(148,163,184,0.1),_transparent_60%)] blur-3xl" />
 
-        <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-5">
+        <div className="editorial-frame relative flex flex-col gap-5">
           <header className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white/88 p-4 shadow-[0_18px_60px_rgba(15,23,42,0.06)] backdrop-blur md:p-5">
             <div className="grid gap-6 lg:grid-cols-[1.12fr_0.88fr] lg:items-center">
               <div>

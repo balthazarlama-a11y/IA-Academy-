@@ -14,8 +14,8 @@ export default async function EstudiantesPage() {
     <main className="relative flex min-h-screen flex-col">
       <Header />
 
-      <section className="flex-1 w-full px-6 py-10 md:py-14">
-        <div className="mx-auto w-full max-w-6xl">
+      <section className="flex-1 w-full px-5 py-10 md:px-6 md:py-14 xl:px-8">
+        <div className="editorial-frame">
           <header className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_18px_54px_rgba(15,23,42,0.06)]">
             <div className="grid gap-6 p-5 md:p-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-end lg:p-8">
               <div>

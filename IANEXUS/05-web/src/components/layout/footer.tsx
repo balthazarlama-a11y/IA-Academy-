@@ -35,7 +35,7 @@ const SOCIAL_LINKS = [
 export default function Footer() {
   return (
     <footer className="relative z-50 px-4 pb-3">
-      <div className="mx-auto w-full max-w-5xl rounded-xl border border-slate-200 bg-white/90 px-5 py-4 shadow-[0_10px_24px_rgba(15,23,42,0.05)] backdrop-blur-sm editorial-surface">
+      <div className="editorial-frame rounded-xl border border-slate-200 bg-white/90 px-5 py-4 shadow-[0_10px_24px_rgba(15,23,42,0.05)] backdrop-blur-sm editorial-surface">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-3">

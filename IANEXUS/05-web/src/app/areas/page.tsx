@@ -162,8 +162,8 @@ export default async function AreasPage({ searchParams }: PageProps) {
     <main className="relative min-h-screen flex flex-col">
       <Header />
 
-      <section className="flex-1 w-full px-6 py-8 md:py-12">
-        <div className="mx-auto flex w-full max-w-7xl flex-col items-center gap-6">
+      <section className="flex-1 w-full px-5 py-8 md:px-6 md:py-12 xl:px-8">
+        <div className="editorial-frame flex flex-col gap-6">
           <div className="w-full overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_12px_36px_rgba(15,23,42,0.05)]">
             <div className="grid gap-5 p-5 md:p-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-end lg:p-7">
               <div>
