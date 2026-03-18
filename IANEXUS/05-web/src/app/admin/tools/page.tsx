@@ -27,9 +27,17 @@ type AdminToolRow = {
   sort_order: number;
   updated_at: string;
   tool_categories: { name: string; slug: string } | { name: string; slug: string }[] | null;
+  tool_careers:
+    | {
+        career_paths:
+          | { id: string; name: string; slug: string }
+          | { id: string; name: string; slug: string }[]
+          | null;
+      }[]
+    | null;
 };
 
-type ToolCategory = {
+type ToolCareer = {
   id: string;
   name: string;
   slug: string;
@@ -59,21 +67,22 @@ export default async function AdminToolsPage({
   const errorMessage = params.err ?? "";
   const query = (params.q ?? "").trim().toLowerCase();
 
-  const [{ data: toolsData }, { data: categoriesData }] = await Promise.all([
+  const [{ data: toolsData }, { data: careersData }] = await Promise.all([
     supabase
       .from("tools")
-      .select("id, name, slug, description, url, cover_image_url, plan, level, ia_type, category_id, verified, edu_verified, featured, status, sort_order, updated_at, tool_categories(name, slug)")
+      .select("id, name, slug, description, url, cover_image_url, plan, level, ia_type, category_id, verified, edu_verified, featured, status, sort_order, updated_at, tool_categories(name, slug), tool_careers(career_paths(id, name, slug))")
       .order("updated_at", { ascending: false })
       .limit(100),
     supabase
-      .from("tool_categories")
+      .from("career_paths")
       .select("id, name, slug")
+      .eq("status", "published")
       .order("sort_order", { ascending: true })
       .order("name", { ascending: true }),
   ]);
 
   const tools = (toolsData ?? []) as unknown as AdminToolRow[];
-  const categories = (categoriesData ?? []) as ToolCategory[];
+  const careers = (careersData ?? []) as ToolCareer[];
   const filteredTools = query
     ? tools.filter((tool) => [tool.name, tool.slug, tool.url].some((value) => value.toLowerCase().includes(query)))
     : tools;
@@ -83,7 +92,7 @@ export default async function AdminToolsPage({
       <div className="flex items-center justify-between gap-3">
         <div>
           <h2 className="text-2xl font-semibold text-slate-900">Tools</h2>
-          <p className="text-sm text-slate-500">Gestiona herramientas publicadas y borradores.</p>
+          <p className="text-sm text-slate-500">Gestiona herramientas, borradores y su clasificación por carreras.</p>
         </div>
         <Link
           href="/admin/posts"
@@ -110,8 +119,8 @@ export default async function AdminToolsPage({
           className="rounded-2xl p-5"
           style={{ background: "rgba(255, 255, 255, 0.88)", border: "1px solid rgba(148, 163, 184, 0.32)" }}
         >
-          <h3 className="mb-4 text-lg font-medium text-slate-900">Nueva tool</h3>
-          <CreateToolForm categories={categories} createAction={createToolAction} />
+          <h3 className="mb-4 text-lg font-medium text-slate-900">Nueva tool por carreras</h3>
+          <CreateToolForm careers={careers} createAction={createToolAction} />
         </section>
       ) : null}
 
@@ -152,7 +161,7 @@ export default async function AdminToolsPage({
               <ToolEditorItem
                 key={tool.id}
                 tool={tool}
-                categories={categories}
+                careers={careers}
                 updateAction={updateToolAction}
                 deleteAction={deleteToolAction}
                 defaultOpen={query ? tool.slug === query || tool.name.toLowerCase() === query : false}

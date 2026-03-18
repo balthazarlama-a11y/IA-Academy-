@@ -10,10 +10,10 @@ type ToolCategory = {
 };
 
 export function CreateToolForm({
-  categories,
+  careers,
   createAction,
 }: {
-  categories: ToolCategory[];
+  careers: ToolCategory[];
   createAction: (formData: FormData) => Promise<void>;
 }) {
   const [isPending, startTransition] = useTransition();
@@ -54,17 +54,18 @@ export function CreateToolForm({
         className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50 md:col-span-2"
       />
       <UploadImageField fileInputName="cover_image_file" urlInputName="cover_image_url" label="Imagen / logo" colSpan="md:col-span-2" />
-      <select
-        name="category_id"
-        required
-        disabled={isPending}
-        className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50"
-      >
-        <option value="">Selecciona categoria</option>
-        {categories.map((category) => (
-          <option key={category.id} value={category.id}>{category.name}</option>
-        ))}
-      </select>
+      <fieldset className="rounded-lg border border-slate-200 bg-white px-3 py-3 text-sm text-slate-900 md:col-span-2">
+        <legend className="px-1 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Carreras</legend>
+        <p className="mb-3 text-xs text-slate-500">Selecciona una o varias carreras para clasificar la tool.</p>
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+          {careers.map((career) => (
+            <label key={career.id} className="inline-flex items-center gap-2 text-sm text-slate-700">
+              <input name="career_ids" type="checkbox" value={career.id} disabled={isPending} />
+              <span>{career.name}</span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
       <input
         name="ia_type"
         placeholder="Tipo IA (opcional)"

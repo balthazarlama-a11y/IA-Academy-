@@ -9,6 +9,7 @@ import { uploadMediaFile } from "@/lib/supabase/admin-storage";
 type ToolPlan = "free" | "freemium" | "paid" | "edu_free";
 type ToolLevel = "beginner" | "intermediate" | "advanced" | "all";
 type ToolStatus = "draft" | "scheduled" | "published" | "archived";
+type ToolCategoryRow = { id: string; slug: string };
 
 async function ensureStaffUser() {
   const user = await getCurrentUser();
@@ -50,6 +51,81 @@ function isNextNavigationError(error: unknown): boolean {
   return digest.startsWith("NEXT_REDIRECT") || digest.startsWith("NEXT_NOT_FOUND");
 }
 
+function getCareerIds(formData: FormData) {
+  return Array.from(
+    new Set(
+      formData
+        .getAll("career_ids")
+        .map((value) => value.toString().trim())
+        .filter(Boolean),
+    ),
+  );
+}
+
+async function resolveLegacyCategoryId(
+  supabase: Awaited<ReturnType<typeof getSupabaseServerAuthClient>>,
+  careerIds: string[],
+  fallbackCategoryId?: string | null,
+) {
+  if (!careerIds.length) {
+    return fallbackCategoryId?.trim() || null;
+  }
+
+  const [{ data: careerRows, error: careerError }, { data: categories, error: categoryError }] = await Promise.all([
+    supabase.from("career_paths").select("id, slug").in("id", careerIds),
+    supabase
+      .from("tool_categories")
+      .select("id, slug")
+      .order("sort_order", { ascending: true })
+      .order("name", { ascending: true }),
+  ]);
+
+  if (careerError) {
+    throw new Error(careerError.message);
+  }
+
+  if (categoryError) {
+    throw new Error(categoryError.message);
+  }
+
+  const categoryRows = ((categories ?? []) as ToolCategoryRow[]);
+  const categoryBySlug = new Map(categoryRows.map((row) => [row.slug, row.id]));
+  const careerSlugs = ((careerRows ?? []) as Array<{ id: string; slug: string }>).map((row) => row.slug);
+
+  for (const slug of careerSlugs) {
+    const matched = categoryBySlug.get(slug);
+    if (matched) return matched;
+  }
+
+  return fallbackCategoryId?.trim() || categoryBySlug.get("todas") || categoryRows[0]?.id || null;
+}
+
+async function syncToolCareers(
+  supabase: Awaited<ReturnType<typeof getSupabaseServerAuthClient>>,
+  toolId: string,
+  careerIds: string[],
+) {
+  const { error: deleteError } = await supabase.from("tool_careers").delete().eq("tool_id", toolId);
+  if (deleteError) {
+    throw new Error(deleteError.message);
+  }
+
+  if (!careerIds.length) {
+    return;
+  }
+
+  const payload = careerIds.map((careerPathId, index) => ({
+    tool_id: toolId,
+    career_path_id: careerPathId,
+    sort_order: index,
+  }));
+
+  const { error: insertError } = await supabase.from("tool_careers").insert(payload);
+  if (insertError) {
+    throw new Error(insertError.message);
+  }
+}
+
 export async function createToolAction(formData: FormData) {
   try {
     await ensureStaffUser();
@@ -64,12 +140,12 @@ export async function createToolAction(formData: FormData) {
     const plan = (formData.get("plan")?.toString() ?? "free") as ToolPlan;
     const level = (formData.get("level")?.toString() ?? "all") as ToolLevel;
     const iaType = normalizeNullableText(formData.get("ia_type"));
-    const categoryId = (formData.get("category_id")?.toString() ?? "").trim();
+    const careerIds = getCareerIds(formData);
     const status = (formData.get("status")?.toString() ?? "published") as ToolStatus;
     const sortOrder = Number.parseInt(formData.get("sort_order")?.toString() ?? "0", 10) || 0;
 
-    if (!name || !slug || !url || !categoryId) {
-      redirect("/admin/tools?err=Completa%20nombre%2C%20slug%2C%20url%20y%20categoria");
+    if (!name || !slug || !url || careerIds.length === 0) {
+      redirect("/admin/tools?err=Completa%20nombre%2C%20slug%2C%20url%20y%20al%20menos%20una%20carrera");
     }
 
     let coverImageUrl = normalizeNullableText(formData.get("cover_image_url"));
@@ -82,26 +158,37 @@ export async function createToolAction(formData: FormData) {
       coverImageUrl = uploadedUrl;
     }
 
-    const { error } = await supabase.from("tools").insert({
-      name,
-      slug,
-      description,
-      url,
-      ...(coverImageUrl ? { cover_image_url: coverImageUrl } : {}),
-      plan,
-      level,
-      ia_type: iaType,
-      category_id: categoryId,
-      verified: formData.get("verified") === "on",
-      edu_verified: formData.get("edu_verified") === "on",
-      featured: formData.get("featured") === "on",
-      status,
-      sort_order: sortOrder,
-    });
+    const categoryId = await resolveLegacyCategoryId(supabase, careerIds);
+    if (!categoryId) {
+      redirect("/admin/tools?err=No%20se%20pudo%20resolver%20la%20categoria%20legacy%20para%20esta%20tool");
+    }
+
+    const { data: insertedTool, error } = await supabase
+      .from("tools")
+      .insert({
+        name,
+        slug,
+        description,
+        url,
+        ...(coverImageUrl ? { cover_image_url: coverImageUrl } : {}),
+        plan,
+        level,
+        ia_type: iaType,
+        category_id: categoryId,
+        verified: formData.get("verified") === "on",
+        edu_verified: formData.get("edu_verified") === "on",
+        featured: formData.get("featured") === "on",
+        status,
+        sort_order: sortOrder,
+      })
+      .select("id")
+      .single();
 
     if (error) {
       redirect(`/admin/tools?err=${encodeURIComponent(error.message)}`);
     }
+
+    await syncToolCareers(supabase, insertedTool.id, careerIds);
 
     revalidatePath("/areas");
     revalidatePath("/estudiantes");
@@ -125,22 +212,17 @@ export async function deleteToolAction(formData: FormData) {
       redirect("/admin/tools?err=ID%20de%20tool%20requerido");
     }
 
-    // 1. Eliminar primero las relaciones en post_tools (integridad referencial)
-    const { error: relError } = await supabase
-      .from("post_tools")
-      .delete()
-      .eq("tool_id", id);
-
-    if (relError) {
-      redirect(`/admin/tools?err=${encodeURIComponent("Error eliminando relaciones: " + relError.message)}`);
+    const { error: postToolsError } = await supabase.from("post_tools").delete().eq("tool_id", id);
+    if (postToolsError) {
+      redirect(`/admin/tools?err=${encodeURIComponent("Error eliminando relaciones: " + postToolsError.message)}`);
     }
 
-    // 2. Eliminar la tool
-    const { error } = await supabase
-      .from("tools")
-      .delete()
-      .eq("id", id);
+    const { error: toolCareersError } = await supabase.from("tool_careers").delete().eq("tool_id", id);
+    if (toolCareersError) {
+      redirect(`/admin/tools?err=${encodeURIComponent("Error eliminando carreras: " + toolCareersError.message)}`);
+    }
 
+    const { error } = await supabase.from("tools").delete().eq("id", id);
     if (error) {
       redirect(`/admin/tools?err=${encodeURIComponent(error.message)}`);
     }
@@ -172,11 +254,12 @@ export async function updateToolAction(formData: FormData) {
     const plan = (formData.get("plan")?.toString() ?? "free") as ToolPlan;
     const level = (formData.get("level")?.toString() ?? "all") as ToolLevel;
     const iaType = normalizeNullableText(formData.get("ia_type"));
-    const categoryId = (formData.get("category_id")?.toString() ?? "").trim();
+    const careerIds = getCareerIds(formData);
+    const currentCategoryId = (formData.get("current_category_id")?.toString() ?? "").trim();
     const status = (formData.get("status")?.toString() ?? "published") as ToolStatus;
     const sortOrder = Number.parseInt(formData.get("sort_order")?.toString() ?? "0", 10) || 0;
 
-    if (!id || !name || !slug || !url || !categoryId) {
+    if (!id || !name || !slug || !url || careerIds.length === 0) {
       redirect("/admin/tools?err=Faltan%20datos%20obligatorios%20para%20actualizar");
     }
 
@@ -188,6 +271,11 @@ export async function updateToolAction(formData: FormData) {
         redirect(`/admin/tools?err=${encodeURIComponent("Error subiendo imagen: " + uploadErr)}`);
       }
       coverImageUrl = uploadedUrl;
+    }
+
+    const categoryId = await resolveLegacyCategoryId(supabase, careerIds, currentCategoryId);
+    if (!categoryId) {
+      redirect("/admin/tools?err=No%20se%20pudo%20resolver%20la%20categoria%20legacy%20para%20actualizar");
     }
 
     const { error } = await supabase
@@ -213,6 +301,8 @@ export async function updateToolAction(formData: FormData) {
     if (error) {
       redirect(`/admin/tools?err=${encodeURIComponent(error.message)}`);
     }
+
+    await syncToolCareers(supabase, id, careerIds);
 
     revalidatePath("/areas");
     revalidatePath("/estudiantes");

@@ -22,6 +22,14 @@ type Tool = {
   sort_order: number;
   updated_at: string;
   tool_categories: { name: string; slug: string } | { name: string; slug: string }[] | null;
+  tool_careers?:
+    | {
+        career_paths:
+          | { id: string; name: string; slug: string }
+          | { id: string; name: string; slug: string }[]
+          | null;
+      }[]
+    | null;
 };
 
 type ToolCategory = {
@@ -48,21 +56,33 @@ function getToolCategoryName(value: Tool["tool_categories"]) {
   return value.name;
 }
 
+function getToolCareerSelections(tool: Tool) {
+  return (tool.tool_careers ?? [])
+    .map((entry) => (Array.isArray(entry.career_paths) ? entry.career_paths[0] : entry.career_paths))
+    .filter((career): career is { id: string; name: string; slug: string } => Boolean(career));
+}
+
 export function ToolEditorItem({
   tool,
+  careers,
   categories,
   updateAction,
   deleteAction,
   defaultOpen = false,
 }: {
   tool: Tool;
-  categories: ToolCategory[];
+  careers?: ToolCategory[];
+  categories?: ToolCategory[];
   updateAction: ActionFn;
   deleteAction: ActionFn;
   defaultOpen?: boolean;
 }) {
   const [isPending, startTransition] = useTransition();
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+  const availableCareers = careers ?? categories ?? [];
+  const selectedCareers = getToolCareerSelections(tool);
+  const selectedCareerIds = new Set(selectedCareers.map((career) => career.id));
+  const selectedCareerLabel = selectedCareers.map((career) => career.name).join(", ");
 
   const handleSubmit = (formData: FormData) => {
     startTransition(() => {
@@ -93,7 +113,7 @@ export function ToolEditorItem({
           <div className="min-w-0 flex-1">
             <p className="truncate text-sm font-medium text-slate-900">{tool.name}</p>
             <p className="truncate text-xs text-slate-500">
-              /{tool.slug} - {tool.status} - {getToolCategoryName(tool.tool_categories)} - {formatDate(tool.updated_at)}
+              /{tool.slug} - {tool.status} - {selectedCareerLabel || getToolCategoryName(tool.tool_categories)} - {formatDate(tool.updated_at)}
             </p>
           </div>
           <Wrench className="h-4 w-4 shrink-0 text-slate-500" />
@@ -103,6 +123,7 @@ export function ToolEditorItem({
       <div className="border-t border-slate-200 p-4">
         <form action={handleSubmit} className="grid grid-cols-1 gap-3 md:grid-cols-2">
           <input type="hidden" name="id" value={tool.id} />
+          <input type="hidden" name="current_category_id" value={tool.category_id} />
           <input
             name="name"
             required
@@ -138,19 +159,24 @@ export function ToolEditorItem({
             label="Imagen / logo"
             colSpan="md:col-span-2"
           />
-          <select
-            name="category_id"
-            defaultValue={tool.category_id}
-            required
-            disabled={isPending}
-            className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50"
-          >
-            {categories.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.name}
-              </option>
-            ))}
-          </select>
+          <fieldset className="rounded-lg border border-slate-200 bg-white px-3 py-3 text-sm text-slate-900 md:col-span-2">
+            <legend className="px-1 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Carreras</legend>
+            <p className="mb-3 text-xs text-slate-500">Selecciona las carreras que mejor representan esta tool.</p>
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+              {availableCareers.map((career) => (
+                <label key={career.id} className="inline-flex items-center gap-2 text-sm text-slate-700">
+                  <input
+                    name="career_ids"
+                    type="checkbox"
+                    value={career.id}
+                    defaultChecked={selectedCareerIds.has(career.id)}
+                    disabled={isPending}
+                  />
+                  <span>{career.name}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
           <input
             name="ia_type"
             defaultValue={tool.ia_type ?? ""}
