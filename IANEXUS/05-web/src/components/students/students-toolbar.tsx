@@ -391,11 +391,11 @@ export default function StudentsToolbar({
                 Curadoria academica
               </p>
               <h2 className="mt-1 text-lg font-semibold text-slate-900">
-                Encuentra acceso real, no ruido
+                Filtra por acceso y tipo de herramienta
               </h2>
               <p className="mt-1 max-w-2xl text-sm leading-relaxed text-slate-600">
-                Filtra por gratis total, pack estudiante o freemium para encontrar herramientas
-                que sirven de verdad en estudio, investigacion y proyectos.
+                Prioriza gratis total, beneficio estudiantil o freemium para encontrar opciones
+                que puedas probar sin perder tiempo.
               </p>
             </div>
 
@@ -419,7 +419,7 @@ export default function StudentsToolbar({
               value={searchInput}
               onChange={(event) => handleSearchChange(event.target.value)}
               placeholder="Ej: chatgpt, notion, github copilot..."
-              className="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-slate-400"
+              className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-slate-400"
             />
             <p className="mt-2 text-xs leading-relaxed text-slate-500">
               Busca por nombre, descripcion o tipo de IA.
@@ -431,7 +431,7 @@ export default function StudentsToolbar({
               Acceso
             </p>
             <div className="grid gap-2">
-              <label className="inline-flex cursor-pointer items-start gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 transition hover:border-slate-300">
+              <label className="inline-flex cursor-pointer items-start gap-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 transition hover:border-slate-300">
                 <input
                   type="radio"
                   name="scope"
@@ -447,7 +447,7 @@ export default function StudentsToolbar({
                   </span>
                 </span>
               </label>
-              <label className="inline-flex cursor-pointer items-start gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 transition hover:border-slate-300">
+              <label className="inline-flex cursor-pointer items-start gap-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 transition hover:border-slate-300">
                 <input
                   type="radio"
                   name="scope"
@@ -463,7 +463,7 @@ export default function StudentsToolbar({
                   </span>
                 </span>
               </label>
-              <label className="inline-flex cursor-pointer items-start gap-3 rounded-2xl border border-emerald-300/30 bg-emerald-400/10 px-4 py-3 text-sm text-emerald-800 transition hover:border-emerald-300/50">
+              <label className="inline-flex cursor-pointer items-start gap-3 rounded-xl border border-emerald-300/30 bg-emerald-400/10 px-4 py-3 text-sm text-emerald-800 transition hover:border-emerald-300/50">
                 <input
                   type="checkbox"
                   checked={includeFreemiumValue}
@@ -491,7 +491,7 @@ export default function StudentsToolbar({
               id="ia_type"
               value={iaTypeValue}
               onChange={(event) => handleIaTypeChange(event.target.value)}
-              className="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-slate-400"
+              className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-slate-400"
             >
               <option value="">Todos</option>
               {iaTypeOptions.map((option) => (
@@ -508,7 +508,7 @@ export default function StudentsToolbar({
           <div className="md:col-span-12 flex flex-col gap-3 border-t border-slate-200 pt-4 md:flex-row md:items-center md:justify-between">
             <p className="text-sm text-slate-600">
               Mostrando <span className="font-semibold text-slate-900">{tools.length}</span>
-              {hasMore ? "+" : ""} oportunidades para estudiantes.
+              {hasMore ? "+" : ""} herramientas para estudiantes.
             </p>
             <button
               type="button"

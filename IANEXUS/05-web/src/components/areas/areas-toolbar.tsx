@@ -330,11 +330,10 @@ export default function AreasToolbar({
                 Curadoria por carrera
               </p>
               <h2 className="mt-1 text-lg font-semibold text-slate-950">
-                Combina carrera, plan y nivel
+                Filtra por carrera, acceso y nivel
               </h2>
               <p className="mt-1 max-w-2xl text-sm leading-relaxed text-slate-600">
-                Selecciona una o varias carreras para afinar el catalogo. Puedes cruzar
-                profesiones, acceso y complejidad sin perder contexto editorial.
+                Acota rapido el catalogo y compara herramientas segun una necesidad concreta.
               </p>
             </div>
 
@@ -370,7 +369,7 @@ export default function AreasToolbar({
                   Carreras
                 </p>
                 <p className="mt-1 text-sm font-semibold text-slate-950">
-                  Selecciona una o varias profesiones
+                  Selecciona uno o varios contextos
                 </p>
               </div>
             </div>
@@ -462,7 +461,7 @@ export default function AreasToolbar({
           <div className="flex items-center justify-between gap-3 border-t border-slate-200 pt-2">
             <p className="text-xs text-slate-500">
               Mostrando <span className="text-slate-700">{tools.length}{hasMore ? "+" : ""}</span>{" "}
-              herramientas
+              herramientas curadas
             </p>
             {hasFilters ? (
               <button
