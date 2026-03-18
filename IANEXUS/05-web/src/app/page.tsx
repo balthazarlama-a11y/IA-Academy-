@@ -85,7 +85,7 @@ const editorialRoutes = [
     blurb: "Gratis, freemium y planes que realmente sirven.",
   },
   {
-    label: "Areas",
+    label: "Carreras",
     href: "/areas",
     icon: Layers3,
     blurb: "Herramientas por especialidad y necesidad concreta.",
@@ -239,7 +239,7 @@ export default async function Home() {
                   Gratis y freemium
                 </span>
                 <span className="rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-[11px] text-slate-700 md:text-sm">
-                  Por area y necesidad
+                  Por carrera y necesidad
                 </span>
               </div>
 
@@ -411,7 +411,7 @@ export default async function Home() {
             title="Herramientas destacadas esta semana"
             description="Una seleccion curada de opciones utiles, con foco en lo que de verdad merece tu tiempo."
             href="/areas"
-            cta="Explorar areas"
+            cta="Explorar carreras"
           />
 
           <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
@@ -486,11 +486,11 @@ export default async function Home() {
 
         <section className="mx-auto w-full max-w-5xl px-6 py-5 md:py-6">
           <EditorialSectionHeader
-            eyebrow="Por areas"
-            title="Explora segun tu area"
-            description="Categorias editoriales para llegar rapido a la herramienta o guia que encaja con lo que haces."
+            eyebrow="Por carreras"
+            title="Explora segun tu carrera"
+            description="Rutas editoriales para llegar rapido a la herramienta o guia que encaja con lo que estudias o haces."
             href="/areas"
-            cta="Ver todas las areas"
+            cta="Ver todas las carreras"
           />
 
           <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
@@ -505,7 +505,7 @@ export default async function Home() {
                   title={area.label}
                   description={area.blurb}
                   meta="Exploracion curada"
-                  footer="Abrir area"
+                  footer="Abrir carrera"
                   icon={Icon}
                   variant="compact"
                 />
