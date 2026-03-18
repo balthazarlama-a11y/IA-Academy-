@@ -1,3 +1,6 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { ArrowUpRight, BookOpenText } from "lucide-react";
 import BlogEmptyState from "@/components/blog/blog-empty-state";
 import BlogPostCard from "@/components/blog/blog-post-card";
 import LatestUpdatesSection from "@/components/blog/latest-updates-section";
@@ -5,41 +8,14 @@ import Footer from "@/components/layout/footer";
 import Header from "@/components/layout/header";
 import { CommunityCtaBanner } from "@/components/marketing/community-cta-banner";
 import { fetchPublishedPosts } from "@/lib/supabase/server";
-import {
-  ArrowUpRight,
-  BookOpenText,
-  Layers3,
-  Sparkles,
-} from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
 
-// ISR cada 5 minutos
 export const revalidate = 300;
 
-function formatDate(dateString: string | null) {
-  if (!dateString) return "Reciente";
-
-  const date = new Date(dateString);
-  return new Intl.DateTimeFormat("es-ES", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  }).format(date);
-}
-
-function formatLabel(kind: string) {
-  switch (kind) {
-    case "news":
-      return "Actualizacion";
-    case "guide":
-      return "Guia";
-    case "tool":
-      return "Herramienta";
-    default:
-      return "Articulo";
-  }
-}
+export const metadata: Metadata = {
+  title: "Blog de IA | IA NEXUS",
+  description:
+    "Archivo editorial de IA NEXUS con guias, notas y actualizaciones para seguir herramientas y cambios relevantes sin ruido.",
+};
 
 export default async function BlogPage() {
   const posts = await fetchPublishedPosts();
@@ -53,144 +29,75 @@ export default async function BlogPage() {
       !latestNews.some((latestPost) => latestPost.id === post.id),
   );
 
-  const totalPosts = posts.length;
-  const newsCount = posts.filter((post) => post.post_kind === "news").length;
-  const libraryCount = posts.filter((post) => post.post_kind !== "news").length;
-
   return (
     <main
       className="relative min-h-screen flex flex-col overflow-hidden text-slate-900"
       style={{
         background:
-          "radial-gradient(circle at top left, rgba(203,213,225,0.45), transparent 36%), radial-gradient(circle at top right, rgba(199,210,254,0.45), transparent 30%), linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%)",
+          "radial-gradient(circle at top left, rgba(203,213,225,0.32), transparent 34%), radial-gradient(circle at top right, rgba(199,210,254,0.32), transparent 28%), linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%)",
       }}
     >
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-[34rem] bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.9),transparent_58%)]" />
-      <div className="pointer-events-none absolute left-[-12rem] top-28 h-64 w-64 rounded-full bg-cyan-200/30 blur-3xl" />
-      <div className="pointer-events-none absolute right-[-10rem] top-44 h-72 w-72 rounded-full bg-indigo-200/24 blur-3xl" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-[28rem] bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.85),transparent_58%)]" />
 
       <Header />
 
-      <section className="relative flex-1 w-full px-4 py-8 md:px-6 md:py-12">
-        <div className="editorial-frame flex flex-col gap-7">
-          <header className="overflow-hidden rounded-2xl border border-white/80 bg-white/92 shadow-[0_22px_60px_rgba(15,23,42,0.07)] backdrop-blur-sm">
-            <div className="grid gap-0 lg:grid-cols-[1.15fr_0.85fr]">
-              <div className="p-5 md:p-6 lg:p-8">
-                <p className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-[11px] font-medium uppercase tracking-[0.18em] text-slate-600">
-                  <BookOpenText className="h-3.5 w-3.5" />
+      <section className="relative flex-1 w-full px-4 py-6 md:px-6 md:py-10">
+        <div className="editorial-frame flex flex-col gap-6">
+          <header className="rounded-2xl border border-white/80 bg-white/92 shadow-[0_18px_50px_rgba(15,23,42,0.06)] backdrop-blur-sm">
+            <div className="grid gap-0 lg:grid-cols-[0.95fr_1.05fr]">
+              <div className="border-b border-slate-200/80 p-5 md:p-6 lg:border-b-0 lg:border-r lg:p-7">
+                <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-slate-500">
                   Archivo editorial
                 </p>
 
-                <h1 className="mt-4 max-w-xl text-2xl font-semibold tracking-tight text-slate-950 md:text-3xl lg:text-4xl">
-                  Notas, guias y actualizaciones sobre IA que vale la pena seguir.
+                <h1 className="mt-3 max-w-2xl text-2xl font-semibold tracking-tight text-slate-950 md:text-3xl">
+                  Blog, guias y notas para seguir IA con criterio.
                 </h1>
 
-                <p className="mt-4 max-w-xl text-sm leading-relaxed text-slate-600 md:text-base">
-                  Un archivo curado para descubrir lanzamientos, leer piezas utiles y seguir
-                  las novedades mas importantes sin ruido.
+                <p className="mt-3 max-w-xl text-sm leading-relaxed text-slate-600 md:text-base">
+                  Un archivo curado para leer lanzamientos, herramientas y piezas utiles sin
+                  caer en ruido promocional.
                 </p>
 
-                <div className="mt-6 flex flex-wrap items-center gap-3 text-sm text-slate-600">
-                  <span className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5">
-                    <BookOpenText className="h-4 w-4 text-slate-500" />
-                    {totalPosts} publicaciones
-                  </span>
-                  <span className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5">
-                    <Sparkles className="h-4 w-4 text-amber-500" />
-                    {newsCount} actualizaciones
-                  </span>
-                  <span className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5">
-                    <Layers3 className="h-4 w-4 text-cyan-600" />
-                    {libraryCount} piezas de archivo
-                  </span>
-                </div>
-
-                <div className="mt-8 flex flex-wrap gap-3">
+                <div className="mt-6 flex flex-wrap gap-3">
                   <Link
                     href="/areas"
-                    className="inline-flex items-center gap-2 rounded-full bg-slate-950 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-slate-800"
+                    className="inline-flex items-center gap-2 rounded-full bg-slate-950 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-slate-800"
                   >
-                    Explorar por areas
+                    Explorar por carreras
                     <ArrowUpRight className="h-4 w-4" />
                   </Link>
                   <Link
-                    href="/estudiantes"
-                    className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-2.5 text-sm font-medium text-slate-700 transition hover:border-slate-300 hover:bg-slate-50"
+                    href="/dia-a-dia"
+                    className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:border-slate-300 hover:bg-slate-50"
                   >
-                    Gratis para estudiantes
+                    Ver feed del día
                   </Link>
                 </div>
               </div>
 
-              <div className="border-t border-slate-200/80 bg-slate-50/90 p-4 md:p-5 lg:border-l lg:border-t-0">
-                <div className="flex items-center justify-between gap-4">
-                  <p className="text-xs font-medium uppercase tracking-[0.18em] text-slate-500">
-                    Lectura destacada
-                  </p>
-                  <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-[11px] font-medium text-emerald-700">
-                    Portada
-                  </span>
+              <div className="p-5 md:p-6 lg:p-7">
+                <div className="flex items-center justify-between gap-4 border-b border-slate-200 pb-3">
+                  <div>
+                    <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-slate-500">
+                      En portada
+                    </p>
+                    <p className="mt-1 text-sm text-slate-600">
+                      La lectura principal del archivo hoy.
+                    </p>
+                  </div>
+                  <BookOpenText className="h-4 w-4 text-slate-400" />
                 </div>
 
                 {featuredPost ? (
-                <article className="mt-5 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-[0_14px_36px_rgba(15,23,42,0.05)]">
-                    {featuredPost.cover_image_url ? (
-                      <div className="relative aspect-[16/10] w-full overflow-hidden">
-                        <Image
-                          src={featuredPost.cover_image_url}
-                          alt={featuredPost.title}
-                          fill
-                          unoptimized
-                          sizes="(min-width: 1024px) 420px, 100vw"
-                          className="object-cover"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/25 via-transparent to-transparent" />
-                      </div>
-                    ) : (
-                      <div className="grid aspect-[16/10] place-items-center bg-[linear-gradient(135deg,rgba(148,163,184,0.2),rgba(255,255,255,0.85))]">
-                        <BookOpenText className="h-10 w-10 text-slate-400" />
-                      </div>
-                    )}
-
-                    <div className="space-y-3 p-4">
-                      <div className="flex flex-wrap items-center gap-2 text-[11px] font-medium uppercase tracking-[0.14em] text-slate-500">
-                        <span className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-slate-700">
-                          {formatLabel(featuredPost.post_kind)}
-                        </span>
-                        <span>{formatDate(featuredPost.published_at)}</span>
-                        {featuredPost.ia_type ? <span>{featuredPost.ia_type}</span> : null}
-                      </div>
-
-                      <h2 className="text-lg font-semibold leading-snug text-slate-950 md:text-xl">
-                        {featuredPost.title}
-                      </h2>
-
-                      <p className="line-clamp-3 text-sm leading-relaxed text-slate-600">
-                        {featuredPost.excerpt ||
-                          "Una pieza destacada para entender el movimiento de IA desde una lectura util y directa."}
-                      </p>
-
-                      <Link
-                        href={`/blog/${featuredPost.slug}`}
-                        prefetch={true}
-                        className="inline-flex items-center gap-2 text-sm font-medium text-slate-900 transition hover:text-slate-600"
-                      >
-                        Leer portada
-                        <ArrowUpRight className="h-4 w-4" />
-                      </Link>
-                    </div>
-                  </article>
+                  <div className="mt-4">
+                    <BlogPostCard post={featuredPost} compact />
+                  </div>
                 ) : (
-                  <div className="mt-5 rounded-xl border border-dashed border-slate-300 bg-white p-5">
-                    <p className="text-sm uppercase tracking-[0.16em] text-slate-500">
-                      Sin portada disponible
-                    </p>
-                    <h2 className="mt-3 text-xl font-semibold text-slate-950">
-                      El archivo editorial estara listo cuando publiquemos la primera pieza.
-                    </h2>
-                    <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                      Mientras tanto, puedes navegar por areas o revisar el bloque de
-                      actualizaciones cuando exista contenido.
+                  <div className="mt-4 rounded-xl border border-dashed border-slate-300 bg-slate-50 p-5">
+                    <p className="text-sm text-slate-600">
+                      Cuando publiquemos la primera pieza aparecerá aquí como portada del
+                      archivo.
                     </p>
                   </div>
                 )}
@@ -201,53 +108,50 @@ export default async function BlogPage() {
           {latestNews.length > 0 ? (
             <LatestUpdatesSection
               posts={latestNews}
-              title="Ultimas actualizaciones"
-              subtitle="Cambios, lanzamientos y notas cortas que conviene leer primero."
+              title="Actualizaciones recientes"
+              subtitle="Cambios y notas cortas que conviene revisar antes de entrar al archivo completo."
             />
           ) : null}
 
-          <section className="rounded-2xl border border-white/80 bg-white/90 p-4 shadow-[0_18px_50px_rgba(15,23,42,0.05)] md:p-5">
-            <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+          <section className="rounded-2xl border border-white/80 bg-white/92 p-4 shadow-[0_18px_50px_rgba(15,23,42,0.05)] md:p-5">
+            <div className="mb-5 flex flex-col gap-2 border-b border-slate-200 pb-4 md:flex-row md:items-end md:justify-between">
               <div>
-                <p className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.16em] text-slate-500">
-                  <Sparkles className="h-3.5 w-3.5 text-amber-500" />
-                  Archivo de lectura
+                <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-slate-500">
+                  Archivo
                 </p>
-                <h2 className="mt-3 text-2xl font-semibold tracking-tight text-slate-950 md:text-3xl">
-                  Guias, notas y piezas de fondo
+                <h2 className="mt-1 text-2xl font-semibold tracking-tight text-slate-950">
+                  Todas las lecturas
                 </h2>
-                <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-600 md:text-base">
-                  Contenido mas completo para cuando quieras ir mas alla de la novedad y
-                  entender mejor cada herramienta o tendencia.
-                </p>
               </div>
 
-              <span className="inline-flex items-center rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600">
-                {archivePosts.length} piezas
-              </span>
+              <p className="text-sm text-slate-500">
+                {archivePosts.length > 0
+                  ? `${archivePosts.length} piezas disponibles`
+                  : "Sin piezas adicionales por ahora"}
+              </p>
             </div>
 
             {archivePosts.length > 0 ? (
-              <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
                 {archivePosts.map((post) => (
                   <BlogPostCard key={post.id} post={post} />
                 ))}
               </div>
             ) : posts.length > 0 ? (
               <BlogEmptyState
-                title="Por ahora solo hay una pieza destacada"
-                description="El archivo ya muestra la portada y las ultimas actualizaciones. Agregaremos mas guias y notas en breve."
-                primaryHref="/areas"
-                primaryLabel="Explorar areas"
-                secondaryHref="/estudiantes"
-                secondaryLabel="Ver gratis para estudiantes"
+                title="Por ahora hay una sola lectura en portada"
+                description="El archivo ya está abierto. Cuando publiquemos más guias y notas aparecerán aquí como biblioteca."
+                primaryHref="/dia-a-dia"
+                primaryLabel="Abrir feed del día"
+                secondaryHref="/areas"
+                secondaryLabel="Explorar carreras"
               />
             ) : (
               <BlogEmptyState />
             )}
           </section>
 
-          <div className="mt-2">
+          <div className="mt-1">
             <CommunityCtaBanner location="blog_banner" />
           </div>
         </div>
