@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -15,6 +15,19 @@ function formatDate(dateString: string | null) {
   }).format(date);
 }
 
+function getKindLabel(kind: Post["post_kind"]) {
+  switch (kind) {
+    case "news":
+      return "News";
+    case "guide":
+      return "Guide";
+    case "tool":
+      return "Tool";
+    default:
+      return "Blog";
+  }
+}
+
 type DayBlogFeedProps = {
   posts: Post[];
   filters: FilterState;
@@ -22,17 +35,16 @@ type DayBlogFeedProps = {
 
 export default function DayBlogFeed({ posts, filters }: DayBlogFeedProps) {
   const filteredPosts = posts.filter((post) => {
-    // Search filter
     if (filters.search) {
       const searchLower = filters.search.toLowerCase();
       const matchesSearch =
         post.title.toLowerCase().includes(searchLower) ||
         (post.excerpt?.toLowerCase().includes(searchLower) ?? false) ||
-        (post.ia_type?.toLowerCase().includes(searchLower) ?? false);
+        (post.ia_type?.toLowerCase().includes(searchLower) ?? false) ||
+        post.post_kind.toLowerCase().includes(searchLower);
       if (!matchesSearch) return false;
     }
 
-    // Category filter (for posts, we use ia_type as category)
     if (filters.category && post.ia_type !== filters.category) {
       return false;
     }
@@ -42,97 +54,101 @@ export default function DayBlogFeed({ posts, filters }: DayBlogFeedProps) {
 
   if (filteredPosts.length === 0) {
     return (
-      <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center">
-        <Sparkles className="mx-auto h-8 w-8 text-slate-300 mb-3" />
-        <p className="text-sm text-slate-500">No se encontraron posts</p>
+      <div className="rounded-[28px] border border-slate-200/80 bg-white p-8 text-center shadow-sm">
+        <Sparkles className="mx-auto mb-3 h-8 w-8 text-slate-300" />
+        <p className="text-sm text-slate-500">No hay posts que coincidan con este filtro.</p>
+        <p className="mt-1 text-xs text-slate-400">Prueba otra categoría, plan o término de búsqueda.</p>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col gap-4">
-      <h2 className="text-sm font-medium uppercase tracking-[0.12em] text-slate-500 px-1">
-        Posts ({filteredPosts.length})
-      </h2>
+    <section className="flex flex-col gap-4">
+      <div className="flex items-end justify-between gap-3 px-1">
+        <div>
+          <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Posts</p>
+          <h2 className="mt-1 text-xl font-semibold tracking-[-0.02em] text-slate-950">
+            Lecturas y contexto
+          </h2>
+        </div>
+        <span className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs text-slate-500">
+          {filteredPosts.length} resultados
+        </span>
+      </div>
 
       <div className="flex flex-col gap-4">
         {filteredPosts.map((post) => {
-          const isNews = post.post_kind === "news";
+          const kindLabel = getKindLabel(post.post_kind);
+          const badgeClass =
+            post.post_kind === "news"
+              ? "border-amber-200 bg-amber-50 text-amber-700"
+              : post.post_kind === "guide"
+                ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+                : post.post_kind === "tool"
+                  ? "border-cyan-200 bg-cyan-50 text-cyan-700"
+                  : "border-slate-200 bg-slate-50 text-slate-600";
 
           return (
             <Link
               key={post.id}
               href={`/blog/${post.slug}`}
               prefetch={true}
-              className="group flex gap-4 rounded-2xl border border-slate-200 bg-white p-4 transition-colors duration-150 hover:border-slate-300 hover:bg-white"
+              className={`group overflow-hidden rounded-[26px] border border-slate-200/80 bg-white shadow-[0_12px_40px_rgba(15,23,42,0.05)] transition duration-200 hover:-translate-y-0.5 hover:border-slate-300 ${
+                post.cover_image_url ? "grid gap-0 lg:grid-cols-[0.88fr_1.12fr]" : "p-4"
+              }`}
             >
-              {/* Thumbnail */}
               {post.cover_image_url ? (
-                <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-xl">
+                <div className="relative min-h-[180px] overflow-hidden bg-slate-100 lg:min-h-full">
                   <Image
                     src={post.cover_image_url}
                     alt={post.title}
                     fill
                     unoptimized
                     loading="lazy"
-                    className="object-cover opacity-80"
+                    className="object-cover transition duration-500 group-hover:scale-[1.03]"
                   />
                 </div>
-              ) : (
-                <div className="flex h-20 w-20 flex-shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-white">
-                  <Sparkles className="h-6 w-6 text-slate-300" />
-                </div>
-              )}
+              ) : null}
 
-              {/* Content */}
-              <div className="flex min-w-0 flex-1 flex-col">
+              <div className={`flex min-w-0 flex-1 flex-col gap-4 ${post.cover_image_url ? "p-5" : ""}`}>
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
-                    <div className="mb-1 flex items-center gap-2">
-                      <span
-                        className={`inline-flex rounded-full px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-[0.12em] ${
-                          isNews
-                            ? "border border-amber-200 bg-amber-50 text-amber-700"
-                            : "border border-slate-200 bg-white text-slate-500"
-                        }`}
-                      >
-                        {isNews ? "News" : "Post"}
+                    <div className="mb-2 flex flex-wrap items-center gap-2">
+                      <span className={`inline-flex rounded-full px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.14em] ${badgeClass}`}>
+                        {kindLabel}
                       </span>
+                      {post.ia_type ? (
+                        <span className="inline-flex rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[10px] uppercase tracking-[0.14em] text-slate-500">
+                          {post.ia_type}
+                        </span>
+                      ) : null}
                     </div>
-                    <h3 className="line-clamp-2 text-sm font-medium leading-snug text-slate-900">
+                    <h3 className="line-clamp-2 text-lg font-semibold leading-snug tracking-[-0.02em] text-slate-950 group-hover:text-slate-700">
                       {post.title}
                     </h3>
                   </div>
-                  <ArrowUpRight className="h-4 w-4 flex-shrink-0 text-slate-400" />
+                  <ArrowUpRight className="h-4 w-4 flex-shrink-0 text-slate-400 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                 </div>
 
-                {post.excerpt && (
-                  <p className="mt-1 line-clamp-2 text-xs text-slate-500">
+                {post.excerpt ? (
+                  <p className="line-clamp-3 text-sm leading-6 text-slate-600">
                     {post.excerpt}
                   </p>
-                )}
+                ) : null}
 
-                <div className="mt-auto flex items-center gap-2 pt-2">
-                  <time className="text-[10px] text-slate-400">
-                    {formatDate(post.published_at)}
-                  </time>
-                  {isNews ? (
-                    <span className="rounded-full border border-amber-200 bg-amber-50 px-1.5 py-0.5 text-[10px] text-amber-700">
+                <div className="mt-auto flex items-center gap-2 pt-1">
+                  <time className="text-[11px] text-slate-400">{formatDate(post.published_at)}</time>
+                  {post.post_kind === "news" ? (
+                    <span className="rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[10px] text-amber-700">
                       Update
                     </span>
                   ) : null}
-                  {post.ia_type && (
-                    <span className="rounded-full border border-slate-200 bg-white px-1.5 py-0.5 text-[10px] text-slate-500">
-                      {post.ia_type}
-                    </span>
-                  )}
                 </div>
               </div>
             </Link>
           );
         })}
       </div>
-    </div>
+    </section>
   );
 }
-

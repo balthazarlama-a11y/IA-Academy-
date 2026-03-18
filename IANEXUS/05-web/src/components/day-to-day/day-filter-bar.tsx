@@ -1,10 +1,10 @@
-﻿"use client";
+"use client";
 
 import { useState, useCallback } from "react";
 
 type FilterState = {
   search: string;
-  plan: "all" | "free" | "edu_free" | "freemium";
+  plan: "all" | "free" | "edu_free" | "freemium" | "paid";
   category: string;
   level: "all" | "beginner" | "intermediate" | "advanced";
 };
@@ -19,6 +19,7 @@ const PLAN_OPTIONS = [
   { value: "free", label: "Gratis" },
   { value: "edu_free", label: "Edu Free" },
   { value: "freemium", label: "Freemium" },
+  { value: "paid", label: "Pago" },
 ] as const;
 
 const LEVEL_OPTIONS = [
@@ -42,7 +43,7 @@ export default function DayFilterBar({ onFilterChange, categories }: DayFilterBa
       setFilters(newFilters);
       onFilterChange(newFilters);
     },
-    [filters, onFilterChange]
+    [filters, onFilterChange],
   );
 
   const hasActiveFilters =
@@ -63,94 +64,98 @@ export default function DayFilterBar({ onFilterChange, categories }: DayFilterBa
   }, [onFilterChange]);
 
   return (
-    <div className="w-full rounded-2xl border border-slate-200 bg-white p-4 md:p-5">
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-12">
-        {/* Search */}
-        <div className="md:col-span-4">
-          <label className="mb-1.5 block text-xs uppercase tracking-[0.12em] text-slate-500">
+    <div className="w-full rounded-[28px] border border-slate-200/80 bg-white/90 p-4 shadow-[0_18px_50px_rgba(15,23,42,0.06)] md:p-5">
+      <div className="flex flex-col gap-4 border-b border-slate-200 pb-4 md:flex-row md:items-end md:justify-between">
+        <div>
+          <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Filtro vivo</p>
+          <h2 className="mt-2 text-lg font-semibold tracking-[-0.02em] text-slate-950">
+            Refina el feed sin salirte de contexto.
+          </h2>
+          <p className="mt-1 text-sm text-slate-500">
+            El feed se actualiza al instante con posts y tools publicadas.
+          </p>
+        </div>
+
+        {hasActiveFilters && (
+          <button
+            onClick={clearFilters}
+            className="self-start text-sm font-medium text-slate-500 transition hover:text-slate-700 md:self-auto"
+          >
+            Limpiar filtros
+          </button>
+        )}
+      </div>
+
+      <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-12">
+        <div className="lg:col-span-4">
+          <label className="mb-1.5 block text-[11px] uppercase tracking-[0.16em] text-slate-500">
             Buscar
           </label>
           <input
             type="text"
-            placeholder="Nombre, tipo de IA..."
+            placeholder="Nombre, tipo de IA, descripción..."
             value={filters.search}
             onChange={(e) => updateFilter("search", e.target.value)}
-            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-cyan-300/50"
+            className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-sky-300 focus:bg-white"
           />
         </div>
 
-        {/* Plan */}
-        <div className="md:col-span-3">
-          <label className="mb-1.5 block text-xs uppercase tracking-[0.12em] text-slate-500">
+        <div className="lg:col-span-3">
+          <label className="mb-1.5 block text-[11px] uppercase tracking-[0.16em] text-slate-500">
             Plan
           </label>
           <select
             value={filters.plan}
             onChange={(e) => updateFilter("plan", e.target.value as FilterState["plan"])}
-            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-cyan-300/50"
+            className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-300 focus:bg-white"
           >
             {PLAN_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value} className="bg-[#0f0f16]">
+              <option key={opt.value} value={opt.value} className="bg-white">
                 {opt.label}
               </option>
             ))}
           </select>
         </div>
 
-        {/* Category */}
-        <div className="md:col-span-3">
-          <label className="mb-1.5 block text-xs uppercase tracking-[0.12em] text-slate-500">
+        <div className="lg:col-span-3">
+          <label className="mb-1.5 block text-[11px] uppercase tracking-[0.16em] text-slate-500">
             Categoría
           </label>
           <select
             value={filters.category}
             onChange={(e) => updateFilter("category", e.target.value)}
-            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-cyan-300/50"
+            className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-300 focus:bg-white"
           >
-            <option value="" className="bg-[#0f0f16]">
+            <option value="" className="bg-white">
               Todas
             </option>
             {categories.map((cat) => (
-              <option key={cat} value={cat} className="bg-[#0f0f16]">
+              <option key={cat} value={cat} className="bg-white">
                 {cat}
               </option>
             ))}
           </select>
         </div>
 
-        {/* Level */}
-        <div className="md:col-span-2">
-          <label className="mb-1.5 block text-xs uppercase tracking-[0.12em] text-slate-500">
+        <div className="lg:col-span-2">
+          <label className="mb-1.5 block text-[11px] uppercase tracking-[0.16em] text-slate-500">
             Nivel
           </label>
           <select
             value={filters.level}
             onChange={(e) => updateFilter("level", e.target.value as FilterState["level"])}
-            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-cyan-300/50"
+            className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-300 focus:bg-white"
           >
             {LEVEL_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value} className="bg-[#0f0f16]">
+              <option key={opt.value} value={opt.value} className="bg-white">
                 {opt.label}
               </option>
             ))}
           </select>
         </div>
       </div>
-
-      {/* Clear filters */}
-      {hasActiveFilters && (
-        <div className="mt-4 flex justify-end border-t border-slate-200 pt-3">
-          <button
-            onClick={clearFilters}
-            className="text-xs text-slate-500 hover:text-slate-700 transition-colors"
-          >
-            Limpiar filtros
-          </button>
-        </div>
-      )}
     </div>
   );
 }
 
 export type { FilterState };
-
