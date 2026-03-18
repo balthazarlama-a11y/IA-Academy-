@@ -13,10 +13,10 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "IA NEXUS — Comunidad IA para estudiantes",
   description:
-    "Herramientas de IA verificadas, prompts para Gemini y comunidad activa por área.",
+    "Herramientas de IA verificadas, prompts para Gemini y comunidad activa por carrera.",
   openGraph: {
     title: "IA NEXUS",
-    description: "Herramientas de IA para estudiantes",
+    description: "Herramientas de IA para estudiantes y carreras",
     type: "website",
   },
 };

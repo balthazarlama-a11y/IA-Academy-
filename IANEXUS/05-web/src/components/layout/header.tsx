@@ -32,7 +32,7 @@ const HEADER_CACHE_TTL_MS = 120_000;
 const NAV_LINKS = [
   { href: "/", label: "Inicio" },
   { href: "/estudiantes", label: "Gratis para estudiantes" },
-  { href: "/areas", label: "Áreas" },
+  { href: "/areas", label: "Carreras" },
   { href: "/dia-a-dia", label: "Día a Día" },
   { href: "/blog", label: "Blog" },
 ] as const;
@@ -206,7 +206,7 @@ export default function Header() {
                     IA NEXUS
                   </span>
                   <span className="hidden text-[11px] text-slate-500 md:block">
-                    Curación editorial de IA
+                    Curación editorial de IA por carrera
                   </span>
                 </div>
               </Link>
