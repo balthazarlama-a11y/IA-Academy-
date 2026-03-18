@@ -13,6 +13,8 @@ interface UploadImageFieldProps {
   label?: string;
   /** Column span class for the grid (e.g. "md:col-span-2") */
   colSpan?: string;
+  /** Preview/render intent for the uploaded asset */
+  assetKind?: "cover" | "logo";
 }
 
 const INPUT_CLASSES =
@@ -34,6 +36,7 @@ export default function UploadImageField({
   existingUrl,
   label = "Imagen de portada",
   colSpan = "md:col-span-2",
+  assetKind = "cover",
 }: UploadImageFieldProps) {
   const [preview, setPreview] = useState<string | null>(existingUrl ?? null);
   const [fileName, setFileName] = useState<string | null>(null);
@@ -87,7 +90,11 @@ export default function UploadImageField({
           <img
             src={preview}
             alt="Preview"
-            className="aspect-video h-auto w-full object-contain"
+            className={
+              assetKind === "logo"
+                ? "aspect-square h-auto w-full object-contain p-4"
+                : "aspect-video h-auto w-full object-contain"
+            }
             aria-hidden="true"
           />
           <button
@@ -102,7 +109,9 @@ export default function UploadImageField({
       ) : null}
 
       <p className="text-[11px] text-slate-500">
-        La portada final se ajusta automaticamente a formato horizontal 16:9 para cards y listados.
+        {assetKind === "logo"
+          ? "El logo final se ajusta automaticamente a un formato cuadrado para mantener consistencia visual."
+          : "La portada final se ajusta automaticamente a formato horizontal 16:9 para cards y listados."}
       </p>
 
       {/* File picker row */}

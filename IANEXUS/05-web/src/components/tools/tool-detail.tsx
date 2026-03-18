@@ -25,15 +25,15 @@ export default function ToolDetail({
     <article className="mx-auto w-full max-w-4xl rounded-3xl border border-slate-200 bg-white backdrop-blur-xl p-6 md:p-9">
       {/* Logo / Imagen */}
       {tool.cover_image_url ? (
-        <div className="mb-6 flex h-20 w-20 items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div className="mb-6 flex h-24 w-24 items-center justify-center overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
           <img
             src={tool.cover_image_url}
             alt={`${tool.name} logo`}
-            className="h-full w-full object-contain p-3"
+            className="h-full w-full object-contain p-1.5"
           />
         </div>
       ) : (
-        <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-2xl border border-slate-200 bg-slate-50">
+        <div className="mb-6 flex h-24 w-24 items-center justify-center rounded-3xl border border-slate-200 bg-slate-50">
           <span className="text-3xl font-bold text-slate-300">
             {tool.name.charAt(0).toUpperCase()}
           </span>

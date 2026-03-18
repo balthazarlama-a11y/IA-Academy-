@@ -14,23 +14,35 @@ export type UploadResult =
 const COVER_WIDTH = 1600;
 const COVER_HEIGHT = 900;
 const COVER_BACKGROUND = { r: 248, g: 250, b: 252, alpha: 1 };
+const TOOL_LOGO_SIZE = 960;
+const TOOL_LOGO_BACKGROUND = { r: 255, g: 255, b: 255, alpha: 0 };
 
-async function normalizeCoverImage(file: File) {
+async function normalizeUploadImage(file: File, folder: "posts" | "tools") {
   const arrayBuffer = await file.arrayBuffer();
   const inputBuffer = Buffer.from(arrayBuffer);
-
-  const normalizedBuffer = await sharp(inputBuffer, {
+  const processor = sharp(inputBuffer, {
     failOn: "warning",
     limitInputPixels: 40_000_000,
-  })
-    .rotate()
-    .resize(COVER_WIDTH, COVER_HEIGHT, {
-      fit: "contain",
-      background: COVER_BACKGROUND,
-      withoutEnlargement: true,
-    })
-    .webp({ quality: 84, effort: 4 })
-    .toBuffer();
+  }).rotate();
+
+  const normalizedBuffer =
+    folder === "tools"
+      ? await processor
+          .resize(TOOL_LOGO_SIZE, TOOL_LOGO_SIZE, {
+            fit: "contain",
+            background: TOOL_LOGO_BACKGROUND,
+            withoutEnlargement: true,
+          })
+          .webp({ quality: 90, alphaQuality: 95, effort: 4 })
+          .toBuffer()
+      : await processor
+          .resize(COVER_WIDTH, COVER_HEIGHT, {
+            fit: "contain",
+            background: COVER_BACKGROUND,
+            withoutEnlargement: true,
+          })
+          .webp({ quality: 84, effort: 4 })
+          .toBuffer();
 
   return {
     buffer: normalizedBuffer,
@@ -66,7 +78,7 @@ export async function uploadMediaFile(
     }
 
     const uniqueId = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-    const { buffer, contentType, extension } = await normalizeCoverImage(file);
+    const { buffer, contentType, extension } = await normalizeUploadImage(file, folder);
     const storagePath = `${folder}/${uniqueId}.${extension}`;
 
     const supabase = getSupabaseServiceRoleClient();

@@ -53,7 +53,7 @@ export function CreateToolForm({
         disabled={isPending}
         className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50 md:col-span-2"
       />
-      <UploadImageField fileInputName="cover_image_file" urlInputName="cover_image_url" label="Imagen / logo" colSpan="md:col-span-2" />
+      <UploadImageField fileInputName="cover_image_file" urlInputName="cover_image_url" label="Imagen / logo" colSpan="md:col-span-2" assetKind="logo" />
       <fieldset className="rounded-lg border border-slate-200 bg-white px-3 py-3 text-sm text-slate-900 md:col-span-2">
         <legend className="px-1 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Carreras</legend>
         <p className="mb-3 text-xs text-slate-500">Selecciona una o varias carreras para clasificar la tool.</p>

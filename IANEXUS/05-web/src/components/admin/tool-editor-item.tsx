@@ -149,6 +149,7 @@ export function ToolEditorItem({
             existingUrl={tool.cover_image_url}
             label="Imagen / logo"
             colSpan="md:col-span-2"
+            assetKind="logo"
           />
           <fieldset className="rounded-lg border border-slate-200 bg-white px-3 py-3 text-sm text-slate-900 md:col-span-2">
             <legend className="px-1 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Carreras</legend>

@@ -44,7 +44,7 @@ function AreaToolCard({ tool }: { tool: Tool }) {
               <img
                 src={tool.cover_image_url}
                 alt={`${tool.name} logo`}
-                className="h-full w-full object-contain p-2"
+                className="h-full w-full object-contain p-0.5"
                 loading="lazy"
               />
             </div>
