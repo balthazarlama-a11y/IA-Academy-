@@ -21,9 +21,11 @@ const LEVEL_LABEL: Record<ToolLevel, string> = {
 function AreaToolCard({ tool }: { tool: Tool }) {
   const plan = PLAN_CONFIG[tool.plan];
   const accentColor = tool.category.color_accent ?? "#6366f1";
+  const categorySummary =
+    tool.category.description ?? "Curada para esta especialidad y pensada para uso practico.";
 
   return (
-    <article className="group relative flex flex-col overflow-hidden rounded-3xl border border-slate-200 p-6 transition-colors duration-150 hover:border-slate-300 hover:bg-white shadow-[0_14px_26px_rgba(15,23,42,0.10)]"
+    <article className="group relative flex flex-col overflow-hidden rounded-[28px] border border-slate-200 p-6 transition-all duration-150 hover:-translate-y-0.5 hover:border-slate-300 hover:bg-white shadow-[0_14px_26px_rgba(15,23,42,0.10)]"
       style={{
         background: "linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(248,250,252,0.9) 100%)",
         contain: "layout style paint",
@@ -41,11 +43,10 @@ function AreaToolCard({ tool }: { tool: Tool }) {
         className="absolute right-4 top-4 z-20"
       />
 
-      <div className="relative z-10 flex flex-col h-full gap-4">
-        {/* Logo / Imagen */}
+      <div className="relative z-10 flex h-full flex-col gap-4">
         <div className="flex items-start justify-between gap-3">
           {tool.cover_image_url ? (
-            <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+            <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
               <img
                 src={tool.cover_image_url}
                 alt={`${tool.name} logo`}
@@ -54,7 +55,7 @@ function AreaToolCard({ tool }: { tool: Tool }) {
               />
             </div>
           ) : (
-            <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-slate-200 bg-slate-50">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-slate-200 bg-slate-50">
               <span className="text-xl font-bold text-slate-300">
                 {tool.name.charAt(0).toUpperCase()}
               </span>
@@ -62,7 +63,6 @@ function AreaToolCard({ tool }: { tool: Tool }) {
           )}
         </div>
 
-        {/* Nombre + badge plan */}
         <div className="flex items-start justify-between gap-3">
           <h3 className="text-lg font-semibold text-slate-900 leading-snug transition-colors duration-150 group-hover:text-slate-900">
             {tool.name}
@@ -75,7 +75,6 @@ function AreaToolCard({ tool }: { tool: Tool }) {
           </span>
         </div>
 
-        {/* Categoría + nivel + señales extra */}
         <div className="flex flex-wrap gap-2">
           <span
             className="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium"
@@ -103,14 +102,17 @@ function AreaToolCard({ tool }: { tool: Tool }) {
           ) : null}
         </div>
 
-        {/* Descripción */}
         {tool.description && (
           <p className="text-sm text-slate-600 line-clamp-3 leading-relaxed">
             {tool.description}
           </p>
         )}
 
-        {/* Badges verificación */}
+        <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+          <p className="text-[11px] uppercase tracking-[0.14em] text-slate-500">Lectura rapida</p>
+          <p className="mt-1 text-sm font-medium text-slate-900">{categorySummary}</p>
+        </div>
+
         <div className="flex items-center gap-3 mt-auto pt-5 border-t border-slate-200">
           {tool.verified && (
             <span className="inline-flex items-center gap-1.5 text-xs text-emerald-600">
@@ -131,11 +133,10 @@ function AreaToolCard({ tool }: { tool: Tool }) {
           )}
         </div>
 
-        {/* CTA */}
         <div className="mt-2 flex gap-2">
           <Link
             href={`/herramientas/${tool.slug}`}
-            className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors duration-150"
+            className="flex-1 inline-flex items-center justify-center gap-2 rounded-2xl px-4 py-2.5 text-sm font-semibold transition-colors duration-150"
             style={{
               background: `${accentColor}22`,
               border: `1px solid ${accentColor}40`,

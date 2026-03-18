@@ -37,7 +37,7 @@ function AreaToolsGrid({
             disabled={isLoadingMore}
             className="inline-flex items-center rounded-full border border-slate-300 bg-slate-50 px-5 py-2.5 text-sm font-medium text-slate-800 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {isLoadingMore ? "Cargando..." : "Cargar 50 más"}
+            {isLoadingMore ? "Cargando..." : "Mostrar 50 mas"}
           </button>
         </div>
       ) : null}

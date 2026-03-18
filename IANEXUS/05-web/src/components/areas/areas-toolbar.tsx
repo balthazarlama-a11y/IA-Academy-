@@ -505,104 +505,156 @@ export default function AreasToolbar({
 
   return (
     <div className="w-full flex flex-col gap-5">
-      <input
-        type="text"
-        placeholder="Buscar herramienta..."
-        value={searchText}
-        onChange={(event) => onSearchChange(event.target.value)}
-        className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 outline-none transition-all focus:ring-2 focus:ring-blue-200"
-      />
+      <section className="overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-[0_18px_50px_rgba(15,23,42,0.05)]">
+        <div className="border-b border-slate-200 px-5 py-4 md:px-6">
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <p className="text-xs uppercase tracking-[0.16em] text-slate-500">
+                Curadoria por especialidad
+              </p>
+              <h2 className="mt-1 text-lg font-semibold text-slate-900">
+                Combina area, plan y nivel
+              </h2>
+              <p className="mt-1 max-w-2xl text-sm leading-relaxed text-slate-600">
+                Selecciona una o varias especialidades para afinar el catalogo. Puedes cruzar
+                area, acceso y complejidad sin perder contexto editorial.
+              </p>
+            </div>
 
-      <div className="rounded-2xl border border-slate-200 bg-white p-4">
-        <p className="mb-3 text-xs font-medium uppercase tracking-[0.14em] text-slate-500">Areas</p>
-        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
-          {AREA_OPTIONS.map((area) => {
-            const checked = selectedAreas.includes(area.slug);
-            return (
-              <label
-                key={area.slug}
-                className="flex cursor-pointer items-center gap-2 rounded-xl border px-3 py-2 text-sm transition-colors"
-                style={{
-                  borderColor: checked ? `${area.accent}66` : "rgba(148,163,184,0.32)",
-                  background: checked ? `${area.accent}18` : "rgba(248,250,252,0.9)",
-                  color: checked ? area.accent : "rgba(51,65,85,0.88)",
-                }}
+            <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-xs text-slate-600">
+              <span className="font-semibold text-slate-900">{tools.length}</span>
+              {hasMore ? "+" : ""} resultados visibles
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 px-5 py-5 md:px-6">
+          <div>
+            <label
+              htmlFor="area-search"
+              className="mb-2 block text-xs uppercase tracking-[0.12em] text-slate-600"
+            >
+              Buscador
+            </label>
+            <input
+              id="area-search"
+              type="text"
+              placeholder="Buscar herramienta..."
+              value={searchText}
+              onChange={(event) => onSearchChange(event.target.value)}
+              className="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 outline-none transition-all focus:border-slate-400"
+            />
+          </div>
+
+          <div className="rounded-[24px] border border-slate-200 bg-slate-50 p-4">
+            <div className="mb-3 flex items-center justify-between gap-3">
+              <div>
+                <p className="text-xs uppercase tracking-[0.14em] text-slate-500">Areas</p>
+                <p className="mt-1 text-sm font-semibold text-slate-900">
+                  Selecciona una o varias especialidades
+                </p>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+              {AREA_OPTIONS.map((area) => {
+                const checked = selectedAreas.includes(area.slug);
+                return (
+                  <label
+                    key={area.slug}
+                    className="flex cursor-pointer items-start gap-3 rounded-2xl border px-3 py-3 text-sm transition-colors"
+                    style={{
+                      borderColor: checked ? `${area.accent}66` : "rgba(148,163,184,0.32)",
+                      background: checked ? `${area.accent}18` : "rgba(255,255,255,0.95)",
+                      color: checked ? area.accent : "rgba(51,65,85,0.88)",
+                    }}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={checked}
+                      onChange={() => onToggleArea(area.slug)}
+                      className="mt-1 h-4 w-4 accent-blue-600"
+                    />
+                    <span>
+                      <span className="block font-medium">{area.label}</span>
+                      <span className="block text-xs leading-relaxed text-slate-500">
+                        Curado para encontrar herramientas utiles en esta disciplina.
+                      </span>
+                    </span>
+                  </label>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+            <div className="rounded-[24px] border border-slate-200 bg-white p-4">
+              <p className="mb-3 text-xs font-medium uppercase tracking-[0.14em] text-slate-500">
+                Plan
+              </p>
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                {PLAN_OPTIONS.map((plan) => {
+                  const checked = selectedPlans.includes(plan.value);
+                  return (
+                    <label
+                      key={plan.value}
+                      className="flex cursor-pointer items-center gap-2 rounded-2xl border border-slate-200 bg-white px-3 py-3 text-sm text-slate-700 transition hover:border-slate-300"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={() => onTogglePlan(plan.value)}
+                        className="h-4 w-4 accent-blue-600"
+                      />
+                      <span>{plan.label}</span>
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="rounded-[24px] border border-slate-200 bg-white p-4">
+              <p className="mb-3 text-xs font-medium uppercase tracking-[0.14em] text-slate-500">
+                Nivel
+              </p>
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                {LEVEL_OPTIONS.map((level) => {
+                  const checked = selectedLevels.includes(level.value);
+                  return (
+                    <label
+                      key={level.value}
+                      className="flex cursor-pointer items-center gap-2 rounded-2xl border border-slate-200 bg-white px-3 py-3 text-sm text-slate-700 transition hover:border-slate-300"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={() => onToggleLevel(level.value)}
+                        className="h-4 w-4 accent-blue-600"
+                      />
+                      <span>{level.label}</span>
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between gap-3 border-t border-slate-200 pt-2">
+            <p className="text-xs text-slate-500">
+              Mostrando <span className="text-slate-600">{tools.length}{hasMore ? "+" : ""}</span>{" "}
+              herramientas
+            </p>
+            {hasFilters ? (
+              <button
+                type="button"
+                onClick={onReset}
+                className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs text-slate-700 transition hover:bg-slate-50"
               >
-                <input
-                  type="checkbox"
-                  checked={checked}
-                  onChange={() => onToggleArea(area.slug)}
-                  className="h-4 w-4 accent-blue-600"
-                />
-                <span>{area.label}</span>
-              </label>
-            );
-          })}
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <div className="rounded-2xl border border-slate-200 bg-white p-4">
-          <p className="mb-3 text-xs font-medium uppercase tracking-[0.14em] text-slate-500">Plan</p>
-          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-            {PLAN_OPTIONS.map((plan) => {
-              const checked = selectedPlans.includes(plan.value);
-              return (
-                <label
-                  key={plan.value}
-                  className="flex cursor-pointer items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700"
-                >
-                  <input
-                    type="checkbox"
-                    checked={checked}
-                    onChange={() => onTogglePlan(plan.value)}
-                    className="h-4 w-4 accent-blue-600"
-                  />
-                  <span>{plan.label}</span>
-                </label>
-              );
-            })}
+                Limpiar filtros
+              </button>
+            ) : null}
           </div>
         </div>
-
-        <div className="rounded-2xl border border-slate-200 bg-white p-4">
-          <p className="mb-3 text-xs font-medium uppercase tracking-[0.14em] text-slate-500">Nivel</p>
-          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-            {LEVEL_OPTIONS.map((level) => {
-              const checked = selectedLevels.includes(level.value);
-              return (
-                <label
-                  key={level.value}
-                  className="flex cursor-pointer items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700"
-                >
-                  <input
-                    type="checkbox"
-                    checked={checked}
-                    onChange={() => onToggleLevel(level.value)}
-                    className="h-4 w-4 accent-blue-600"
-                  />
-                  <span>{level.label}</span>
-                </label>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-
-      <div className="flex items-center justify-between gap-3">
-        <p className="text-xs text-slate-500">
-          Mostrando <span className="text-slate-600">{tools.length}{hasMore ? "+" : ""}</span> herramientas
-        </p>
-        {hasFilters ? (
-          <button
-            type="button"
-            onClick={onReset}
-            className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs text-slate-700 transition hover:bg-slate-50"
-          >
-            Limpiar filtros
-          </button>
-        ) : null}
-      </div>
+      </section>
 
       {errorMessage ? (
         <div className="rounded-2xl border border-red-300/35 bg-red-400/10 px-4 py-3 text-sm text-red-700">
