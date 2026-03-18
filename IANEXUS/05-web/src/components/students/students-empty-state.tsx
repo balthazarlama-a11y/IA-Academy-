@@ -8,7 +8,7 @@ export default function StudentsEmptyState({
   resetHref: string;
 }) {
   return (
-    <div className="rounded-[28px] border border-slate-200 bg-white px-6 py-14 text-center shadow-[0_16px_40px_rgba(15,23,42,0.05)] md:px-10">
+    <div className="rounded-2xl border border-slate-200 bg-white px-6 py-12 text-center shadow-[0_12px_32px_rgba(15,23,42,0.05)] md:px-10">
       <div className="mx-auto inline-flex items-center rounded-full border border-slate-300 bg-slate-50 px-3 py-1 text-xs uppercase tracking-[0.12em] text-slate-600">
         Curadoria academica
       </div>
@@ -31,10 +31,10 @@ export default function StudentsEmptyState({
           </Link>
         ) : (
           <Link
-            href="/areas"
+            href="/estudiantes"
             className="inline-flex items-center rounded-full border border-slate-300 bg-slate-50 px-5 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
           >
-            Explorar por áreas
+            Volver al catálogo
           </Link>
         )}
       </div>

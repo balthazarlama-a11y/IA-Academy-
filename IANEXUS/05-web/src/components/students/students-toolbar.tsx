@@ -383,7 +383,7 @@ export default function StudentsToolbar({
 
   return (
     <>
-      <section className="mt-8 overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-[0_18px_50px_rgba(15,23,42,0.05)]">
+      <section className="mt-8 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_12px_36px_rgba(15,23,42,0.05)]">
         <div className="border-b border-slate-200 px-5 py-4 md:px-6">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
             <div>
@@ -528,7 +528,7 @@ export default function StudentsToolbar({
       ) : null}
 
       {isLoading && tools.length === 0 ? (
-        <div className="mt-8 rounded-3xl border border-slate-200 bg-white px-6 py-10 text-center text-slate-700">
+        <div className="mt-8 rounded-2xl border border-slate-200 bg-white px-6 py-9 text-center text-slate-700">
           Cargando herramientas...
         </div>
       ) : tools.length > 0 ? (

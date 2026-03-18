@@ -66,14 +66,14 @@ export default async function BlogPage() {
       }}
     >
       <div className="pointer-events-none absolute inset-x-0 top-0 h-[34rem] bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.9),transparent_58%)]" />
-      <div className="pointer-events-none absolute left-[-12rem] top-28 h-72 w-72 rounded-full bg-cyan-200/35 blur-3xl" />
-      <div className="pointer-events-none absolute right-[-10rem] top-44 h-80 w-80 rounded-full bg-indigo-200/30 blur-3xl" />
+      <div className="pointer-events-none absolute left-[-12rem] top-28 h-64 w-64 rounded-full bg-cyan-200/30 blur-3xl" />
+      <div className="pointer-events-none absolute right-[-10rem] top-44 h-72 w-72 rounded-full bg-indigo-200/24 blur-3xl" />
 
       <Header />
 
       <section className="relative flex-1 w-full px-4 py-8 md:px-6 md:py-12">
-        <div className="mx-auto flex w-full max-w-6xl flex-col gap-8">
-          <header className="overflow-hidden rounded-[1.5rem] border border-white/80 bg-white/88 shadow-[0_28px_80px_rgba(15,23,42,0.08)] backdrop-blur-sm">
+        <div className="mx-auto flex w-full max-w-5xl flex-col gap-7">
+          <header className="overflow-hidden rounded-2xl border border-white/80 bg-white/92 shadow-[0_22px_60px_rgba(15,23,42,0.07)] backdrop-blur-sm">
             <div className="grid gap-0 lg:grid-cols-[1.15fr_0.85fr]">
               <div className="p-5 md:p-6 lg:p-8">
                 <p className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-[11px] font-medium uppercase tracking-[0.18em] text-slate-600">
@@ -81,11 +81,11 @@ export default async function BlogPage() {
                   Archivo editorial
                 </p>
 
-                <h1 className="mt-4 max-w-2xl text-3xl font-semibold tracking-tight text-slate-950 md:text-4xl lg:text-5xl">
+                <h1 className="mt-4 max-w-xl text-2xl font-semibold tracking-tight text-slate-950 md:text-3xl lg:text-4xl">
                   Notas, guias y actualizaciones sobre IA que vale la pena seguir.
                 </h1>
 
-                <p className="mt-4 max-w-2xl text-base leading-relaxed text-slate-600 md:text-lg">
+                <p className="mt-4 max-w-xl text-sm leading-relaxed text-slate-600 md:text-base">
                   Un archivo curado para descubrir lanzamientos, leer piezas utiles y seguir
                   las novedades mas importantes sin ruido.
                 </p>
@@ -122,7 +122,7 @@ export default async function BlogPage() {
                 </div>
               </div>
 
-              <div className="border-t border-slate-200/80 bg-slate-50/90 p-5 md:p-6 lg:border-l lg:border-t-0">
+              <div className="border-t border-slate-200/80 bg-slate-50/90 p-4 md:p-5 lg:border-l lg:border-t-0">
                 <div className="flex items-center justify-between gap-4">
                   <p className="text-xs font-medium uppercase tracking-[0.18em] text-slate-500">
                     Lectura destacada
@@ -133,7 +133,7 @@ export default async function BlogPage() {
                 </div>
 
                 {featuredPost ? (
-                  <article className="mt-5 overflow-hidden rounded-[1.25rem] border border-slate-200 bg-white shadow-[0_18px_50px_rgba(15,23,42,0.06)]">
+                <article className="mt-5 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-[0_14px_36px_rgba(15,23,42,0.05)]">
                     {featuredPost.cover_image_url ? (
                       <div className="relative aspect-[16/10] w-full overflow-hidden">
                         <Image
@@ -152,7 +152,7 @@ export default async function BlogPage() {
                       </div>
                     )}
 
-                    <div className="space-y-3.5 p-4">
+                    <div className="space-y-3 p-4">
                       <div className="flex flex-wrap items-center gap-2 text-[11px] font-medium uppercase tracking-[0.14em] text-slate-500">
                         <span className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-slate-700">
                           {formatLabel(featuredPost.post_kind)}
@@ -161,11 +161,11 @@ export default async function BlogPage() {
                         {featuredPost.ia_type ? <span>{featuredPost.ia_type}</span> : null}
                       </div>
 
-                      <h2 className="text-xl font-semibold leading-snug text-slate-950 md:text-2xl">
+                      <h2 className="text-lg font-semibold leading-snug text-slate-950 md:text-xl">
                         {featuredPost.title}
                       </h2>
 
-                      <p className="line-clamp-3 text-sm leading-relaxed text-slate-600 md:text-base">
+                      <p className="line-clamp-3 text-sm leading-relaxed text-slate-600">
                         {featuredPost.excerpt ||
                           "Una pieza destacada para entender el movimiento de IA desde una lectura util y directa."}
                       </p>
@@ -181,7 +181,7 @@ export default async function BlogPage() {
                     </div>
                   </article>
                 ) : (
-                  <div className="mt-5 rounded-[1.5rem] border border-dashed border-slate-300 bg-white p-6">
+                  <div className="mt-5 rounded-xl border border-dashed border-slate-300 bg-white p-5">
                     <p className="text-sm uppercase tracking-[0.16em] text-slate-500">
                       Sin portada disponible
                     </p>
@@ -206,7 +206,7 @@ export default async function BlogPage() {
             />
           ) : null}
 
-          <section className="rounded-[1.5rem] border border-white/80 bg-white/90 p-5 shadow-[0_24px_70px_rgba(15,23,42,0.05)] md:p-6">
+          <section className="rounded-2xl border border-white/80 bg-white/90 p-4 shadow-[0_18px_50px_rgba(15,23,42,0.05)] md:p-5">
             <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
               <div>
                 <p className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.16em] text-slate-500">

@@ -14,7 +14,7 @@ export default function FundamentalsToolCard({ tool }: { tool: FundamentalsTool 
   const planCfg = PLAN_CONFIG[tool.plan];
 
   return (
-    <article className="group relative rounded-[18px] border border-slate-200/80 bg-white shadow-[0_12px_40px_rgba(15,23,42,0.05)] transition duration-200 hover:-translate-y-0.5 hover:border-slate-300">
+    <article className="group relative rounded-xl border border-slate-200/80 bg-white shadow-[0_10px_28px_rgba(15,23,42,0.05)] transition duration-200 hover:-translate-y-0.5 hover:border-slate-300">
       <StaffEditButton
         href={`/admin/tools?q=${encodeURIComponent(tool.slug)}`}
         label={`Editar herramienta "${tool.name}" en Admin`}

@@ -34,7 +34,7 @@ function planSummary(plan: Tool["plan"]) {
 export default memo(function StudentToolCard({ tool }: { tool: Tool }) {
   return (
     <article
-      className="group relative overflow-hidden rounded-[28px] border border-slate-200 bg-white p-6 shadow-[0_8px_22px_rgba(15,23,42,0.06)] transition-all duration-150 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-[0_14px_30px_rgba(15,23,42,0.1)]"
+      className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_8px_22px_rgba(15,23,42,0.06)] transition-all duration-150 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-[0_12px_26px_rgba(15,23,42,0.08)]"
       style={{
         background: "linear-gradient(180deg,#ffffff 0%,#f8fafc 100%)",
         contain: "layout style paint",
@@ -48,7 +48,7 @@ export default memo(function StudentToolCard({ tool }: { tool: Tool }) {
         className="absolute right-4 top-4 z-10"
       />
 
-      <div className="flex min-h-[240px] flex-col">
+        <div className="flex min-h-[220px] flex-col">
         {tool.cover_image_url ? (
           <div className="mb-4 flex h-14 w-14 items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
             <img
@@ -102,7 +102,7 @@ export default memo(function StudentToolCard({ tool }: { tool: Tool }) {
           {shortDescription(tool.description)}
         </p>
 
-        <div className="mt-4 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+        <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
           <p className="text-[11px] uppercase tracking-[0.14em] text-slate-500">Lectura rapida</p>
           <p className="mt-1 text-sm font-medium text-slate-900">{planSummary(tool.plan)}</p>
         </div>

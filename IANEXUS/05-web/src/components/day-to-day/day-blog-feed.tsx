@@ -54,7 +54,7 @@ export default function DayBlogFeed({ posts, filters }: DayBlogFeedProps) {
 
   if (filteredPosts.length === 0) {
     return (
-      <div className="rounded-[20px] border border-slate-200/80 bg-white p-6 text-center shadow-sm">
+      <div className="rounded-xl border border-slate-200/80 bg-white p-5 text-center shadow-sm">
         <Sparkles className="mx-auto mb-3 h-8 w-8 text-slate-300" />
         <p className="text-sm text-slate-500">No hay posts que coincidan con este filtro.</p>
         <p className="mt-1 text-xs text-slate-400">Prueba otra categoría, plan o término de búsqueda.</p>
@@ -93,7 +93,7 @@ export default function DayBlogFeed({ posts, filters }: DayBlogFeedProps) {
               key={post.id}
               href={`/blog/${post.slug}`}
               prefetch={true}
-              className={`group overflow-hidden rounded-[18px] border border-slate-200/80 bg-white shadow-[0_12px_40px_rgba(15,23,42,0.05)] transition duration-200 hover:-translate-y-0.5 hover:border-slate-300 ${
+            className={`group overflow-hidden rounded-xl border border-slate-200/80 bg-white shadow-[0_10px_28px_rgba(15,23,42,0.04)] transition duration-200 hover:-translate-y-0.5 hover:border-slate-300 ${
                 post.cover_image_url ? "grid gap-0 lg:grid-cols-[0.88fr_1.12fr]" : "p-4"
               }`}
             >

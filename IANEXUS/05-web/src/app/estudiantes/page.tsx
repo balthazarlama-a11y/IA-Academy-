@@ -15,24 +15,24 @@ export default async function EstudiantesPage() {
       <Header />
 
       <section className="flex-1 w-full px-6 py-10 md:py-14">
-        <div className="mx-auto w-full max-w-7xl">
-          <header className="overflow-hidden rounded-[32px] border border-slate-200 bg-white shadow-[0_24px_80px_rgba(15,23,42,0.06)]">
-            <div className="grid gap-8 p-6 md:p-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-end lg:p-10">
+        <div className="mx-auto w-full max-w-6xl">
+          <header className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_18px_54px_rgba(15,23,42,0.06)]">
+            <div className="grid gap-6 p-5 md:p-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-end lg:p-8">
               <div>
                 <p className="inline-flex items-center rounded-full border border-slate-300 bg-slate-50 px-3 py-1 text-xs uppercase tracking-[0.16em] text-slate-600">
                   Estudiantes
                 </p>
                 <h1
-                  className="mt-4 text-4xl font-semibold leading-tight text-slate-900 md:text-5xl lg:text-6xl"
+                  className="mt-4 text-3xl font-semibold leading-tight text-slate-900 md:text-4xl lg:text-5xl"
                 >
                   Gratis, packs y descuentos que si ayudan a estudiar
                 </h1>
-                <p className="mt-4 max-w-3xl text-base leading-relaxed text-slate-600 md:text-lg">
+                <p className="mt-4 max-w-3xl text-sm leading-relaxed text-slate-600 md:text-base">
                   Curamos herramientas con acceso real para estudiantes: gratis total, planes
                   freemium y opciones que piden correo universitario. Menos ruido, mas utilidad.
                 </p>
 
-                <div className="mt-6 flex flex-wrap items-center gap-3">
+                <div className="mt-5 flex flex-wrap items-center gap-3">
                   <TrackedWhatsAppLink
                     location="estudiantes_header"
                     className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
@@ -53,21 +53,21 @@ export default async function EstudiantesPage() {
               </div>
 
               <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
-                <div className="rounded-[24px] border border-slate-200 bg-slate-50 p-4">
+                <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
                   <p className="text-xs uppercase tracking-[0.14em] text-slate-500">Gratis total</p>
                   <p className="mt-2 text-sm font-semibold text-slate-900">Sin pago ni tarjeta</p>
                   <p className="mt-1 text-sm leading-relaxed text-slate-600">
                     Herramientas que puedes usar desde hoy sin barreras de entrada.
                   </p>
                 </div>
-                <div className="rounded-[24px] border border-slate-200 bg-slate-50 p-4">
+                <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
                   <p className="text-xs uppercase tracking-[0.14em] text-slate-500">Pack estudiante</p>
                   <p className="mt-2 text-sm font-semibold text-slate-900">Correo universitario</p>
                   <p className="mt-1 text-sm leading-relaxed text-slate-600">
                     Beneficios y planes pensados para cuentas educativas verificables.
                   </p>
                 </div>
-                <div className="rounded-[24px] border border-slate-200 bg-slate-50 p-4">
+                <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
                   <p className="text-xs uppercase tracking-[0.14em] text-slate-500">Freemium</p>
                   <p className="mt-2 text-sm font-semibold text-slate-900">Empieza gratis</p>
                   <p className="mt-1 text-sm leading-relaxed text-slate-600">

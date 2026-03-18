@@ -44,7 +44,7 @@ export default function BlogPostCard({ post }: { post: Post }) {
   const isNews = post.post_kind === "news";
 
   return (
-    <article className="group relative overflow-hidden rounded-[1.25rem] border border-slate-200 bg-white shadow-[0_1px_0_rgba(15,23,42,0.04)] transition-all duration-200 hover:-translate-y-1 hover:border-slate-300 hover:shadow-[0_24px_60px_rgba(15,23,42,0.08)]">
+    <article className="group relative overflow-hidden rounded-xl border border-slate-200 bg-white shadow-[0_1px_0_rgba(15,23,42,0.04)] transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-[0_16px_40px_rgba(15,23,42,0.06)]">
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
 
       <StaffEditButton
@@ -73,7 +73,7 @@ export default function BlogPostCard({ post }: { post: Post }) {
           </div>
         )}
 
-        <div className="space-y-3.5 p-4 md:p-5">
+        <div className="space-y-3 p-4">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <span
               className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[10px] uppercase tracking-[0.14em] ${kindTone(
@@ -87,16 +87,16 @@ export default function BlogPostCard({ post }: { post: Post }) {
           </div>
 
           <div className="space-y-2">
-            <h2 className="text-[1.05rem] font-semibold leading-snug text-slate-950 md:text-xl">
+            <h2 className="text-[1rem] font-semibold leading-snug text-slate-950 md:text-[1.05rem]">
               {post.title}
             </h2>
 
             {post.excerpt ? (
-              <p className="line-clamp-2 text-sm leading-relaxed text-slate-600 md:text-[0.95rem]">
+              <p className="line-clamp-2 text-sm leading-relaxed text-slate-600">
                 {post.excerpt}
               </p>
             ) : (
-              <p className="line-clamp-2 text-sm leading-relaxed text-slate-500 md:text-[0.95rem]">
+              <p className="line-clamp-2 text-sm leading-relaxed text-slate-500">
                 Una pieza curada para entender mejor el movimiento de la IA y tomar
                 decisiones con mas contexto.
               </p>

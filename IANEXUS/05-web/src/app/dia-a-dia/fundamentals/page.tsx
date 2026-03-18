@@ -25,7 +25,7 @@ export default async function FundamentalsPage() {
           <section className="grid gap-4 lg:grid-cols-[1.12fr_0.88fr]">
             <Link
               href="/dia-a-dia"
-              className="group rounded-[28px] border border-slate-200/80 bg-white p-5 shadow-[0_18px_60px_rgba(15,23,42,0.08)] transition hover:-translate-y-0.5 hover:border-slate-300"
+            className="group rounded-2xl border border-slate-200/80 bg-white p-5 shadow-[0_12px_36px_rgba(15,23,42,0.06)] transition hover:-translate-y-0.5 hover:border-slate-300"
             >
               <div className="flex items-start justify-between gap-3">
                 <div>
@@ -46,14 +46,14 @@ export default async function FundamentalsPage() {
             </Link>
 
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
-              <div className="rounded-[28px] border border-slate-200/80 bg-slate-950 p-5 text-white shadow-[0_18px_60px_rgba(15,23,42,0.14)]">
+              <div className="rounded-2xl border border-slate-200/80 bg-slate-950 p-5 text-white shadow-[0_12px_28px_rgba(15,23,42,0.14)]">
                 <p className="text-[11px] uppercase tracking-[0.18em] text-slate-400">Lecturas</p>
                 <p className="mt-3 text-4xl font-semibold">{posts.length}</p>
                 <p className="mt-2 text-sm leading-6 text-slate-300">
                   Posts listos para consumir en una sesión corta.
                 </p>
               </div>
-              <div className="rounded-[28px] border border-slate-200/80 bg-white p-5 shadow-sm">
+              <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm">
                 <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Tools</p>
                 <p className="mt-3 text-4xl font-semibold text-slate-950">{tools.length}</p>
                 <p className="mt-2 text-sm leading-6 text-slate-600">
@@ -83,7 +83,7 @@ export default async function FundamentalsPage() {
                   ))}
                 </div>
               ) : (
-                <div className="rounded-[28px] border border-slate-200/80 bg-white p-5 text-sm text-slate-600 shadow-sm">
+                <div className="rounded-2xl border border-slate-200/80 bg-white p-5 text-sm text-slate-600 shadow-sm">
                   Aún no hay publicaciones recientes.
                 </div>
               )}
@@ -108,7 +108,7 @@ export default async function FundamentalsPage() {
                   ))}
                 </div>
               ) : (
-                <div className="rounded-[28px] border border-slate-200/80 bg-white p-5 text-sm text-slate-600 shadow-sm">
+                <div className="rounded-2xl border border-slate-200/80 bg-white p-5 text-sm text-slate-600 shadow-sm">
                   Aún no hay tools recomendadas para hoy.
                 </div>
               )}

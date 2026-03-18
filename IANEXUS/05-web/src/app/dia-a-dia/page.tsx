@@ -19,10 +19,10 @@ export default async function DiaADiaPage() {
       <Header />
 
       <section className="relative flex-1 px-4 py-6 sm:px-6 md:py-10">
-        <div className="absolute inset-x-0 top-0 h-72 bg-[radial-gradient(circle_at_top_left,_rgba(56,189,248,0.18),_transparent_45%),radial-gradient(circle_at_top_right,_rgba(99,102,241,0.16),_transparent_40%),radial-gradient(circle_at_center,_rgba(148,163,184,0.12),_transparent_60%)] blur-3xl" />
+        <div className="absolute inset-x-0 top-0 h-64 bg-[radial-gradient(circle_at_top_left,_rgba(56,189,248,0.14),_transparent_45%),radial-gradient(circle_at_top_right,_rgba(99,102,241,0.12),_transparent_40%),radial-gradient(circle_at_center,_rgba(148,163,184,0.1),_transparent_60%)] blur-3xl" />
 
-        <div className="relative mx-auto flex w-full max-w-7xl flex-col gap-6">
-          <header className="overflow-hidden rounded-[24px] border border-slate-200/80 bg-white/85 p-5 shadow-[0_24px_80px_rgba(15,23,42,0.08)] backdrop-blur md:p-6">
+        <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-5">
+          <header className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white/88 p-4 shadow-[0_18px_60px_rgba(15,23,42,0.06)] backdrop-blur md:p-5">
             <div className="grid gap-6 lg:grid-cols-[1.12fr_0.88fr] lg:items-center">
               <div>
                 <p className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.18em] text-slate-500">
@@ -30,11 +30,11 @@ export default async function DiaADiaPage() {
                   Feed editorial
                 </p>
 
-                <h1 className="mt-4 max-w-3xl text-3xl font-semibold leading-tight tracking-[-0.03em] text-slate-950 md:text-5xl">
+                <h1 className="mt-4 max-w-3xl text-3xl font-semibold leading-tight tracking-[-0.03em] text-slate-950 md:text-4xl">
                   Lo que vale la pena ver hoy en IA.
                 </h1>
 
-                <p className="mt-4 max-w-2xl text-base leading-7 text-slate-600 md:text-lg">
+                <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-600 md:text-base">
                   Posts, tools y lecturas rápidas para descubrir qué usar, cómo usarlo y por qué importa en tu flujo real.
                 </p>
 
@@ -55,7 +55,7 @@ export default async function DiaADiaPage() {
                   </Link>
                 </div>
 
-                <div className="mt-6 flex flex-wrap gap-2">
+                <div className="mt-5 flex flex-wrap gap-2">
                   <span className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs text-slate-500">Posts publicados</span>
                   <span className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs text-slate-500">Tools activas</span>
                   <span className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs text-slate-500">Curación diaria</span>
@@ -63,19 +63,19 @@ export default async function DiaADiaPage() {
               </div>
 
               <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
-                <div className="rounded-[20px] border border-slate-200 bg-slate-950 p-4 text-white shadow-[0_18px_40px_rgba(15,23,42,0.18)]">
+                <div className="rounded-xl border border-slate-200 bg-slate-950 p-4 text-white shadow-[0_12px_28px_rgba(15,23,42,0.16)]">
                   <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Posts</p>
                   <p className="mt-3 text-3xl font-semibold">{postsData.length}</p>
                   <p className="mt-2 text-sm text-slate-300">Lecturas publicadas listas para abrir.</p>
                 </div>
 
-                <div className="rounded-[20px] border border-slate-200 bg-white p-4 shadow-sm">
+                <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
                   <p className="text-xs uppercase tracking-[0.18em] text-slate-500">Tools</p>
                   <p className="mt-3 text-3xl font-semibold text-slate-950">{toolsData.tools.length}</p>
                   <p className="mt-2 text-sm text-slate-600">Herramientas y packs que pueden entrar en tu flujo hoy.</p>
                 </div>
 
-                <div className="rounded-[20px] border border-slate-200 bg-white p-4 shadow-sm">
+                <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
                   <p className="text-xs uppercase tracking-[0.18em] text-slate-500">Sistema</p>
                   <p className="mt-3 text-3xl font-semibold text-slate-950">2</p>
                   <p className="mt-2 text-sm text-slate-600">Dos vistas que comparten la misma lógica editorial.</p>

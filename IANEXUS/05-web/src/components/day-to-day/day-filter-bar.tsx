@@ -64,7 +64,7 @@ export default function DayFilterBar({ onFilterChange, categories }: DayFilterBa
   }, [onFilterChange]);
 
   return (
-    <div className="w-full rounded-[28px] border border-slate-200/80 bg-white/90 p-4 shadow-[0_18px_50px_rgba(15,23,42,0.06)] md:p-5">
+    <div className="w-full rounded-2xl border border-slate-200/80 bg-white/92 p-4 shadow-[0_12px_36px_rgba(15,23,42,0.05)] md:p-5">
       <div className="flex flex-col gap-4 border-b border-slate-200 pb-4 md:flex-row md:items-end md:justify-between">
         <div>
           <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Filtro vivo</p>
