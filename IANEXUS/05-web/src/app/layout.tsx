@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import WhatsAppStickyButton from "@/components/layout/whatsapp-sticky-button";
+import { buildRootMetadata } from "@/lib/seo";
 import "./globals.css";
 
 const inter = Inter({
@@ -10,16 +11,7 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
-export const metadata: Metadata = {
-  title: "IA NEXUS — Comunidad IA para estudiantes",
-  description:
-    "Herramientas de IA verificadas, prompts para Gemini y comunidad activa por carrera.",
-  openGraph: {
-    title: "IA NEXUS",
-    description: "Herramientas de IA para estudiantes y carreras",
-    type: "website",
-  },
-};
+export const metadata: Metadata = buildRootMetadata();
 
 export default function RootLayout({
   children,

@@ -1,5 +1,7 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { cache } from "react";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import ToolDetail from "@/components/tools/tool-detail";
@@ -8,8 +10,55 @@ import { getRelatedPostsByToolSlug } from "@/lib/repositories/post-tools-repo";
 import { getToolBySlug } from "@/lib/repositories/tools-repo";
 import { getCurrentUser } from "@/lib/auth/session";
 import { hasAdminAccess } from "@/lib/auth/roles";
+import { buildPageMetadata, normalizeDescription } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
+
+const getPublishedTool = cache(async (slug: string) => getToolBySlug(slug));
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+
+  let decodedSlug = "";
+  try {
+    decodedSlug = decodeURIComponent(slug);
+  } catch {
+    return buildPageMetadata({
+      title: "Herramienta no encontrada",
+      path: `/herramientas/${slug}`,
+      noIndex: true,
+    });
+  }
+
+  const tool = await getPublishedTool(decodedSlug);
+  if (!tool) {
+    return buildPageMetadata({
+      title: "Herramienta no encontrada",
+      path: `/herramientas/${decodedSlug}`,
+      noIndex: true,
+    });
+  }
+
+  return buildPageMetadata({
+    title: `${tool.name} | Herramienta IA`,
+    description: normalizeDescription(
+      tool.description,
+      `${tool.name} en IA NEXUS: descubre para que sirve, que nivel requiere y cuando conviene usarla.`,
+    ),
+    path: `/herramientas/${tool.slug}`,
+    image: tool.cover_image_url,
+    type: "website",
+    keywords: [
+      tool.name,
+      tool.primaryCareer?.name ?? "herramientas IA",
+      tool.ia_type ?? "inteligencia artificial",
+    ],
+  });
+}
 
 export default async function ToolDetailPage({
   params,
@@ -30,7 +79,7 @@ export default async function ToolDetailPage({
   }
 
   const [tool, relatedPosts, viewer] = await Promise.all([
-    getToolBySlug(decodedSlug),
+    getPublishedTool(decodedSlug),
     getRelatedPostsByToolSlug(decodedSlug).catch(() => []),
     getCurrentUser().catch(() => null),
   ]);

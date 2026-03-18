@@ -1,17 +1,20 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Suspense } from "react";
+import { cache, Suspense } from "react";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import { PostContent } from "@/components/blog/post-content";
 import RelatedTools from "@/components/blog/related-tools";
 import { getCurrentUser } from "@/lib/auth/session";
 import { hasAdminAccess } from "@/lib/auth/roles";
+import { buildPageMetadata, normalizeDescription } from "@/lib/seo";
 import { fetchPublishedPostBySlug } from "@/lib/supabase/server";
 import { getRelatedToolsByPostSlug } from "@/lib/repositories/post-tools-repo";
 
-// Cache estático con ISR cada 5 minutos
 export const dynamic = "force-dynamic";
+
+const getPublishedPost = cache(async (slug: string) => fetchPublishedPostBySlug(slug));
 
 function formatDate(value: string | null) {
   if (!value) return "";
@@ -32,6 +35,40 @@ interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug } = await params;
+
+  let decodedSlug = "";
+  try {
+    decodedSlug = decodeURIComponent(slug);
+  } catch {
+    return buildPageMetadata({
+      title: "Post no encontrado",
+      path: `/blog/${slug}`,
+      noIndex: true,
+    });
+  }
+
+  const post = await getPublishedPost(decodedSlug);
+  if (!post) {
+    return buildPageMetadata({
+      title: "Post no encontrado",
+      path: `/blog/${decodedSlug}`,
+      noIndex: true,
+    });
+  }
+
+  const typeLabel = post.post_kind === "news" ? "Novedad" : "Guia";
+  return buildPageMetadata({
+    title: `${post.title} | ${typeLabel}`,
+    description: normalizeDescription(post.excerpt, `Lee ${post.title} en IA NEXUS.`),
+    path: `/blog/${post.slug}`,
+    image: post.cover_image_url,
+    type: "article",
+    keywords: ["blog IA", post.ia_type ?? "inteligencia artificial", post.post_kind],
+  });
+}
+
 export default async function BlogPostPage({ params }: PageProps) {
   const { slug } = await params;
 
@@ -46,14 +83,12 @@ export default async function BlogPostPage({ params }: PageProps) {
     notFound();
   }
 
-  // El post es el dato crítico: si no existe/publicado => 404
-  const post = await fetchPublishedPostBySlug(decodedSlug);
+  const post = await getPublishedPost(decodedSlug);
 
   if (!post) {
     notFound();
   }
 
-  // Datos auxiliares con fallback para evitar 500 por dependencias no críticas
   const [viewer, relatedTools] = await Promise.all([
     getCurrentUser().catch(() => null),
     getRelatedToolsByPostSlug(decodedSlug).catch(() => []),
