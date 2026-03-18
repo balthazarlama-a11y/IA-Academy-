@@ -179,7 +179,7 @@ function getPlanLabel(plan: string) {
     case "paid":
       return "Pago";
     case "edu_free":
-      return "Student free";
+      return "Beneficio estudiantil";
     default:
       return plan;
   }
@@ -470,7 +470,7 @@ export default async function Home() {
                     "Una opcion pensada para avanzar sin quedar atrapado en planes caros."
                   }
                   meta={tool.category.name}
-                  footer={tool.edu_verified ? "Valida para campus" : "Acceso simple"}
+                  footer={tool.edu_verified ? "Con verificación académica" : "Acceso simple"}
                   mediaUrl={tool.cover_image_url}
                   icon={GraduationCap}
                   variant="compact"

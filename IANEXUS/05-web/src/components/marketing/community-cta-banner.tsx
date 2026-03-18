@@ -7,7 +7,7 @@ interface CommunityCtaBannerProps {
 
 export function CommunityCtaBanner({ location, subtitle }: CommunityCtaBannerProps) {
   const titles: Record<string, string> = {
-    hero: "Accede a descuentos .edu y herramientas antes que nadie",
+    hero: "Accede a beneficios estudiantiles y herramientas antes que nadie",
     blog_banner: "Detecta herramientas aplicables antes que otros",
     areas_banner: "Pregunta qué herramienta conviene para tu área",
     estudiantes_banner: "No pagues de más por herramientas de IA",
@@ -16,8 +16,8 @@ export function CommunityCtaBanner({ location, subtitle }: CommunityCtaBannerPro
   const defaultSubtitles: Record<string, string> = {
     hero: "Recibe descuentos exclusivos para estudiantes, acceso a herramientas nuevas y casos reales para tus proyectos extra.",
     blog_banner: "Entra al grupo para descubrir descuentos activos, prompts probados y oportunidades antes que tus compañeros.",
-    areas_banner: "Pregunta qué herramienta conviene para tu área y entérate de planes .edu con descuentos reales que no anuncian públicamente.",
-    estudiantes_banner: "Únete a +200 estudiantes que ya ahorran con descuentos .edu, herramientas gratis para proyectos y oportunidades antes que el resto.",
+    areas_banner: "Pregunta qué herramienta conviene para tu área y entérate de beneficios estudiantiles con acceso real y verificación académica cuando corresponda.",
+    estudiantes_banner: "Únete a +200 estudiantes que ya ahorran con beneficios estudiantiles, herramientas gratis para proyectos y oportunidades antes que el resto.",
   };
 
   const ctaLabels: Record<string, string> = {

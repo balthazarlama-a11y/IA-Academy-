@@ -6,7 +6,7 @@ import { StaffEditButton } from "@/components/staff/staff-edit-button";
 
 const PLAN_CONFIG: Record<ToolPlan, { label: string; color: string; bg: string }> = {
   free: { label: "Gratis", color: "rgba(16,185,129,0.92)", bg: "rgba(16,185,129,0.10)" },
-  edu_free: { label: ".edu Gratis", color: "rgba(14,165,233,0.92)", bg: "rgba(14,165,233,0.10)" },
+  edu_free: { label: "Beneficio estudiantil", color: "rgba(14,165,233,0.92)", bg: "rgba(14,165,233,0.10)" },
   freemium: { label: "Freemium", color: "rgba(234,179,8,0.95)", bg: "rgba(234,179,8,0.10)" },
   paid: { label: "Pago", color: "rgba(100,116,139,0.92)", bg: "rgba(148,163,184,0.08)" },
 };
@@ -117,7 +117,7 @@ function AreaToolCard({ tool }: { tool: Tool }) {
           {tool.edu_verified ? (
             <span className="inline-flex items-center gap-1.5 text-xs text-cyan-600">
               <GraduationCap className="h-4 w-4" />
-              Plan .edu
+              Verificación académica
             </span>
           ) : null}
           {tool.guide_slug ? (

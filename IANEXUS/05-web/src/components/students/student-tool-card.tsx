@@ -11,7 +11,7 @@ function shortDescription(value: string | null) {
 }
 
 function planLabel(plan: Tool["plan"]) {
-  if (plan === "edu_free") return "Edu Free";
+  if (plan === "edu_free") return "Beneficio estudiantil";
   if (plan === "free") return "Gratis";
   if (plan === "freemium") return "Freemium";
   return "Pago";
@@ -25,7 +25,7 @@ function planTone(plan: Tool["plan"]) {
 }
 
 function planSummary(plan: Tool["plan"]) {
-  if (plan === "edu_free") return "Pensado para correo universitario";
+  if (plan === "edu_free") return "Requiere correo institucional";
   if (plan === "free") return "Acceso sin pago ni tarjeta";
   if (plan === "freemium") return "Empieza gratis y luego decide";
   return "Requiere pago o upgrade";
@@ -79,7 +79,7 @@ export default memo(function StudentToolCard({ tool }: { tool: Tool }) {
           {tool.edu_verified && (
             <span className="inline-flex items-center gap-1 rounded-full border border-emerald-300/30 bg-emerald-400/10 px-2.5 py-1 text-xs font-medium text-emerald-700">
               <GraduationCap className="h-3 w-3" />
-              Pack .edu
+              Beneficio estudiantil
             </span>
           )}
           {tool.verified && (

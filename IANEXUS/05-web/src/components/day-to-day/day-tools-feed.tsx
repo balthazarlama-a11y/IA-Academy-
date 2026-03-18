@@ -9,7 +9,7 @@ import { StaffEditButton } from "@/components/staff/staff-edit-button";
 
 const PLAN_CONFIG: Record<ToolPlan, { label: string; color: string; bg: string }> = {
   free: { label: "Gratis", color: "rgba(52,211,153,0.9)", bg: "rgba(52,211,153,0.12)" },
-  edu_free: { label: ".edu", color: "rgba(56,189,248,0.9)", bg: "rgba(56,189,248,0.12)" },
+  edu_free: { label: "Beneficio estudiantil", color: "rgba(56,189,248,0.9)", bg: "rgba(56,189,248,0.12)" },
   freemium: { label: "Freemium", color: "rgba(251,191,36,0.9)", bg: "rgba(251,191,36,0.12)" },
   paid: { label: "Pago", color: "rgba(148,163,184,0.7)", bg: "rgba(148,163,184,0.08)" },
 };
@@ -173,7 +173,7 @@ export default function DayToolsFeed({ tools, filters }: DayToolsFeedProps) {
                       {tool.edu_verified && (
                         <span className="inline-flex items-center gap-1 rounded-full border border-cyan-200 bg-cyan-50 px-2.5 py-1 text-[10px] text-cyan-700">
                           <GraduationCap className="h-3 w-3" />
-                          Pack .edu
+                          Verificación académica
                         </span>
                       )}
                     </div>

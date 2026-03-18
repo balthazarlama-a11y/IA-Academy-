@@ -3,7 +3,7 @@ import type { Tool } from "@/lib/types/tool";
 
 const PLAN_BADGE: Record<Tool["plan"], { label: string; color: string; bg: string; border: string }> = {
   free:     { label: "Gratis",          color: "#059669", bg: "rgba(16,185,129,0.10)", border: "rgba(52,211,153,0.35)" },
-  edu_free: { label: "Pack Estudiante", color: "#0284c7", bg: "rgba(56,189,248,0.10)", border: "rgba(56,189,248,0.35)" },
+  edu_free: { label: "Beneficio estudiantil", color: "#0284c7", bg: "rgba(56,189,248,0.10)", border: "rgba(56,189,248,0.35)" },
   freemium: { label: "Freemium",        color: "#d97706", bg: "rgba(251,191,36,0.12)", border: "rgba(251,191,36,0.40)" },
   paid:     { label: "Pago",            color: "#64748b", bg: "rgba(148,163,184,0.08)", border: "rgba(148,163,184,0.30)" },
 };
@@ -53,7 +53,7 @@ export default function ToolMetaBadges({ tool }: { tool: Tool }) {
       {tool.edu_verified ? (
         <span className="inline-flex items-center gap-1 rounded-full border border-cyan-300/30 bg-cyan-400/10 px-2.5 py-1 text-xs text-cyan-700">
           <GraduationCap className="h-3.5 w-3.5" />
-          .edu verificado
+          Verificación académica
         </span>
       ) : null}
     </div>

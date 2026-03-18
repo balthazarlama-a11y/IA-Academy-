@@ -457,9 +457,9 @@ export default function StudentsToolbar({
                   className="mt-1"
                 />
                 <span>
-                  <span className="block font-semibold text-slate-900">Pack estudiante</span>
+                  <span className="block font-semibold text-slate-900">Beneficio estudiantil</span>
                   <span className="block text-xs leading-relaxed text-slate-500">
-                    Beneficios para cuentas educativas o verificadas.
+                    Beneficios con correo institucional o verificación académica.
                   </span>
                 </span>
               </label>

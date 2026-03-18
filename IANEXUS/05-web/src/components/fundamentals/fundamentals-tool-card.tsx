@@ -5,7 +5,7 @@ import { StaffEditButton } from "@/components/staff/staff-edit-button";
 
 const PLAN_CONFIG: Record<FundamentalsTool["plan"], { label: string; cls: string }> = {
   free: { label: "Gratis", cls: "border-emerald-300/40 bg-emerald-400/10 text-emerald-700" },
-  edu_free: { label: ".edu Free", cls: "border-sky-300/40 bg-sky-400/10 text-sky-700" },
+  edu_free: { label: "Beneficio estudiantil", cls: "border-sky-300/40 bg-sky-400/10 text-sky-700" },
   freemium: { label: "Freemium", cls: "border-amber-300/40 bg-amber-400/10 text-amber-700" },
   paid: { label: "Pago", cls: "border-slate-300 bg-slate-50 text-slate-500" },
 };
@@ -37,7 +37,7 @@ export default function FundamentalsToolCard({ tool }: { tool: FundamentalsTool 
           {tool.edu_verified && (
             <span className="inline-flex items-center gap-1 rounded-full border border-sky-300/35 bg-sky-400/10 px-2 py-0.5 text-xs text-sky-700">
               <GraduationCap className="h-3 w-3" />
-              Pack .edu
+              Beneficio estudiantil
             </span>
           )}
           {tool.ia_type && !tool.edu_verified && (

@@ -79,7 +79,7 @@ export function CreateToolForm({
         className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50"
       >
         <option value="free">Free</option>
-        <option value="edu_free">Edu Free</option>
+        <option value="edu_free">Beneficio estudiantil</option>
         <option value="freemium">Freemium</option>
         <option value="paid">Paid</option>
       </select>
@@ -118,7 +118,7 @@ export function CreateToolForm({
         <input name="verified" type="checkbox" disabled={isPending} /> Verificada
       </label>
       <label className="inline-flex items-center gap-2 text-sm text-slate-700">
-        <input name="edu_verified" type="checkbox" disabled={isPending} /> Edu verificada
+        <input name="edu_verified" type="checkbox" disabled={isPending} /> Verificación académica
       </label>
       <label className="inline-flex items-center gap-2 text-sm text-slate-700 md:col-span-2">
         <input name="featured" type="checkbox" disabled={isPending} /> Destacada

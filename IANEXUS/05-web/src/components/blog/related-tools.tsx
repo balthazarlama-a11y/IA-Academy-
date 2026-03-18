@@ -4,14 +4,14 @@ import type { RelatedToolForPost } from "@/lib/repositories/post-tools-repo";
 function planLabel(plan: RelatedToolForPost["plan"]) {
   switch (plan) {
     case "edu_free":
-      return "Edu Free";
+      return "Beneficio estudiantil";
     case "freemium":
       return "Freemium";
     case "paid":
-      return "Paid";
+      return "Pago";
     case "free":
     default:
-      return "Free";
+      return "Gratis";
   }
 }
 

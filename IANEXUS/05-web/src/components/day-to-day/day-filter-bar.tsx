@@ -17,7 +17,7 @@ type DayFilterBarProps = {
 const PLAN_OPTIONS = [
   { value: "all", label: "Todos los planes" },
   { value: "free", label: "Gratis" },
-  { value: "edu_free", label: "Edu Free" },
+  { value: "edu_free", label: "Beneficio estudiantil" },
   { value: "freemium", label: "Freemium" },
   { value: "paid", label: "Pago" },
 ] as const;
