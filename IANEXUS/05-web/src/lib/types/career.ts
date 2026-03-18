@@ -1,15 +1,8 @@
-import type { ToolLevel, ToolPlan } from "@/lib/types/tool";
+import type { ToolCareer, ToolLevel, ToolPlan } from "@/lib/types/tool";
 
-export type CareerPathSource = "career_paths" | "tool_categories";
+export type CareerPathSource = "career_paths";
 
-export type CareerPath = {
-  id: string;
-  name: string;
-  slug: string;
-  description: string | null;
-  color_accent: string | null;
-  icon_name: string | null;
-  sort_order: number;
+export type CareerPath = ToolCareer & {
   source: CareerPathSource;
 };
 

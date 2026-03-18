@@ -1,7 +1,8 @@
 export type ToolPlan = "free" | "freemium" | "paid" | "edu_free";
 export type ToolLevel = "beginner" | "intermediate" | "advanced" | "all";
+export type ToolTaxonomySource = "career_paths" | "synthetic";
 
-export type ToolCategory = {
+export type ToolCareer = {
   id: string;
   name: string;
   slug: string;
@@ -9,7 +10,11 @@ export type ToolCategory = {
   color_accent: string | null;
   icon_name: string | null;
   sort_order: number;
+  source?: ToolTaxonomySource;
 };
+
+// Deprecated compatibility alias kept while UI migrates from `category` to careers.
+export type ToolCategory = ToolCareer;
 
 export type Tool = {
   id: string;
@@ -25,6 +30,8 @@ export type Tool = {
   edu_verified: boolean;
   featured: boolean;
   sort_order: number;
+  careers?: ToolCareer[];
+  primaryCareer?: ToolCareer;
   category: ToolCategory;
   guide_slug: string | null;
   created_at: string;
@@ -33,6 +40,9 @@ export type Tool = {
 export type ToolFilters = {
   search?: string;
   categorySlug?: string;
+  careerSlugs?: string[];
+  plans?: ToolPlan[];
+  levels?: ToolLevel[];
   onlyFree?: boolean;
   onlyEdu?: boolean;
   limit?: number;

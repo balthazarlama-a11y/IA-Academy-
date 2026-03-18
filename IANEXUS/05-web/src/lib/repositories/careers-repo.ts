@@ -1,6 +1,5 @@
 import { getSupabaseServerClient } from "@/lib/supabase/server";
-import type { Career, CareerPath, CareerPathSource } from "@/lib/types/career";
-import type { ToolCategory } from "@/lib/types/tool";
+import type { Career, CareerPath } from "@/lib/types/career";
 
 type RawCareerPathRow = {
   id: string;
@@ -14,20 +13,26 @@ type RawCareerPathRow = {
 
 type RawCareerToolLinkRow = {
   tool_id: string;
-  career_id: string;
+  career_path_id: string;
   sort_order: number;
 };
 
-const CAREER_PATH_SELECT = "id, name, slug, description, color_accent, icon_name, sort_order";
-
-let hasCareerPathsSchemaCache: boolean | null = null;
+const CAREER_PATH_SELECT = [
+  "id",
+  "name",
+  "slug",
+  "description",
+  "color_accent",
+  "icon_name",
+  "sort_order",
+].join(", ");
 
 function normalizeList(values: string[] | undefined | null): string[] {
   if (!values || values.length === 0) return [];
   return [...new Set(values.map((value) => value.trim()).filter(Boolean))];
 }
 
-function mapCareerPath(row: RawCareerPathRow | ToolCategory, source: CareerPathSource): CareerPath {
+function mapCareerPath(row: RawCareerPathRow): CareerPath {
   return {
     id: row.id,
     name: row.name,
@@ -36,53 +41,26 @@ function mapCareerPath(row: RawCareerPathRow | ToolCategory, source: CareerPathS
     color_accent: row.color_accent,
     icon_name: row.icon_name,
     sort_order: row.sort_order,
-    source,
+    source: "career_paths",
   };
-}
-
-async function hasCareerPathsSchema(): Promise<boolean> {
-  if (hasCareerPathsSchemaCache !== null) {
-    return hasCareerPathsSchemaCache;
-  }
-
-  const supabase = getSupabaseServerClient();
-  const { error } = await supabase.from("career_paths").select("id").limit(1);
-
-  hasCareerPathsSchemaCache = !error;
-  return hasCareerPathsSchemaCache;
 }
 
 export async function getCareerPaths(): Promise<CareerPath[]> {
   const supabase = getSupabaseServerClient();
 
-  if (await hasCareerPathsSchema()) {
-    const { data, error } = await supabase
-      .from("career_paths")
-      .select(CAREER_PATH_SELECT)
-      .order("sort_order", { ascending: true })
-      .order("name", { ascending: true });
-
-    if (!error) {
-      return (((data as RawCareerPathRow[] | null) ?? [])).map((row) =>
-        mapCareerPath(row, "career_paths"),
-      );
-    }
-
-    console.error("[careers-repo] getCareerPaths schema:", error.message);
-  }
-
   const { data, error } = await supabase
-    .from("tool_categories")
+    .from("career_paths")
     .select(CAREER_PATH_SELECT)
+    .eq("status", "published")
     .order("sort_order", { ascending: true })
     .order("name", { ascending: true });
 
   if (error) {
-    console.error("[careers-repo] getCareerPaths fallback:", error.message);
+    console.error("[careers-repo] getCareerPaths:", error.message);
     return [];
   }
 
-  return (((data as ToolCategory[] | null) ?? [])).map((row) => mapCareerPath(row, "tool_categories"));
+  return ((((data as unknown as RawCareerPathRow[] | null) ?? []))).map(mapCareerPath);
 }
 
 export async function getCareers(): Promise<Career[]> {
@@ -96,64 +74,34 @@ export async function resolveCareerPathToolIds(careerSlugs: string[]): Promise<s
   }
 
   const supabase = getSupabaseServerClient();
-
-  if (await hasCareerPathsSchema()) {
-    const { data: careerRows, error: careerError } = await supabase
-      .from("career_paths")
-      .select("id, slug")
-      .in("slug", slugs);
-
-    if (careerError) {
-      console.error("[careers-repo] resolveCareerPathToolIds careers:", careerError.message);
-      return [];
-    }
-
-    const careerIds = (((careerRows as Array<{ id: string }> | null) ?? [])).map((row) => row.id);
-    if (careerIds.length === 0) {
-      return [];
-    }
-
-    const { data: linkRows, error: linkError } = await supabase
-      .from("tool_careers")
-      .select("tool_id, career_id, sort_order")
-      .in("career_id", careerIds)
-      .order("sort_order", { ascending: true });
-
-    if (linkError) {
-      console.error("[careers-repo] resolveCareerPathToolIds links:", linkError.message);
-      return [];
-    }
-
-    return [...new Set((((linkRows as RawCareerToolLinkRow[] | null) ?? [])).map((row) => row.tool_id))];
-  }
-
-  const { data: categoryRows, error: categoryError } = await supabase
-    .from("tool_categories")
+  const { data: careerRows, error: careerError } = await supabase
+    .from("career_paths")
     .select("id, slug")
+    .eq("status", "published")
     .in("slug", slugs);
 
-  if (categoryError) {
-    console.error("[careers-repo] resolveCareerPathToolIds fallback categories:", categoryError.message);
+  if (careerError) {
+    console.error("[careers-repo] resolveCareerPathToolIds careers:", careerError.message);
     return [];
   }
 
-  const categoryIds = (((categoryRows as Array<{ id: string }> | null) ?? [])).map((row) => row.id);
-  if (categoryIds.length === 0) {
+  const careerIds = ((((careerRows as unknown as Array<{ id: string }> | null) ?? []))).map((row) => row.id);
+  if (careerIds.length === 0) {
     return [];
   }
 
-  const { data: toolRows, error: toolError } = await supabase
-    .from("tools")
-    .select("id")
-    .eq("status", "published")
-    .in("category_id", categoryIds);
+  const { data: linkRows, error: linkError } = await supabase
+    .from("tool_careers")
+    .select("tool_id, career_path_id, sort_order")
+    .in("career_path_id", careerIds)
+    .order("sort_order", { ascending: true });
 
-  if (toolError) {
-    console.error("[careers-repo] resolveCareerPathToolIds fallback tools:", toolError.message);
+  if (linkError) {
+    console.error("[careers-repo] resolveCareerPathToolIds links:", linkError.message);
     return [];
   }
 
-  return [...new Set((((toolRows as Array<{ id: string }> | null) ?? [])).map((row) => row.id))];
+  return [...new Set((((linkRows as unknown as RawCareerToolLinkRow[] | null) ?? [])).map((row) => row.tool_id))];
 }
 
 export async function resolveCareerToolIds(careerSlugs: string[]): Promise<string[]> {

@@ -1,5 +1,5 @@
 import { getSupabaseServerAuthClient, getSupabaseServerClient } from "@/lib/supabase/server";
-import type { RelatedPostSummary, ToolPlan } from "@/lib/types/tool";
+import type { RelatedPostSummary, ToolCareer, ToolPlan } from "@/lib/types/tool";
 
 type ContentStatus = "draft" | "scheduled" | "published" | "archived";
 
@@ -37,12 +37,20 @@ export type RelatedToolForPost = {
   description: string | null;
   plan: ToolPlan;
   iaType: string | null;
-  category: {
-    name: string;
-    slug: string;
-    colorAccent: string | null;
-  };
+  careers: ToolCareer[];
+  primaryCareer: ToolCareer;
+  category: ToolCareer;
   sortOrder: number;
+};
+
+type RawCareer = {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  color_accent: string | null;
+  icon_name: string | null;
+  sort_order: number;
 };
 
 type RawPostToolRelation = {
@@ -92,18 +100,6 @@ type RawRelatedToolRelation = {
         description: string | null;
         plan: ToolPlan;
         ia_type: string | null;
-        tool_categories:
-          | {
-              name: string;
-              slug: string;
-              color_accent: string | null;
-            }
-          | {
-              name: string;
-              slug: string;
-              color_accent: string | null;
-            }[]
-          | null;
       }
     | {
         id: string;
@@ -112,18 +108,6 @@ type RawRelatedToolRelation = {
         description: string | null;
         plan: ToolPlan;
         ia_type: string | null;
-        tool_categories:
-          | {
-              name: string;
-              slug: string;
-              color_accent: string | null;
-            }
-          | {
-              name: string;
-              slug: string;
-              color_accent: string | null;
-            }[]
-          | null;
       }[]
     | null;
 };
@@ -148,9 +132,92 @@ type RawRelatedPostRelation = {
     | null;
 };
 
+type RawToolCareerRelation = {
+  tool_id: string;
+  sort_order: number;
+  career_paths:
+    | RawCareer
+    | RawCareer[]
+    | null;
+};
+
+type RelatedToolRecord = {
+  sortOrder: number;
+  tool: {
+    id: string;
+    name: string;
+    slug: string;
+    description: string | null;
+    plan: ToolPlan;
+    ia_type: string | null;
+  };
+};
+
+const TOOL_CAREER_SELECT = [
+  "tool_id",
+  "sort_order",
+  "career_paths(id, name, slug, description, color_accent, icon_name, sort_order)",
+].join(", ");
+
+const FALLBACK_CAREER: ToolCareer = {
+  id: "general",
+  name: "General",
+  slug: "general",
+  description: "Clasificacion general mientras una tool termina de asociarse a una carrera.",
+  color_accent: null,
+  icon_name: null,
+  sort_order: 0,
+  source: "synthetic",
+};
+
 function pickFirst<T>(value: T | T[] | null): T | null {
   if (!value) return null;
   return Array.isArray(value) ? (value[0] ?? null) : value;
+}
+
+function mapCareer(row: RawCareer | null): ToolCareer {
+  if (!row) {
+    return FALLBACK_CAREER;
+  }
+
+  return {
+    id: row.id,
+    name: row.name,
+    slug: row.slug,
+    description: row.description,
+    color_accent: row.color_accent,
+    icon_name: row.icon_name,
+    sort_order: row.sort_order,
+    source: "career_paths",
+  };
+}
+
+async function getCareerAssignmentsByToolIds(toolIds: string[]): Promise<Map<string, ToolCareer[]>> {
+  const assignments = new Map<string, ToolCareer[]>();
+  if (toolIds.length === 0) {
+    return assignments;
+  }
+
+  const supabase = getSupabaseServerClient();
+  const { data, error } = await supabase
+    .from("tool_careers")
+    .select(TOOL_CAREER_SELECT)
+    .in("tool_id", toolIds)
+    .order("sort_order", { ascending: true });
+
+  if (error) {
+    console.error("[post-tools-repo] getCareerAssignmentsByToolIds:", error.message);
+    return assignments;
+  }
+
+  for (const row of ((data as unknown as RawToolCareerRelation[] | null) ?? [])) {
+    const career = mapCareer(pickFirst(row.career_paths));
+    const current = assignments.get(row.tool_id) ?? [];
+    current.push(career);
+    assignments.set(row.tool_id, current);
+  }
+
+  return assignments;
 }
 
 export async function listAdminPostsForRelations(limit = 250): Promise<AdminRelationPost[]> {
@@ -228,7 +295,6 @@ export async function linkToolToPost(input: {
   toolId: string;
   sortOrder: number;
 }): Promise<{ ok: boolean; error?: string }> {
-  // Validación de inputs
   if (!input.postId || typeof input.postId !== "string" || input.postId.trim() === "") {
     return { ok: false, error: "ID de post invalido" };
   }
@@ -252,8 +318,7 @@ export async function linkToolToPost(input: {
 
   if (error) {
     console.error("[post-tools-repo] linkToolToPost:", error.message, error.code);
-    
-    // Mensajes de error amigables según el tipo de error de Supabase
+
     if (error.code === "23503") {
       return { ok: false, error: "El post o la tool no existen" };
     }
@@ -263,7 +328,7 @@ export async function linkToolToPost(input: {
     if (error.code === "42501") {
       return { ok: false, error: "No tienes permisos para realizar esta accion" };
     }
-    
+
     return { ok: false, error: `Error de base de datos: ${error.message}` };
   }
 
@@ -274,7 +339,6 @@ export async function unlinkToolFromPost(input: {
   postId: string;
   toolId: string;
 }): Promise<{ ok: boolean; error?: string }> {
-  // Validación de inputs
   if (!input.postId || typeof input.postId !== "string" || input.postId.trim() === "") {
     return { ok: false, error: "ID de post invalido" };
   }
@@ -292,12 +356,11 @@ export async function unlinkToolFromPost(input: {
 
   if (error) {
     console.error("[post-tools-repo] unlinkToolFromPost:", error.message, error.code);
-    
-    // Mensajes de error amigables según el tipo de error de Supabase
+
     if (error.code === "42501") {
       return { ok: false, error: "No tienes permisos para realizar esta accion" };
     }
-    
+
     return { ok: false, error: `Error de base de datos: ${error.message}` };
   }
 
@@ -322,7 +385,7 @@ export async function getRelatedToolsByPostSlug(slug: string): Promise<RelatedTo
 
   const { data, error } = await supabase
     .from("post_tools")
-    .select("sort_order, tools(id, name, slug, description, plan, ia_type, tool_categories(name, slug, color_accent))")
+    .select("sort_order, tools(id, name, slug, description, plan, ia_type)")
     .eq("post_id", postData.id)
     .order("sort_order", { ascending: true });
 
@@ -331,30 +394,33 @@ export async function getRelatedToolsByPostSlug(slug: string): Promise<RelatedTo
     return [];
   }
 
-  return (((data as RawRelatedToolRelation[] | null) ?? []))
-    .map((row) => {
-      const tool = pickFirst(row.tools);
-      if (!tool) return null;
+  const rows = ((data as unknown as RawRelatedToolRelation[] | null) ?? []);
+  const toolRecords = rows
+    .map((row) => ({
+      sortOrder: row.sort_order,
+      tool: pickFirst(row.tools),
+    }))
+    .filter((row): row is RelatedToolRecord => Boolean(row.tool));
 
-      const category = pickFirst(tool.tool_categories);
-      if (!category) return null;
+  const assignments = await getCareerAssignmentsByToolIds(toolRecords.map((row) => row.tool.id));
 
-      return {
-        id: tool.id,
-        name: tool.name,
-        slug: tool.slug,
-        description: tool.description,
-        plan: tool.plan,
-        iaType: tool.ia_type,
-        category: {
-          name: category.name,
-          slug: category.slug,
-          colorAccent: category.color_accent,
-        },
-        sortOrder: row.sort_order,
-      } satisfies RelatedToolForPost;
-    })
-    .filter((row): row is RelatedToolForPost => row !== null);
+  return toolRecords.map((row) => {
+    const careers = assignments.get(row.tool.id) ?? [FALLBACK_CAREER];
+    const primaryCareer = careers[0] ?? FALLBACK_CAREER;
+
+    return {
+      id: row.tool.id,
+      name: row.tool.name,
+      slug: row.tool.slug,
+      description: row.tool.description,
+      plan: row.tool.plan,
+      iaType: row.tool.ia_type,
+      careers,
+      primaryCareer,
+      category: primaryCareer,
+      sortOrder: row.sortOrder,
+    } satisfies RelatedToolForPost;
+  });
 }
 
 export async function getRelatedPostsByToolSlug(slug: string): Promise<RelatedPostSummary[]> {
