@@ -1,10 +1,12 @@
 import { getSupabaseServerClient } from "@/lib/supabase/server";
+import { resolveCareerToolIds } from "@/lib/repositories/careers-repo";
 import type { Tool, ToolCategory, ToolLevel, ToolPlan } from "@/lib/types/tool";
 
 export type { ToolLevel, ToolPlan };
 
 export type AreaFilters = {
   search?: string;
+  careerSlugs?: string[];
   categorySlugs?: string[];
   plans?: ToolPlan[];
   levels?: ToolLevel[];
@@ -130,6 +132,17 @@ export async function getAreasPage(
     }
 
     query = query.in("category_id", categoryIds);
+  }
+
+  const careerSlugs = normalizeList(filters.careerSlugs);
+  if (careerSlugs.length > 0) {
+    const careerToolIds = await resolveCareerToolIds(careerSlugs);
+
+    if (careerToolIds.length === 0) {
+      return { tools: [], hasMore: false, nextOffset: null };
+    }
+
+    query = query.in("id", careerToolIds);
   }
 
   const plans = normalizeList(filters.plans);
