@@ -22,15 +22,15 @@ export default async function DiaADiaPage() {
         <div className="absolute inset-x-0 top-0 h-72 bg-[radial-gradient(circle_at_top_left,_rgba(56,189,248,0.18),_transparent_45%),radial-gradient(circle_at_top_right,_rgba(99,102,241,0.16),_transparent_40%),radial-gradient(circle_at_center,_rgba(148,163,184,0.12),_transparent_60%)] blur-3xl" />
 
         <div className="relative mx-auto flex w-full max-w-7xl flex-col gap-6">
-          <header className="overflow-hidden rounded-[32px] border border-slate-200/80 bg-white/85 p-6 shadow-[0_24px_80px_rgba(15,23,42,0.08)] backdrop-blur md:p-8">
-            <div className="grid gap-8 lg:grid-cols-[1.12fr_0.88fr] lg:items-center">
+          <header className="overflow-hidden rounded-[24px] border border-slate-200/80 bg-white/85 p-5 shadow-[0_24px_80px_rgba(15,23,42,0.08)] backdrop-blur md:p-6">
+            <div className="grid gap-6 lg:grid-cols-[1.12fr_0.88fr] lg:items-center">
               <div>
                 <p className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.18em] text-slate-500">
                   <Sparkles className="h-3.5 w-3.5 text-cyan-500" />
                   Feed editorial
                 </p>
 
-                <h1 className="mt-4 max-w-3xl text-4xl font-semibold leading-tight tracking-[-0.03em] text-slate-950 md:text-5xl">
+                <h1 className="mt-4 max-w-3xl text-3xl font-semibold leading-tight tracking-[-0.03em] text-slate-950 md:text-5xl">
                   Lo que vale la pena ver hoy en IA.
                 </h1>
 
@@ -63,21 +63,21 @@ export default async function DiaADiaPage() {
               </div>
 
               <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
-                <div className="rounded-[24px] border border-slate-200 bg-slate-950 p-5 text-white shadow-[0_18px_40px_rgba(15,23,42,0.18)]">
+                <div className="rounded-[20px] border border-slate-200 bg-slate-950 p-4 text-white shadow-[0_18px_40px_rgba(15,23,42,0.18)]">
                   <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Posts</p>
-                  <p className="mt-3 text-4xl font-semibold">{postsData.length}</p>
+                  <p className="mt-3 text-3xl font-semibold">{postsData.length}</p>
                   <p className="mt-2 text-sm text-slate-300">Lecturas publicadas listas para abrir.</p>
                 </div>
 
-                <div className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-sm">
+                <div className="rounded-[20px] border border-slate-200 bg-white p-4 shadow-sm">
                   <p className="text-xs uppercase tracking-[0.18em] text-slate-500">Tools</p>
-                  <p className="mt-3 text-4xl font-semibold text-slate-950">{toolsData.tools.length}</p>
+                  <p className="mt-3 text-3xl font-semibold text-slate-950">{toolsData.tools.length}</p>
                   <p className="mt-2 text-sm text-slate-600">Herramientas y packs que pueden entrar en tu flujo hoy.</p>
                 </div>
 
-                <div className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-sm">
+                <div className="rounded-[20px] border border-slate-200 bg-white p-4 shadow-sm">
                   <p className="text-xs uppercase tracking-[0.18em] text-slate-500">Sistema</p>
-                  <p className="mt-3 text-4xl font-semibold text-slate-950">2</p>
+                  <p className="mt-3 text-3xl font-semibold text-slate-950">2</p>
                   <p className="mt-2 text-sm text-slate-600">Dos vistas que comparten la misma lógica editorial.</p>
                 </div>
               </div>

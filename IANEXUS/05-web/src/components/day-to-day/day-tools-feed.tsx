@@ -55,7 +55,7 @@ export default function DayToolsFeed({ tools, filters }: DayToolsFeedProps) {
 
   if (filteredTools.length === 0) {
     return (
-      <div className="rounded-[28px] border border-slate-200/80 bg-white p-8 text-center shadow-sm">
+      <div className="rounded-[20px] border border-slate-200/80 bg-white p-6 text-center shadow-sm">
         <ExternalLink className="mx-auto mb-3 h-8 w-8 text-slate-300" />
         <p className="text-sm text-slate-500">No hay tools que coincidan con este filtro.</p>
         <p className="mt-1 text-xs text-slate-400">Cambia categoría, nivel o plan para abrir el feed.</p>
@@ -85,7 +85,7 @@ export default function DayToolsFeed({ tools, filters }: DayToolsFeedProps) {
           return (
             <article
               key={tool.id}
-              className="group relative overflow-hidden rounded-[26px] border border-slate-200/80 bg-white shadow-[0_12px_40px_rgba(15,23,42,0.05)] transition duration-200 hover:-translate-y-0.5 hover:border-slate-300"
+              className="group relative overflow-hidden rounded-[18px] border border-slate-200/80 bg-white shadow-[0_12px_40px_rgba(15,23,42,0.05)] transition duration-200 hover:-translate-y-0.5 hover:border-slate-300"
             >
               <StaffEditButton
                 href={`/admin/tools?q=${encodeURIComponent(tool.slug)}`}
@@ -94,7 +94,7 @@ export default function DayToolsFeed({ tools, filters }: DayToolsFeedProps) {
               />
 
               <div className="grid gap-0 lg:grid-cols-[0.88fr_1.12fr]">
-                <div className="relative min-h-[180px] overflow-hidden bg-slate-50">
+                <div className="relative min-h-[160px] overflow-hidden bg-slate-50">
                   {tool.cover_image_url ? (
                     <Image
                       src={tool.cover_image_url}
@@ -106,13 +106,13 @@ export default function DayToolsFeed({ tools, filters }: DayToolsFeedProps) {
                     />
                   ) : (
                     <div
-                      className="flex min-h-[180px] items-center justify-center"
+                      className="flex min-h-[160px] items-center justify-center"
                       style={{
                         background: `radial-gradient(circle at top, ${accentColor}20, transparent 52%), linear-gradient(160deg, rgba(248,250,252,1), rgba(255,255,255,1))`,
                       }}
                     >
                       <div
-                        className="rounded-[28px] border bg-white/90 p-4 shadow-sm"
+                        className="rounded-[20px] border bg-white/90 p-4 shadow-sm"
                         style={{ borderColor: `${accentColor}22`, color: accentColor }}
                       >
                         <Sparkles className="h-7 w-7" />
@@ -121,7 +121,7 @@ export default function DayToolsFeed({ tools, filters }: DayToolsFeedProps) {
                   )}
                 </div>
 
-                <div className="flex min-w-0 flex-1 flex-col gap-4 p-5">
+                <div className="flex min-w-0 flex-1 flex-col gap-3.5 p-4">
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0">
                       <div className="mb-2 flex flex-wrap items-center gap-2">
@@ -140,7 +140,7 @@ export default function DayToolsFeed({ tools, filters }: DayToolsFeedProps) {
                         </span>
                       </div>
 
-                      <h3 className="text-lg font-semibold tracking-[-0.02em] text-slate-950">
+                      <h3 className="text-[1.02rem] font-semibold tracking-[-0.02em] text-slate-950">
                         {tool.name}
                       </h3>
                     </div>
@@ -153,7 +153,7 @@ export default function DayToolsFeed({ tools, filters }: DayToolsFeedProps) {
                   </div>
 
                   {tool.description ? (
-                    <p className="line-clamp-3 text-sm leading-6 text-slate-600">
+                    <p className="line-clamp-2 text-sm leading-6 text-slate-600">
                       {tool.description}
                     </p>
                   ) : (

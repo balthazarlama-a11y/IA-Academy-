@@ -54,7 +54,7 @@ export default function DayBlogFeed({ posts, filters }: DayBlogFeedProps) {
 
   if (filteredPosts.length === 0) {
     return (
-      <div className="rounded-[28px] border border-slate-200/80 bg-white p-8 text-center shadow-sm">
+      <div className="rounded-[20px] border border-slate-200/80 bg-white p-6 text-center shadow-sm">
         <Sparkles className="mx-auto mb-3 h-8 w-8 text-slate-300" />
         <p className="text-sm text-slate-500">No hay posts que coincidan con este filtro.</p>
         <p className="mt-1 text-xs text-slate-400">Prueba otra categoría, plan o término de búsqueda.</p>
@@ -93,12 +93,12 @@ export default function DayBlogFeed({ posts, filters }: DayBlogFeedProps) {
               key={post.id}
               href={`/blog/${post.slug}`}
               prefetch={true}
-              className={`group overflow-hidden rounded-[26px] border border-slate-200/80 bg-white shadow-[0_12px_40px_rgba(15,23,42,0.05)] transition duration-200 hover:-translate-y-0.5 hover:border-slate-300 ${
+              className={`group overflow-hidden rounded-[18px] border border-slate-200/80 bg-white shadow-[0_12px_40px_rgba(15,23,42,0.05)] transition duration-200 hover:-translate-y-0.5 hover:border-slate-300 ${
                 post.cover_image_url ? "grid gap-0 lg:grid-cols-[0.88fr_1.12fr]" : "p-4"
               }`}
             >
               {post.cover_image_url ? (
-                <div className="relative min-h-[180px] overflow-hidden bg-slate-100 lg:min-h-full">
+                <div className="relative min-h-[160px] overflow-hidden bg-slate-100 lg:min-h-full">
                   <Image
                     src={post.cover_image_url}
                     alt={post.title}
@@ -110,7 +110,7 @@ export default function DayBlogFeed({ posts, filters }: DayBlogFeedProps) {
                 </div>
               ) : null}
 
-              <div className={`flex min-w-0 flex-1 flex-col gap-4 ${post.cover_image_url ? "p-5" : ""}`}>
+              <div className={`flex min-w-0 flex-1 flex-col gap-3.5 ${post.cover_image_url ? "p-4" : ""}`}>
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
                     <div className="mb-2 flex flex-wrap items-center gap-2">
@@ -123,7 +123,7 @@ export default function DayBlogFeed({ posts, filters }: DayBlogFeedProps) {
                         </span>
                       ) : null}
                     </div>
-                    <h3 className="line-clamp-2 text-lg font-semibold leading-snug tracking-[-0.02em] text-slate-950 group-hover:text-slate-700">
+                    <h3 className="line-clamp-2 text-[1.02rem] font-semibold leading-snug tracking-[-0.02em] text-slate-950 group-hover:text-slate-700">
                       {post.title}
                     </h3>
                   </div>
@@ -131,7 +131,7 @@ export default function DayBlogFeed({ posts, filters }: DayBlogFeedProps) {
                 </div>
 
                 {post.excerpt ? (
-                  <p className="line-clamp-3 text-sm leading-6 text-slate-600">
+                  <p className="line-clamp-2 text-sm leading-6 text-slate-600">
                     {post.excerpt}
                   </p>
                 ) : null}

@@ -14,23 +14,23 @@ export default function FundamentalsToolCard({ tool }: { tool: FundamentalsTool 
   const planCfg = PLAN_CONFIG[tool.plan];
 
   return (
-    <article className="group relative rounded-[26px] border border-slate-200/80 bg-white shadow-[0_12px_40px_rgba(15,23,42,0.05)] transition duration-200 hover:-translate-y-0.5 hover:border-slate-300">
+    <article className="group relative rounded-[18px] border border-slate-200/80 bg-white shadow-[0_12px_40px_rgba(15,23,42,0.05)] transition duration-200 hover:-translate-y-0.5 hover:border-slate-300">
       <StaffEditButton
         href={`/admin/tools?q=${encodeURIComponent(tool.slug)}`}
         label={`Editar herramienta "${tool.name}" en Admin`}
         className="absolute right-3 top-3 z-10"
       />
-      <Link href={`/herramientas/${tool.slug}`} className="block p-5">
+      <Link href={`/herramientas/${tool.slug}`} className="block p-4">
         <div className="flex items-center justify-between gap-2">
           <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Tool</p>
           <span className={`inline-flex items-center rounded-full border px-2.5 py-1 text-[10px] font-medium ${planCfg.cls}`}>
             {planCfg.label}
           </span>
         </div>
-        <h3 className="mt-3 text-lg font-semibold tracking-[-0.02em] text-slate-950 transition group-hover:text-slate-700">
+        <h3 className="mt-3 text-[1.02rem] font-semibold tracking-[-0.02em] text-slate-950 transition group-hover:text-slate-700">
           {tool.name}
         </h3>
-        <p className="mt-2 line-clamp-3 text-sm leading-6 text-slate-600">
+        <p className="mt-2 line-clamp-2 text-sm leading-6 text-slate-600">
           {tool.description ?? "Herramienta recomendada para tu operación diaria."}
         </p>
         <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-slate-200 pt-3">
