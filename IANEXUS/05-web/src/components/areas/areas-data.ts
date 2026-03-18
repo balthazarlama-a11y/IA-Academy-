@@ -52,7 +52,7 @@ export type RawToolRow = {
 
 export const PLAN_OPTIONS: Array<{ value: ToolPlan; label: string }> = [
   { value: "free", label: "Gratis" },
-  { value: "edu_free", label: ".edu Gratis" },
+  { value: "edu_free", label: "Beneficio estudiantil" },
   { value: "freemium", label: "Freemium" },
   { value: "paid", label: "Pago" },
 ];
