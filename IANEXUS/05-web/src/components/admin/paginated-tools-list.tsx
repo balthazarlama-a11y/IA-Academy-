@@ -14,14 +14,20 @@ type Tool = {
   plan: "free" | "freemium" | "paid" | "edu_free";
   level: "beginner" | "intermediate" | "advanced" | "all";
   ia_type: string | null;
-  category_id: string;
   verified: boolean;
   edu_verified: boolean;
   featured: boolean;
   status: "draft" | "scheduled" | "published" | "archived";
   sort_order: number;
   updated_at: string;
-  tool_categories: { name: string; slug: string } | { name: string; slug: string }[] | null;
+  tool_careers?:
+    | {
+        career_paths:
+          | { id: string; name: string; slug: string }
+          | { id: string; name: string; slug: string }[]
+          | null;
+      }[]
+    | null;
 };
 
 type ToolCategory = {

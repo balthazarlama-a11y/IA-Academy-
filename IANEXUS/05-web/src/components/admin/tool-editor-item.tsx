@@ -14,14 +14,12 @@ type Tool = {
   plan: "free" | "freemium" | "paid" | "edu_free";
   level: "beginner" | "intermediate" | "advanced" | "all";
   ia_type: string | null;
-  category_id: string;
   verified: boolean;
   edu_verified: boolean;
   featured: boolean;
   status: "draft" | "scheduled" | "published" | "archived";
   sort_order: number;
   updated_at: string;
-  tool_categories: { name: string; slug: string } | { name: string; slug: string }[] | null;
   tool_careers?:
     | {
         career_paths:
@@ -48,12 +46,6 @@ function formatDate(value: string) {
     hour: "2-digit",
     minute: "2-digit",
   }).format(new Date(value));
-}
-
-function getToolCategoryName(value: Tool["tool_categories"]) {
-  if (!value) return "Sin categoria";
-  if (Array.isArray(value)) return value[0]?.name ?? "Sin categoria";
-  return value.name;
 }
 
 function getToolCareerSelections(tool: Tool) {
@@ -113,7 +105,7 @@ export function ToolEditorItem({
           <div className="min-w-0 flex-1">
             <p className="truncate text-sm font-medium text-slate-900">{tool.name}</p>
             <p className="truncate text-xs text-slate-500">
-              /{tool.slug} - {tool.status} - {selectedCareerLabel || getToolCategoryName(tool.tool_categories)} - {formatDate(tool.updated_at)}
+              /{tool.slug} - {tool.status} - {selectedCareerLabel || "Sin carreras"} - {formatDate(tool.updated_at)}
             </p>
           </div>
           <Wrench className="h-4 w-4 shrink-0 text-slate-500" />
@@ -123,7 +115,6 @@ export function ToolEditorItem({
       <div className="border-t border-slate-200 p-4">
         <form action={handleSubmit} className="grid grid-cols-1 gap-3 md:grid-cols-2">
           <input type="hidden" name="id" value={tool.id} />
-          <input type="hidden" name="current_category_id" value={tool.category_id} />
           <input
             name="name"
             required

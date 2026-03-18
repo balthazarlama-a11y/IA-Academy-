@@ -19,14 +19,12 @@ type AdminToolRow = {
   plan: "free" | "freemium" | "paid" | "edu_free";
   level: "beginner" | "intermediate" | "advanced" | "all";
   ia_type: string | null;
-  category_id: string;
   verified: boolean;
   edu_verified: boolean;
   featured: boolean;
   status: "draft" | "scheduled" | "published" | "archived";
   sort_order: number;
   updated_at: string;
-  tool_categories: { name: string; slug: string } | { name: string; slug: string }[] | null;
   tool_careers:
     | {
         career_paths:
@@ -70,7 +68,7 @@ export default async function AdminToolsPage({
   const [{ data: toolsData }, { data: careersData }] = await Promise.all([
     supabase
       .from("tools")
-      .select("id, name, slug, description, url, cover_image_url, plan, level, ia_type, category_id, verified, edu_verified, featured, status, sort_order, updated_at, tool_categories(name, slug), tool_careers(career_paths(id, name, slug))")
+      .select("id, name, slug, description, url, cover_image_url, plan, level, ia_type, verified, edu_verified, featured, status, sort_order, updated_at, tool_careers(career_paths(id, name, slug))")
       .order("updated_at", { ascending: false })
       .limit(100),
     supabase

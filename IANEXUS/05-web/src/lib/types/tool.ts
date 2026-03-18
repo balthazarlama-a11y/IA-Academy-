@@ -13,7 +13,7 @@ export type ToolCareer = {
   source?: ToolTaxonomySource;
 };
 
-// Deprecated compatibility alias kept while UI migrates from `category` to careers.
+// Deprecated compatibility alias kept only for leaf UI that still reads `tool.category`.
 export type ToolCategory = ToolCareer;
 
 export type Tool = {
@@ -39,6 +39,7 @@ export type Tool = {
 
 export type ToolFilters = {
   search?: string;
+  // Deprecated transitional alias. Prefer `careerSlugs`.
   categorySlug?: string;
   careerSlugs?: string[];
   plans?: ToolPlan[];

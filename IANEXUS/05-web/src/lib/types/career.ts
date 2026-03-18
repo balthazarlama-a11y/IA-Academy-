@@ -11,6 +11,7 @@ export type Career = CareerPath;
 export type CareerFilters = {
   search?: string;
   careerSlugs?: string[];
+  // Deprecated transitional alias. Prefer `careerSlugs`.
   categorySlugs?: string[];
   plans?: ToolPlan[];
   levels?: ToolLevel[];

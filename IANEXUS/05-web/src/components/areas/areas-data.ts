@@ -201,6 +201,8 @@ export function mapTool(row: RawToolRow): Tool {
     edu_verified: row.edu_verified,
     featured: row.featured,
     sort_order: row.sort_order ?? 0,
+    careers,
+    primaryCareer: primaryCareer ?? undefined,
     created_at: row.created_at ?? "",
     category: mapCareerToCategory(primaryCareer),
     guide_slug: null,

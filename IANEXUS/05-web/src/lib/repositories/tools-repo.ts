@@ -150,6 +150,7 @@ function normalizeCareerSlugs(filters: ToolFilters): string[] {
     return careerSlugs;
   }
 
+  // Transitional fallback while a few call sites still pass `categorySlug`.
   return filters.categorySlug ? [filters.categorySlug.trim()] : [];
 }
 

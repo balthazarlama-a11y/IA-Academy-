@@ -25,7 +25,6 @@ function mapFilters(filters: CareerFilters): ToolFilters {
   return {
     search: filters.search,
     careerSlugs,
-    categorySlug: careerSlugs[0],
     plans: filters.plans,
     levels: filters.levels,
   };

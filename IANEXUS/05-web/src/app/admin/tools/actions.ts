@@ -9,7 +9,6 @@ import { uploadMediaFile } from "@/lib/supabase/admin-storage";
 type ToolPlan = "free" | "freemium" | "paid" | "edu_free";
 type ToolLevel = "beginner" | "intermediate" | "advanced" | "all";
 type ToolStatus = "draft" | "scheduled" | "published" | "archived";
-type ToolCategoryRow = { id: string; slug: string };
 
 async function ensureStaffUser() {
   const user = await getCurrentUser();
@@ -60,44 +59,6 @@ function getCareerIds(formData: FormData) {
         .filter(Boolean),
     ),
   );
-}
-
-async function resolveLegacyCategoryId(
-  supabase: Awaited<ReturnType<typeof getSupabaseServerAuthClient>>,
-  careerIds: string[],
-  fallbackCategoryId?: string | null,
-) {
-  if (!careerIds.length) {
-    return fallbackCategoryId?.trim() || null;
-  }
-
-  const [{ data: careerRows, error: careerError }, { data: categories, error: categoryError }] = await Promise.all([
-    supabase.from("career_paths").select("id, slug").in("id", careerIds),
-    supabase
-      .from("tool_categories")
-      .select("id, slug")
-      .order("sort_order", { ascending: true })
-      .order("name", { ascending: true }),
-  ]);
-
-  if (careerError) {
-    throw new Error(careerError.message);
-  }
-
-  if (categoryError) {
-    throw new Error(categoryError.message);
-  }
-
-  const categoryRows = ((categories ?? []) as ToolCategoryRow[]);
-  const categoryBySlug = new Map(categoryRows.map((row) => [row.slug, row.id]));
-  const careerSlugs = ((careerRows ?? []) as Array<{ id: string; slug: string }>).map((row) => row.slug);
-
-  for (const slug of careerSlugs) {
-    const matched = categoryBySlug.get(slug);
-    if (matched) return matched;
-  }
-
-  return fallbackCategoryId?.trim() || categoryBySlug.get("todas") || categoryRows[0]?.id || null;
 }
 
 async function syncToolCareers(
@@ -158,11 +119,6 @@ export async function createToolAction(formData: FormData) {
       coverImageUrl = uploadedUrl;
     }
 
-    const categoryId = await resolveLegacyCategoryId(supabase, careerIds);
-    if (!categoryId) {
-      redirect("/admin/tools?err=No%20se%20pudo%20resolver%20la%20categoria%20legacy%20para%20esta%20tool");
-    }
-
     const { data: insertedTool, error } = await supabase
       .from("tools")
       .insert({
@@ -174,7 +130,6 @@ export async function createToolAction(formData: FormData) {
         plan,
         level,
         ia_type: iaType,
-        category_id: categoryId,
         verified: formData.get("verified") === "on",
         edu_verified: formData.get("edu_verified") === "on",
         featured: formData.get("featured") === "on",
@@ -255,7 +210,6 @@ export async function updateToolAction(formData: FormData) {
     const level = (formData.get("level")?.toString() ?? "all") as ToolLevel;
     const iaType = normalizeNullableText(formData.get("ia_type"));
     const careerIds = getCareerIds(formData);
-    const currentCategoryId = (formData.get("current_category_id")?.toString() ?? "").trim();
     const status = (formData.get("status")?.toString() ?? "published") as ToolStatus;
     const sortOrder = Number.parseInt(formData.get("sort_order")?.toString() ?? "0", 10) || 0;
 
@@ -273,11 +227,6 @@ export async function updateToolAction(formData: FormData) {
       coverImageUrl = uploadedUrl;
     }
 
-    const categoryId = await resolveLegacyCategoryId(supabase, careerIds, currentCategoryId);
-    if (!categoryId) {
-      redirect("/admin/tools?err=No%20se%20pudo%20resolver%20la%20categoria%20legacy%20para%20actualizar");
-    }
-
     const { error } = await supabase
       .from("tools")
       .update({
@@ -289,7 +238,6 @@ export async function updateToolAction(formData: FormData) {
         plan,
         level,
         ia_type: iaType,
-        category_id: categoryId,
         verified: formData.get("verified") === "on",
         edu_verified: formData.get("edu_verified") === "on",
         featured: formData.get("featured") === "on",
