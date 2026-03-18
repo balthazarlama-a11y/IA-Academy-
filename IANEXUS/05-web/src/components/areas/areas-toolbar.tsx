@@ -9,16 +9,16 @@ import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import AreaToolsGrid from "./area-tools-grid";
 import AreasEmptyState from "./areas-empty-state";
 
-const AREA_OPTIONS = [
+const CAREER_OPTIONS = [
   { slug: "programacion", label: "Programacion", accent: "#3b82f6", hint: "Codigo, debugging y producto" },
-  { slug: "salud", label: "Salud", accent: "#10b981", hint: "Estudio, resumen y apoyo clinico" },
   { slug: "investigacion", label: "Investigacion", accent: "#8b5cf6", hint: "Lectura, evidencia y sintesis" },
+  { slug: "salud", label: "Salud", accent: "#10b981", hint: "Estudio, resumen y apoyo clinico" },
   { slug: "diseno", label: "Diseno", accent: "#ec4899", hint: "Creatividad visual y prototipos" },
   { slug: "escritura", label: "Escritura", accent: "#f97316", hint: "Texto, claridad y redaccion" },
 ] as const;
 
-const AREA_SLUGS = new Set<string>(AREA_OPTIONS.map((option) => option.slug));
-type AreaSlug = (typeof AREA_OPTIONS)[number]["slug"];
+const CAREER_SLUGS = new Set<string>(CAREER_OPTIONS.map((option) => option.slug));
+type CareerSlug = (typeof CAREER_OPTIONS)[number]["slug"];
 
 const PLAN_OPTIONS: Array<{ value: ToolPlan; label: string }> = [
   { value: "free", label: "Gratis" },
@@ -36,7 +36,7 @@ const LEVEL_OPTIONS: Array<{ value: ToolLevel; label: string }> = [
 
 type LocalFilters = {
   search: string;
-  areaSlugs: AreaSlug[];
+  careerSlugs: CareerSlug[];
   plans: ToolPlan[];
   levels: ToolLevel[];
 };
@@ -141,12 +141,12 @@ function sanitizeSearch(value: string) {
   return value.trim().replaceAll(",", " ");
 }
 
-function normalizeArray(values: string[]): string[] {
+function normalizeArray(values: string[]) {
   return [...new Set(values.map((value) => value.trim()).filter(Boolean))];
 }
 
-function normalizeAreaSlugs(values: string[] | undefined): AreaSlug[] {
-  return normalizeArray(values ?? []).filter((value) => AREA_SLUGS.has(value)) as AreaSlug[];
+function normalizeCareerSlugs(values: string[] | undefined): CareerSlug[] {
+  return normalizeArray(values ?? []).filter((value) => CAREER_SLUGS.has(value)) as CareerSlug[];
 }
 
 function normalizePlans(values: string[] | undefined): ToolPlan[] {
@@ -180,7 +180,7 @@ function toggleItem<T extends string>(list: T[], value: T): T[] {
 function buildKey(filters: LocalFilters, offset: number): string {
   return JSON.stringify({
     search: sanitizeSearch(filters.search).toLowerCase(),
-    areaSlugs: [...filters.areaSlugs].sort(),
+    careerSlugs: [...filters.careerSlugs].sort(),
     plans: [...filters.plans].sort(),
     levels: [...filters.levels].sort(),
     offset,
@@ -191,7 +191,7 @@ function buildKey(filters: LocalFilters, offset: number): string {
 function hasActiveFilters(filters: LocalFilters): boolean {
   return (
     filters.search.trim().length > 0 ||
-    filters.areaSlugs.length > 0 ||
+    filters.careerSlugs.length > 0 ||
     filters.plans.length > 0 ||
     filters.levels.length > 0
   );
@@ -208,8 +208,8 @@ export default function AreasToolbar({
   const pathname = usePathname();
 
   const [searchText, setSearchText] = useState(initialFilters.search ?? "");
-  const [selectedAreas, setSelectedAreas] = useState<AreaSlug[]>(
-    normalizeAreaSlugs(initialFilters.categorySlugs),
+  const [selectedCareers, setSelectedCareers] = useState<CareerSlug[]>(
+    normalizeCareerSlugs(initialFilters.categorySlugs),
   );
   const [selectedPlans, setSelectedPlans] = useState<ToolPlan[]>(
     normalizePlans(initialFilters.plans),
@@ -236,17 +236,17 @@ export default function AreasToolbar({
   const currentFilters = useMemo<LocalFilters>(
     () => ({
       search: searchText.trim(),
-      areaSlugs: selectedAreas,
+      careerSlugs: selectedCareers,
       plans: selectedPlans,
       levels: selectedLevels,
     }),
-    [searchText, selectedAreas, selectedPlans, selectedLevels],
+    [searchText, selectedCareers, selectedPlans, selectedLevels],
   );
 
   useEffect(() => {
     const initialSnapshot: LocalFilters = {
       search: initialFilters.search ?? "",
-      areaSlugs: normalizeAreaSlugs(initialFilters.categorySlugs),
+      careerSlugs: normalizeCareerSlugs(initialFilters.categorySlugs),
       plans: normalizePlans(initialFilters.plans),
       levels: normalizeLevels(initialFilters.levels),
     };
@@ -264,9 +264,7 @@ export default function AreasToolbar({
 
   useEffect(() => {
     return () => {
-      if (searchTimerRef.current) {
-        clearTimeout(searchTimerRef.current);
-      }
+      if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
     };
   }, []);
 
@@ -275,7 +273,7 @@ export default function AreasToolbar({
       const params = new URLSearchParams();
 
       if (filters.search) params.set("q", filters.search);
-      for (const area of filters.areaSlugs) params.append("area", area);
+      for (const career of filters.careerSlugs) params.append("area", career);
       for (const plan of filters.plans) params.append("plan", plan);
       for (const level of filters.levels) params.append("level", level);
 
@@ -286,18 +284,14 @@ export default function AreasToolbar({
   );
 
   const ensureCategoryMap = useCallback(async (): Promise<Map<string, string>> => {
-    if (categoryMapRef.current) {
-      return categoryMapRef.current;
-    }
+    if (categoryMapRef.current) return categoryMapRef.current;
 
     const { data, error } = await supabase
       .from("tool_categories")
       .select("id, slug")
-      .in("slug", [...AREA_SLUGS]);
+      .in("slug", [...CAREER_SLUGS]);
 
-    if (error) {
-      return new Map();
-    }
+    if (error) return new Map();
 
     const map = new Map<string, string>();
     for (const category of (data ?? []) as CategoryMapRow[]) {
@@ -327,9 +321,7 @@ export default function AreasToolbar({
         setIsLoadingMore(false);
         return;
       }
-      if (cached) {
-        cacheRef.current.delete(cacheKey);
-      }
+      if (cached) cacheRef.current.delete(cacheKey);
 
       const existing = inFlightRef.current.get(cacheKey);
       const task =
@@ -343,9 +335,9 @@ export default function AreasToolbar({
             .order("sort_order", { ascending: true })
             .order("created_at", { ascending: false });
 
-          if (filters.areaSlugs.length > 0) {
+          if (filters.careerSlugs.length > 0) {
             const categoryMap = await ensureCategoryMap();
-            const categoryIds = filters.areaSlugs
+            const categoryIds = filters.careerSlugs
               .map((slug) => categoryMap.get(slug))
               .filter((value): value is string => Boolean(value));
 
@@ -356,13 +348,8 @@ export default function AreasToolbar({
             query = query.in("category_id", categoryIds);
           }
 
-          if (filters.plans.length > 0) {
-            query = query.in("plan", filters.plans);
-          }
-
-          if (filters.levels.length > 0) {
-            query = query.in("level", filters.levels);
-          }
+          if (filters.plans.length > 0) query = query.in("plan", filters.plans);
+          if (filters.levels.length > 0) query = query.in("level", filters.levels);
 
           const safeSearch = sanitizeSearch(filters.search);
           if (safeSearch.length > 0) {
@@ -391,16 +378,10 @@ export default function AreasToolbar({
           };
         })();
 
-      if (!existing) {
-        inFlightRef.current.set(cacheKey, task);
-      }
+      if (!existing) inFlightRef.current.set(cacheKey, task);
 
       const result = await task;
-
-      if (!existing) {
-        inFlightRef.current.delete(cacheKey);
-      }
-
+      if (!existing) inFlightRef.current.delete(cacheKey);
       if (requestId !== requestIdRef.current) return;
 
       if (result.error) {
@@ -438,20 +419,20 @@ export default function AreasToolbar({
     searchTimerRef.current = setTimeout(() => {
       applyFilters({
         search: value.trim(),
-        areaSlugs: selectedAreas,
+        careerSlugs: selectedCareers,
         plans: selectedPlans,
         levels: selectedLevels,
       });
     }, SEARCH_DEBOUNCE_MS);
   };
 
-  const onToggleArea = (slug: AreaSlug) => {
+  const onToggleCareer = (slug: CareerSlug) => {
     if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
-    const nextAreas = toggleItem(selectedAreas, slug);
-    setSelectedAreas(nextAreas);
+    const nextCareers = toggleItem(selectedCareers, slug);
+    setSelectedCareers(nextCareers);
     applyFilters({
       search: searchText.trim(),
-      areaSlugs: nextAreas,
+      careerSlugs: nextCareers,
       plans: selectedPlans,
       levels: selectedLevels,
     });
@@ -463,7 +444,7 @@ export default function AreasToolbar({
     setSelectedPlans(nextPlans);
     applyFilters({
       search: searchText.trim(),
-      areaSlugs: selectedAreas,
+      careerSlugs: selectedCareers,
       plans: nextPlans,
       levels: selectedLevels,
     });
@@ -475,7 +456,7 @@ export default function AreasToolbar({
     setSelectedLevels(nextLevels);
     applyFilters({
       search: searchText.trim(),
-      areaSlugs: selectedAreas,
+      careerSlugs: selectedCareers,
       plans: selectedPlans,
       levels: nextLevels,
     });
@@ -483,9 +464,9 @@ export default function AreasToolbar({
 
   const onReset = () => {
     if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
-    const empty: LocalFilters = { search: "", areaSlugs: [], plans: [], levels: [] };
+    const empty: LocalFilters = { search: "", careerSlugs: [], plans: [], levels: [] };
     setSearchText("");
-    setSelectedAreas([]);
+    setSelectedCareers([]);
     setSelectedPlans([]);
     setSelectedLevels([]);
     applyFilters(empty);
@@ -495,7 +476,7 @@ export default function AreasToolbar({
     if (!hasMore || nextOffset === null || isLoadingMore) return;
     void fetchPage(nextOffset, true, {
       search: searchText.trim(),
-      areaSlugs: selectedAreas,
+      careerSlugs: selectedCareers,
       plans: selectedPlans,
       levels: selectedLevels,
     });
@@ -504,15 +485,15 @@ export default function AreasToolbar({
   const hasFilters = hasActiveFilters(currentFilters);
 
   return (
-    <div className="w-full flex flex-col gap-5">
-      <section className="overflow-hidden rounded-[24px] border border-slate-200 bg-white shadow-[0_14px_38px_rgba(15,23,42,0.05)]">
+    <div className="w-full flex flex-col gap-4">
+      <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_12px_32px_rgba(15,23,42,0.05)]">
         <div className="border-b border-slate-200 px-5 py-4 md:px-6">
-          <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+          <div className="flex flex-col gap-2.5 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <p className="text-xs uppercase tracking-[0.16em] text-slate-500">
+              <p className="text-[11px] uppercase tracking-[0.16em] text-slate-500">
                 Curadoria por carrera
               </p>
-              <h2 className="mt-1 text-lg font-semibold text-slate-900">
+              <h2 className="mt-1 text-lg font-semibold text-slate-950">
                 Combina carrera, plan y nivel
               </h2>
               <p className="mt-1 max-w-2xl text-sm leading-relaxed text-slate-600">
@@ -521,7 +502,7 @@ export default function AreasToolbar({
               </p>
             </div>
 
-            <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-xs text-slate-600">
+            <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3.5 py-2 text-xs text-slate-600">
               <span className="font-semibold text-slate-900">{tools.length}</span>
               {hasMore ? "+" : ""} resultados visibles
             </div>
@@ -531,64 +512,67 @@ export default function AreasToolbar({
         <div className="grid grid-cols-1 gap-4 px-5 py-5 md:px-6">
           <div>
             <label
-              htmlFor="area-search"
-              className="mb-2 block text-xs uppercase tracking-[0.12em] text-slate-600"
+              htmlFor="career-search"
+              className="mb-2 block text-[11px] uppercase tracking-[0.12em] text-slate-600"
             >
               Buscar por nombre o tema
             </label>
             <input
-              id="area-search"
+              id="career-search"
               type="text"
               placeholder="Buscar herramienta, carrera o tema..."
               value={searchText}
               onChange={(event) => onSearchChange(event.target.value)}
-              className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 outline-none transition-all focus:border-slate-400"
+              className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 outline-none transition-all focus:border-slate-400"
             />
           </div>
 
-          <div className="rounded-[20px] border border-slate-200 bg-slate-50 p-4">
+          <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
             <div className="mb-3 flex items-center justify-between gap-3">
               <div>
-                <p className="text-xs uppercase tracking-[0.14em] text-slate-500">Carreras</p>
-                <p className="mt-1 text-sm font-semibold text-slate-900">
+                <p className="text-[11px] uppercase tracking-[0.14em] text-slate-500">
+                  Carreras
+                </p>
+                <p className="mt-1 text-sm font-semibold text-slate-950">
                   Selecciona una o varias profesiones
                 </p>
               </div>
             </div>
+
             <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-3">
-              {AREA_OPTIONS.map((area) => {
-                const checked = selectedAreas.includes(area.slug);
+              {CAREER_OPTIONS.map((career) => {
+                const checked = selectedCareers.includes(career.slug);
                 return (
                   <label
-                    key={area.slug}
-                    className="flex cursor-pointer items-start gap-3 rounded-xl border px-3 py-3 text-sm transition-colors"
+                    key={career.slug}
+                    className="flex cursor-pointer items-start gap-3 rounded-lg border px-3 py-3 text-sm transition-colors"
                     style={{
-                      borderColor: checked ? `${area.accent}66` : "rgba(148,163,184,0.32)",
-                      background: checked ? `${area.accent}18` : "rgba(255,255,255,0.95)",
-                      color: checked ? area.accent : "rgba(51,65,85,0.88)",
+                      borderColor: checked ? `${career.accent}66` : "rgba(148,163,184,0.28)",
+                      background: checked ? `${career.accent}14` : "rgba(255,255,255,0.95)",
+                      color: checked ? career.accent : "rgba(51,65,85,0.88)",
                     }}
-                    >
-                      <input
-                        type="checkbox"
-                        checked={checked}
-                        onChange={() => onToggleArea(area.slug)}
-                        className="mt-1 h-4 w-4 accent-blue-600"
-                      />
-                      <span>
-                        <span className="block font-medium">{area.label}</span>
-                        <span className="block text-xs leading-relaxed text-slate-500">
-                          {area.hint}
-                        </span>
+                  >
+                    <input
+                      type="checkbox"
+                      checked={checked}
+                      onChange={() => onToggleCareer(career.slug)}
+                      className="mt-1 h-4 w-4 accent-blue-600"
+                    />
+                    <span>
+                      <span className="block font-medium">{career.label}</span>
+                      <span className="block text-xs leading-relaxed text-slate-500">
+                        {career.hint}
                       </span>
-                    </label>
-                  );
-                })}
-              </div>
+                    </span>
+                  </label>
+                );
+              })}
+            </div>
           </div>
 
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-            <div className="rounded-[20px] border border-slate-200 bg-white p-4">
-              <p className="mb-3 text-xs font-medium uppercase tracking-[0.14em] text-slate-500">
+            <div className="rounded-xl border border-slate-200 bg-white p-4">
+              <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.14em] text-slate-500">
                 Plan
               </p>
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
@@ -597,7 +581,7 @@ export default function AreasToolbar({
                   return (
                     <label
                       key={plan.value}
-                      className="flex cursor-pointer items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 transition hover:border-slate-300"
+                      className="flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 transition hover:border-slate-300"
                     >
                       <input
                         type="checkbox"
@@ -612,8 +596,8 @@ export default function AreasToolbar({
               </div>
             </div>
 
-            <div className="rounded-[20px] border border-slate-200 bg-white p-4">
-              <p className="mb-3 text-xs font-medium uppercase tracking-[0.14em] text-slate-500">
+            <div className="rounded-xl border border-slate-200 bg-white p-4">
+              <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.14em] text-slate-500">
                 Nivel
               </p>
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
@@ -622,7 +606,7 @@ export default function AreasToolbar({
                   return (
                     <label
                       key={level.value}
-                      className="flex cursor-pointer items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 transition hover:border-slate-300"
+                      className="flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 transition hover:border-slate-300"
                     >
                       <input
                         type="checkbox"
@@ -640,7 +624,7 @@ export default function AreasToolbar({
 
           <div className="flex items-center justify-between gap-3 border-t border-slate-200 pt-2">
             <p className="text-xs text-slate-500">
-              Mostrando <span className="text-slate-600">{tools.length}{hasMore ? "+" : ""}</span>{" "}
+              Mostrando <span className="text-slate-700">{tools.length}{hasMore ? "+" : ""}</span>{" "}
               herramientas
             </p>
             {hasFilters ? (
@@ -663,7 +647,7 @@ export default function AreasToolbar({
       ) : null}
 
       {isLoading && tools.length === 0 ? (
-        <div className="rounded-3xl border border-slate-200 bg-white px-6 py-10 text-center text-slate-700">
+        <div className="rounded-2xl border border-slate-200 bg-white px-6 py-10 text-center text-slate-700 shadow-[0_10px_24px_rgba(15,23,42,0.04)]">
           Cargando herramientas...
         </div>
       ) : tools.length > 0 ? (
@@ -680,4 +664,3 @@ export default function AreasToolbar({
     </div>
   );
 }
-
