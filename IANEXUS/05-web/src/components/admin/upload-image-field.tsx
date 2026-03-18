@@ -82,12 +82,12 @@ export default function UploadImageField({
 
       {/* Image preview */}
       {preview ? (
-        <div className="relative h-32 w-full overflow-hidden rounded-lg border border-slate-200">
+        <div className="relative overflow-hidden rounded-lg border border-slate-200 bg-slate-50">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={preview}
             alt="Preview"
-            className="h-full w-full object-cover"
+            className="aspect-video h-auto w-full object-contain"
             aria-hidden="true"
           />
           <button
@@ -100,6 +100,10 @@ export default function UploadImageField({
           </button>
         </div>
       ) : null}
+
+      <p className="text-[11px] text-slate-500">
+        La portada final se ajusta automaticamente a formato horizontal 16:9 para cards y listados.
+      </p>
 
       {/* File picker row */}
       <div className="flex items-center gap-2">

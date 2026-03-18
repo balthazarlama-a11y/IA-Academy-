@@ -2,7 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { createClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 
-export function getSupabaseServerClient() {
+function getRequiredSupabaseEnv() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
@@ -13,6 +13,12 @@ export function getSupabaseServerClient() {
   if (!anonKey) {
     throw new Error("Missing NEXT_PUBLIC_SUPABASE_ANON_KEY");
   }
+
+  return { url, anonKey };
+}
+
+export function getSupabaseServerClient() {
+  const { url, anonKey } = getRequiredSupabaseEnv();
 
   return createClient(url, anonKey, {
     auth: {
@@ -22,16 +28,7 @@ export function getSupabaseServerClient() {
 }
 
 export async function getSupabaseServerAuthClient() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-  if (!url) {
-    throw new Error("Missing NEXT_PUBLIC_SUPABASE_URL");
-  }
-
-  if (!anonKey) {
-    throw new Error("Missing NEXT_PUBLIC_SUPABASE_ANON_KEY");
-  }
+  const { url, anonKey } = getRequiredSupabaseEnv();
 
   const cookieStore = await cookies();
 
@@ -49,6 +46,22 @@ export async function getSupabaseServerAuthClient() {
           // Server Components might attempt setting cookies in unsupported contexts.
         }
       },
+    },
+  });
+}
+
+export function getSupabaseServiceRoleClient() {
+  const { url } = getRequiredSupabaseEnv();
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!serviceRoleKey) {
+    throw new Error("Missing SUPABASE_SERVICE_ROLE_KEY");
+  }
+
+  return createClient(url, serviceRoleKey, {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
     },
   });
 }
