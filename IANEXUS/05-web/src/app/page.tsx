@@ -1,103 +1,51 @@
 import Link from "next/link";
-import LiquidBackground from "@/components/backgrounds/liquid-background";
-import PillarCards from "@/components/home/pillar-cards";
-import Footer from "@/components/layout/footer";
-import Header from "@/components/layout/header";
+import {
+  ArrowRight,
+  BookOpen,
+  GraduationCap,
+  Layers3,
+  Sparkles,
+  Search,
+} from "lucide-react";
+import EditorialTopbar from "@/components/home/editorial-topbar";
+import { EditorialCard } from "@/components/home/editorial-card";
+import { EditorialSectionHeader } from "@/components/home/editorial-section-header";
 import { TrackedWhatsAppLink } from "@/components/marketing/tracked-whatsapp-link";
+import { fetchPublishedPosts } from "@/lib/supabase/server";
+import { getToolsPage } from "@/lib/repositories/tools-repo";
+
+export const revalidate = 300;
 
 type HomeIconProps = {
   className?: string;
 };
 
-function IconSummary({ className }: HomeIconProps) {
+function IconProgramacion({ className }: HomeIconProps) {
   return (
     <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="1.8">
-      <path d="M6 5h12" />
-      <path d="M6 10h12" />
-      <path d="M6 15h8" />
-      <path d="M6 19h6" />
+      <path d="M8 8l-4 4 4 4" />
+      <path d="M16 8l4 4-4 4" />
+      <path d="M10 19l4-14" />
     </svg>
   );
 }
 
-function IconResearch({ className }: HomeIconProps) {
-  return (
-    <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="1.8">
-      <circle cx="11" cy="11" r="6" />
-      <path d="M20 20l-4.2-4.2" />
-    </svg>
-  );
+function IconInvestigacion({ className }: HomeIconProps) {
+  return <Search className={className} />;
 }
 
-function IconPresentation({ className }: HomeIconProps) {
-  return (
-    <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="1.8">
-      <rect x="4" y="5" width="16" height="10" rx="2" />
-      <path d="M12 15v4" />
-      <path d="M8 19h8" />
-    </svg>
-  );
-}
-
-function IconStudy({ className }: HomeIconProps) {
-  return (
-    <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="1.8">
-      <path d="M3 8l9-4 9 4-9 4-9-4z" />
-      <path d="M7 10v4c0 1.6 2.2 3 5 3s5-1.4 5-3v-4" />
-    </svg>
-  );
-}
-
-function IconProductivity({ className }: HomeIconProps) {
-  return (
-    <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="1.8">
-      <path d="M12 3v18" />
-      <path d="M3 12h18" />
-      <path d="M6 6l12 12" />
-    </svg>
-  );
-}
-
-function IconIdeas({ className }: HomeIconProps) {
-  return (
-    <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="1.8">
-      <path d="M9 18h6" />
-      <path d="M10 22h4" />
-      <path d="M8.5 14.5A5.5 5.5 0 1115.5 14c-.8.7-1.5 1.8-1.5 3h-4c0-1.2-.7-2.1-1.5-2.5z" />
-    </svg>
-  );
-}
-
-function IconHealth({ className }: HomeIconProps) {
+function IconSalud({ className }: HomeIconProps) {
   return (
     <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="1.8">
       <path d="M12 4v16" />
-      <path d="M8 8h8" />
-      <path d="M8 16h8" />
+      <path d="M4 12h16" />
+      <path d="M7 7h10" />
+      <path d="M7 17h10" />
     </svg>
   );
 }
 
-function IconEngineering({ className }: HomeIconProps) {
-  return (
-    <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="1.8">
-      <path d="M12 3l2.5 2.5-1.5 2.5 1.5 2.5-1.5 2.5 1.5 2.5L12 21l-2.5-2.5 1.5-2.5-1.5-2.5 1.5-2.5-1.5-2.5L12 3z" />
-    </svg>
-  );
-}
-
-function IconLaw({ className }: HomeIconProps) {
-  return (
-    <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="1.8">
-      <path d="M12 5v14" />
-      <path d="M6 8h12" />
-      <path d="M7 8l-2 4h4l-2-4z" />
-      <path d="M17 8l-2 4h4l-2-4z" />
-    </svg>
-  );
-}
-
-function IconDesign({ className }: HomeIconProps) {
+function IconDiseno({ className }: HomeIconProps) {
   return (
     <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="1.8">
       <circle cx="8" cy="8" r="3" />
@@ -108,7 +56,7 @@ function IconDesign({ className }: HomeIconProps) {
   );
 }
 
-function IconBusiness({ className }: HomeIconProps) {
+function IconNegocios({ className }: HomeIconProps) {
   return (
     <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="1.8">
       <rect x="4" y="7" width="16" height="11" rx="2" />
@@ -118,249 +66,546 @@ function IconBusiness({ className }: HomeIconProps) {
   );
 }
 
-function IconEducation({ className }: HomeIconProps) {
+function IconDerecho({ className }: HomeIconProps) {
   return (
     <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="1.8">
-      <path d="M3 8l9-4 9 4-9 4-9-4z" />
-      <path d="M6 10v4c0 1.4 2.7 2.8 6 2.8s6-1.4 6-2.8v-4" />
+      <path d="M12 5v14" />
+      <path d="M6 8h12" />
+      <path d="M7 8l-2 4h4l-2-4z" />
+      <path d="M17 8l-2 4h4l-2-4z" />
     </svg>
   );
 }
 
-const useCases = [
-  { label: "Resumir", icon: IconSummary },
-  { label: "Investigar", icon: IconResearch },
-  { label: "Presentaciones", icon: IconPresentation },
-  { label: "Estudiar", icon: IconStudy },
-  { label: "Productividad", icon: IconProductivity },
-  { label: "Organizar ideas", icon: IconIdeas },
+const editorialRoutes = [
+  {
+    label: "Estudiantes",
+    href: "/estudiantes",
+    icon: GraduationCap,
+    blurb: "Gratis, freemium y planes que realmente sirven.",
+  },
+  {
+    label: "Areas",
+    href: "/areas",
+    icon: Layers3,
+    blurb: "Herramientas por especialidad y necesidad concreta.",
+  },
+  {
+    label: "Dia a dia",
+    href: "/dia-a-dia",
+    icon: Sparkles,
+    blurb: "Lo que vale la pena usar hoy sin perder tiempo.",
+  },
+  {
+    label: "Blog",
+    href: "/blog",
+    icon: BookOpen,
+    blurb: "Novedades, guias y actualizaciones editoriales.",
+  },
 ];
 
-const areas = [
-  { label: "Salud", href: "/areas?area=salud", icon: IconHealth },
-  { label: "Ingenieria", href: "/areas?area=programacion", icon: IconEngineering },
-  { label: "Derecho", href: "/areas?area=investigacion", icon: IconLaw },
-  { label: "Diseno", href: "/areas?area=diseno", icon: IconDesign },
-  { label: "Negocios", href: "/areas?area=escritura", icon: IconBusiness },
-  { label: "Educacion", href: "/dia-a-dia/fundamentals", icon: IconEducation },
+const areaRoutes = [
+  {
+    label: "Programacion",
+    href: "/areas?area=programacion",
+    icon: IconProgramacion,
+    blurb: "Copilotos, code review y flujo tecnico.",
+  },
+  {
+    label: "Investigacion",
+    href: "/areas?area=investigacion",
+    icon: IconInvestigacion,
+    blurb: "Busqueda, papers y analisis con contexto.",
+  },
+  {
+    label: "Salud",
+    href: "/areas?area=salud",
+    icon: IconSalud,
+    blurb: "Evidencia, resumenes y herramientas clinicas.",
+  },
+  {
+    label: "Diseno",
+    href: "/areas?area=diseno",
+    icon: IconDiseno,
+    blurb: "Visual, branding y produccion creativa.",
+  },
+  {
+    label: "Negocios",
+    href: "/areas?area=negocios",
+    icon: IconNegocios,
+    blurb: "Ventas, marketing y automatizacion.",
+  },
+  {
+    label: "Derecho",
+    href: "/areas?area=derecho",
+    icon: IconDerecho,
+    blurb: "Resumen de casos, lectura y contexto legal.",
+  },
 ];
 
-const toolCloud = [
-  { name: "ChatGPT", accent: "from-emerald-500 to-teal-500" },
-  { name: "Claude", accent: "from-orange-400 to-amber-500" },
-  { name: "Perplexity", accent: "from-sky-500 to-cyan-500" },
-  { name: "Gemini", accent: "from-violet-500 to-fuchsia-500" },
-  { name: "Notion AI", accent: "from-slate-700 to-slate-900" },
-  { name: "Gamma", accent: "from-blue-500 to-indigo-500" },
-  { name: "Canva", accent: "from-cyan-500 to-blue-500" },
-  { name: "NotebookLM", accent: "from-lime-500 to-emerald-500" },
-];
+function formatDate(dateString: string | null) {
+  if (!dateString) {
+    return "Reciente";
+  }
 
-export default function Home() {
+  const date = new Date(dateString);
+
+  return new Intl.DateTimeFormat("es-ES", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  }).format(date);
+}
+
+function getPostLabel(postKind: string) {
+  switch (postKind) {
+    case "news":
+      return "Actualizacion";
+    case "guide":
+      return "Guia";
+    case "tool":
+      return "Herramienta";
+    default:
+      return "Post";
+  }
+}
+
+function getPlanLabel(plan: string) {
+  switch (plan) {
+    case "free":
+      return "Gratis";
+    case "freemium":
+      return "Freemium";
+    case "paid":
+      return "Pago";
+    case "edu_free":
+      return "Student free";
+    default:
+      return plan;
+  }
+}
+
+export default async function Home() {
+  const [posts, toolsPage] = await Promise.all([
+    fetchPublishedPosts(),
+    getToolsPage({}, { limit: 12, offset: 0 }),
+  ]);
+
+  const featuredPost = posts[0] ?? null;
+  const newsPosts = posts.filter((post) => post.post_kind === "news").slice(0, 3);
+  const guidePosts = posts.filter((post) => post.post_kind !== "news").slice(0, 4);
+  const featuredTools = toolsPage.tools.slice(0, 6);
+  const studentTools = toolsPage.tools
+    .filter((tool) => tool.plan === "free" || tool.plan === "edu_free" || tool.edu_verified)
+    .slice(0, 4);
+
+  const routeStats = [
+    { label: "Publicaciones", value: posts.length },
+    { label: "Herramientas", value: toolsPage.tools.length },
+    { label: "Gratis para estudiantes", value: studentTools.length },
+    { label: "Guias y actualizaciones", value: guidePosts.length },
+  ];
+
   return (
-    <main className="relative grid min-h-screen grid-rows-[auto_1fr_auto] overflow-hidden">
-      <LiquidBackground performanceMode="minimal" />
+    <main className="relative min-h-screen overflow-hidden bg-[#f6efe7] text-slate-950">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-[38rem] bg-[radial-gradient(circle_at_top_left,rgba(125,92,255,0.13),transparent_38%),radial-gradient(circle_at_top_right,rgba(3,105,161,0.12),transparent_34%),radial-gradient(circle_at_center,rgba(251,146,60,0.08),transparent_42%)]" />
+      <div className="pointer-events-none absolute -left-28 top-28 h-80 w-80 rounded-full bg-violet-200/35 blur-3xl" />
+      <div className="pointer-events-none absolute -right-28 top-40 h-96 w-96 rounded-full bg-sky-200/35 blur-3xl" />
 
-      <div className="row-start-1">
-        <Header />
-      </div>
+      <div className="relative z-10">
+        <EditorialTopbar />
 
-      <section className="row-start-2 px-6 py-4 md:py-6">
-        <div className="mx-auto flex w-full max-w-6xl flex-col gap-6">
-          <section className="grid items-start gap-5 lg:grid-cols-[0.82fr_1.18fr]">
-            <div className="rounded-[2rem] border border-slate-200/80 bg-white/94 p-6 text-center shadow-[0_18px_40px_rgba(15,23,42,0.06)] md:p-8 lg:text-left">
-              <p className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.16em] text-slate-600">
-                IA NEXUS para estudiantes
+        <section className="mx-auto w-full max-w-6xl px-6 pb-8 pt-8 md:pb-12 md:pt-10">
+          <div className="grid gap-6 lg:grid-cols-[1.06fr_0.94fr]">
+            <div className="rounded-[2.25rem] border border-slate-200 bg-white/94 p-6 shadow-[0_20px_50px_rgba(15,23,42,0.06)] md:p-8 lg:p-10">
+              <p className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+                <Sparkles className="h-3.5 w-3.5 text-sky-600" />
+                Portada editorial de IA
               </p>
 
-              <h1 className="mt-4 text-4xl font-semibold leading-tight tracking-tight text-slate-950 md:text-5xl">
-                Descubre herramientas de IA para estudiar mejor
+              <h1 className="mt-5 max-w-2xl text-4xl font-semibold leading-[1.02] tracking-tight text-slate-950 md:text-5xl lg:text-6xl">
+                Descubre las IAs que si valen la pena
               </h1>
 
-              <p className="mx-auto mt-4 max-w-xl text-base text-slate-600 md:text-lg lg:mx-0">
-                Explora opciones para resumir, investigar, presentar y aprender segun lo que
-                necesitas hoy.
+              <p className="mt-5 max-w-xl text-base leading-7 text-slate-600 md:text-lg">
+                Herramientas, guias y novedades curadas para estudiantes y usuarios que quieren
+                usar IA con criterio, no por ruido.
               </p>
 
-              <div className="mt-5 flex flex-wrap items-center justify-center gap-2 lg:justify-start">
+              <div className="mt-6 flex flex-wrap gap-2">
+                <span className="rounded-full border border-slate-200 bg-white px-3 py-1 text-sm text-slate-700">
+                  Noticias curadas
+                </span>
                 <span className="rounded-full border border-slate-200 bg-white px-3 py-1 text-sm text-slate-700">
                   Gratis y freemium
                 </span>
                 <span className="rounded-full border border-slate-200 bg-white px-3 py-1 text-sm text-slate-700">
-                  Por area
-                </span>
-                <span className="rounded-full border border-slate-200 bg-white px-3 py-1 text-sm text-slate-700">
-                  Mas alla de ChatGPT
+                  Por area y necesidad
                 </span>
               </div>
 
-              <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center lg:justify-start">
-                <TrackedWhatsAppLink
-                  location="hero"
-                  className="inline-flex items-center gap-3 rounded-full px-8 py-4 text-base font-semibold text-white transition-colors duration-150"
-                  style={{
-                    background: "linear-gradient(135deg, #2563eb, #7c3aed)",
-                    boxShadow: "0 12px 24px rgba(59,130,246,0.28)",
-                    touchAction: "manipulation",
-                  }}
+              <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+                <Link
+                  href="/blog"
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-slate-950 px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-slate-800"
                 >
-                  Entrar al grupo de WhatsApp
-                  <svg width="18" height="18" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                    <path
-                      d="M2 7h10M7 2l5 5-5 5"
-                      stroke="currentColor"
-                      strokeWidth="1.8"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </TrackedWhatsAppLink>
-
+                  Explorar portada
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
                 <Link
                   href="/estudiantes"
-                  className="inline-flex items-center rounded-full border border-slate-200 bg-white px-6 py-4 text-base font-medium text-slate-700 transition-colors hover:bg-slate-50"
+                  className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-6 py-3.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50"
                 >
                   Ver herramientas para estudiantes
                 </Link>
               </div>
+
+              <div className="mt-8 grid grid-cols-2 gap-3 md:grid-cols-4">
+                {routeStats.map((stat) => (
+                  <div
+                    key={stat.label}
+                    className="rounded-2xl border border-slate-200 bg-slate-50/80 px-4 py-3"
+                  >
+                    <p className="text-2xl font-semibold tracking-tight text-slate-950">
+                      {stat.value}
+                    </p>
+                    <p className="mt-1 text-xs uppercase tracking-[0.14em] text-slate-500">
+                      {stat.label}
+                    </p>
+                  </div>
+                ))}
+              </div>
             </div>
 
             <div className="grid gap-4">
-              <div className="rounded-[2rem] border border-slate-200/80 bg-white/94 p-5 shadow-[0_18px_40px_rgba(15,23,42,0.06)]">
-                <div className="flex items-center justify-between gap-3">
-                  <div>
-                    <p className="text-sm font-semibold uppercase tracking-[0.14em] text-slate-500">
-                      Elige tu forma de descubrir herramientas
-                    </p>
-                    <h2 className="mt-1 text-xl font-semibold text-slate-900 md:text-2xl">
-                      Tres caminos claros para empezar
-                    </h2>
+              {featuredPost ? (
+                <EditorialCard
+                  href={`/blog/${featuredPost.slug}`}
+                  eyebrow={getPostLabel(featuredPost.post_kind)}
+                  title={featuredPost.title}
+                  description={
+                    featuredPost.excerpt ??
+                    "La lectura principal del dia para entender que cambio, que herramienta o que guia conviene revisar primero."
+                  }
+                  meta={
+                    [formatDate(featuredPost.published_at), featuredPost.ia_type]
+                      .filter(Boolean)
+                      .join(" / ")
+                  }
+                  footer="Leer ahora"
+                  mediaUrl={featuredPost.cover_image_url}
+                  icon={BookOpen}
+                  variant="featured"
+                  className="min-h-[22rem]"
+                />
+              ) : (
+                <div className="rounded-[2.25rem] border border-slate-200 bg-white p-6 shadow-[0_20px_50px_rgba(15,23,42,0.06)]">
+                  <p className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+                    Portada principal
+                  </p>
+                  <h2 className="mt-4 text-2xl font-semibold text-slate-950">
+                    La lectura principal de IA NEXUS aparecera aqui
+                  </h2>
+                  <p className="mt-3 text-sm leading-6 text-slate-600">
+                    Cuando haya publicaciones activas, esta zona mostrara la historia o actualizacion
+                    mas relevante del momento.
+                  </p>
+                </div>
+              )}
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-[0_12px_30px_rgba(15,23,42,0.05)]">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
+                    Ruta rapida
+                  </p>
+                  <div className="mt-4 grid gap-2">
+                    {editorialRoutes.slice(0, 2).map((route) => {
+                      const Icon = route.icon;
+                      return (
+                        <Link
+                          key={route.href}
+                          href={route.href}
+                          className="flex items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 transition-colors hover:bg-white"
+                        >
+                          <div className="flex items-center gap-3">
+                            <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white text-slate-900 shadow-sm">
+                              <Icon className="h-4 w-4" />
+                            </span>
+                            <div>
+                              <p className="font-medium text-slate-950">{route.label}</p>
+                              <p className="text-xs text-slate-500">{route.blurb}</p>
+                            </div>
+                          </div>
+                          <ArrowRight className="h-4 w-4 text-slate-400" />
+                        </Link>
+                      );
+                    })}
                   </div>
-                  <Link
-                    href="/areas"
-                    className="hidden rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 md:inline-flex"
-                  >
-                    Explorar areas
-                  </Link>
                 </div>
 
-                <div className="mt-5">
-                  <PillarCards variant="grid" />
+                <div className="rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-[0_12px_30px_rgba(15,23,42,0.05)]">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
+                    Mas visto
+                  </p>
+                  <div className="mt-4 grid gap-2">
+                    {editorialRoutes.slice(2).map((route) => {
+                      const Icon = route.icon;
+                      return (
+                        <Link
+                          key={route.href}
+                          href={route.href}
+                          className="flex items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 transition-colors hover:bg-white"
+                        >
+                          <div className="flex items-center gap-3">
+                            <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white text-slate-900 shadow-sm">
+                              <Icon className="h-4 w-4" />
+                            </span>
+                            <div>
+                              <p className="font-medium text-slate-950">{route.label}</p>
+                              <p className="text-xs text-slate-500">{route.blurb}</p>
+                            </div>
+                          </div>
+                          <ArrowRight className="h-4 w-4 text-slate-400" />
+                        </Link>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </section>
 
-              <div className="rounded-[2rem] border border-slate-200/80 bg-white/94 p-5 shadow-[0_18px_40px_rgba(15,23,42,0.06)]">
-                <p className="text-sm font-semibold uppercase tracking-[0.14em] text-slate-500">
-                  Algunas herramientas conocidas
+        <section className="mx-auto w-full max-w-6xl px-6 py-8 md:py-12">
+          <EditorialSectionHeader
+            eyebrow="Ultimas novedades"
+            title="Lo nuevo en IA"
+            description="Lecturas breves para enterarte rapido de lo importante sin sentir que estas navegando una landing de producto."
+            href="/blog"
+            cta="Ver blog"
+          />
+
+          <div className="mt-6 grid gap-4 md:grid-cols-3">
+            {(newsPosts.length > 0 ? newsPosts : guidePosts.slice(0, 3)).map((post) => (
+              <EditorialCard
+                key={post.id}
+                href={`/blog/${post.slug}`}
+                eyebrow={getPostLabel(post.post_kind)}
+                title={post.title}
+                description={
+                  post.excerpt ??
+                  "Una actualizacion breve para entender lo que cambia y por que importa."
+                }
+                meta={[formatDate(post.published_at), post.ia_type].filter(Boolean).join(" / ")}
+                footer="Leer post"
+                mediaUrl={post.cover_image_url}
+                icon={BookOpen}
+                variant="compact"
+              />
+            ))}
+          </div>
+        </section>
+
+        <section className="mx-auto w-full max-w-6xl px-6 py-8 md:py-12">
+          <EditorialSectionHeader
+            eyebrow="Herramientas"
+            title="Herramientas destacadas esta semana"
+            description="Una seleccion curada de opciones utiles, con foco en lo que de verdad merece tu tiempo."
+            href="/areas"
+            cta="Explorar areas"
+          />
+
+          <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {featuredTools.map((tool) => (
+              <EditorialCard
+                key={tool.id}
+                href={`/herramientas/${tool.slug}`}
+                eyebrow={tool.category.name}
+                title={tool.name}
+                description={
+                  tool.description ??
+                  "Una herramienta curada por IA NEXUS para resolver tareas reales sin ruido."
+                }
+                meta={[getPlanLabel(tool.plan), tool.ia_type].filter(Boolean).join(" / ")}
+                footer={tool.verified ? "Verificada" : "Curada"}
+                mediaUrl={tool.cover_image_url}
+                icon={BookOpen}
+                variant="default"
+              >
+                <div className="flex flex-wrap gap-2">
+                  {tool.guide_slug ? (
+                    <span className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[11px] font-medium text-slate-600">
+                      Tiene guia
+                    </span>
+                  ) : null}
+                  {tool.edu_verified ? (
+                    <span className="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-[11px] font-medium text-emerald-700">
+                      Para estudiantes
+                    </span>
+                  ) : null}
+                </div>
+              </EditorialCard>
+            ))}
+          </div>
+        </section>
+
+        <section className="mx-auto w-full max-w-6xl px-6 py-8 md:py-12">
+          <EditorialSectionHeader
+            eyebrow="Para estudiantes"
+            title="Gratis, freemium y utilidades para estudiar mejor"
+            description="Herramientas que ayudan a ahorrar tiempo y dinero, con foco en acceso sencillo y valor real."
+            href="/estudiantes"
+            cta="Ver todo para estudiantes"
+          />
+
+          <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            {studentTools.length > 0 ? (
+              studentTools.map((tool) => (
+                <EditorialCard
+                  key={tool.id}
+                  href={`/herramientas/${tool.slug}`}
+                  eyebrow={getPlanLabel(tool.plan)}
+                  title={tool.name}
+                  description={
+                    tool.description ??
+                    "Una opcion pensada para avanzar sin quedar atrapado en planes caros."
+                  }
+                  meta={tool.category.name}
+                  footer={tool.edu_verified ? "Valida para campus" : "Acceso simple"}
+                  mediaUrl={tool.cover_image_url}
+                  icon={GraduationCap}
+                  variant="compact"
+                />
+              ))
+            ) : (
+              <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6 text-sm text-slate-600">
+                Todavia no hay herramientas marcadas para estudiantes.
+              </div>
+            )}
+          </div>
+        </section>
+
+        <section className="mx-auto w-full max-w-6xl px-6 py-8 md:py-12">
+          <EditorialSectionHeader
+            eyebrow="Por areas"
+            title="Explora segun tu area"
+            description="Categorias editoriales para llegar rapido a la herramienta o guia que encaja con lo que haces."
+            href="/areas"
+            cta="Ver todas las areas"
+          />
+
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {areaRoutes.map((area) => {
+              const Icon = area.icon;
+
+              return (
+                <EditorialCard
+                  key={area.href}
+                  href={area.href}
+                  eyebrow="Area"
+                  title={area.label}
+                  description={area.blurb}
+                  meta="Exploracion curada"
+                  footer="Abrir area"
+                  icon={Icon}
+                  variant="compact"
+                />
+              );
+            })}
+          </div>
+        </section>
+
+        <section className="mx-auto w-full max-w-6xl px-6 py-8 md:py-12">
+          <EditorialSectionHeader
+            eyebrow="Guia y contexto"
+            title="Guias para usar mejor la IA"
+            description="Contenido de fondo para entender procesos, comparar opciones y tomar mejores decisiones."
+            href="/blog"
+            cta="Ir al archivo"
+          />
+
+          <div className="mt-6 grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
+            {guidePosts.length > 0 ? (
+              <EditorialCard
+                href={`/blog/${guidePosts[0].slug}`}
+                eyebrow={getPostLabel(guidePosts[0].post_kind)}
+                title={guidePosts[0].title}
+                description={
+                  guidePosts[0].excerpt ??
+                  "Una guia pensada para resolver una necesidad concreta sin rodeos."
+                }
+                meta={[formatDate(guidePosts[0].published_at), guidePosts[0].ia_type]
+                  .filter(Boolean)
+                  .join(" / ")}
+                footer="Lectura principal"
+                mediaUrl={guidePosts[0].cover_image_url}
+                icon={BookOpen}
+                variant="featured"
+              />
+            ) : (
+              <div className="rounded-[2.25rem] border border-slate-200 bg-white p-6 shadow-[0_20px_50px_rgba(15,23,42,0.06)]">
+                <h3 className="text-xl font-semibold text-slate-950">Guia principal pendiente</h3>
+                <p className="mt-2 text-sm leading-6 text-slate-600">
+                  Cuando haya contenidos publicados, esta zona mostrara una lectura mas profunda.
                 </p>
-                <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-                  {toolCloud.map((tool) => (
-                    <div
-                      key={tool.name}
-                      className="rounded-2xl border border-slate-200 bg-white p-3 text-center shadow-[0_8px_18px_rgba(15,23,42,0.05)]"
-                    >
-                      <div
-                        className={`mx-auto flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br ${tool.accent} text-sm font-semibold text-white`}
-                      >
-                        {tool.name.slice(0, 2).toUpperCase()}
-                      </div>
-                      <p className="mt-2 text-sm font-medium text-slate-700">{tool.name}</p>
-                    </div>
-                  ))}
-                </div>
               </div>
+            )}
+
+            <div className="grid gap-4">
+              {guidePosts.slice(1, 4).map((post) => (
+                <EditorialCard
+                  key={post.id}
+                  href={`/blog/${post.slug}`}
+                  eyebrow={getPostLabel(post.post_kind)}
+                  title={post.title}
+                  description={
+                    post.excerpt ??
+                    "Una lectura breve para profundizar sobre herramientas, procesos y criterios."
+                  }
+                  meta={[formatDate(post.published_at), post.ia_type].filter(Boolean).join(" / ")}
+                  footer="Ver guia"
+                  mediaUrl={post.cover_image_url}
+                  icon={BookOpen}
+                  variant="compact"
+                />
+              ))}
             </div>
-          </section>
+          </div>
+        </section>
 
-          <section className="grid gap-4 lg:grid-cols-[0.95fr_1.05fr]">
-            <div className="rounded-[2rem] border border-slate-200/80 bg-white/94 p-6 shadow-[0_18px_40px_rgba(15,23,42,0.06)]">
-              <p className="text-sm font-semibold uppercase tracking-[0.14em] text-slate-500">
-                Para que te sirve
-              </p>
-              <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3">
-                {useCases.map((item) => {
-                  const Icon = item.icon;
-                  return (
-                    <div
-                      key={item.label}
-                      className="rounded-2xl border border-slate-200 bg-slate-50/80 p-4 text-slate-700"
-                    >
-                      <Icon className="h-5 w-5 text-blue-600" />
-                      <p className="mt-3 text-sm font-medium">{item.label}</p>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            <div className="rounded-[2rem] border border-slate-200/80 bg-white/94 p-6 shadow-[0_18px_40px_rgba(15,23,42,0.06)]">
-              <div className="flex items-center justify-between gap-3">
-                <p className="text-sm font-semibold uppercase tracking-[0.14em] text-slate-500">
-                  Explora segun tu area
-                </p>
-                <Link href="/areas" className="text-sm font-medium text-blue-700 hover:text-blue-800">
-                  Ver todas
-                </Link>
-              </div>
-
-              <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3">
-                {areas.map((area) => {
-                  const Icon = area.icon;
-                  return (
-                    <Link
-                      key={area.label}
-                      href={area.href}
-                      className="rounded-2xl border border-slate-200 bg-white p-4 transition-colors hover:bg-slate-50"
-                    >
-                      <Icon className="h-5 w-5 text-violet-600" />
-                      <p className="mt-3 text-sm font-medium text-slate-700">{area.label}</p>
-                    </Link>
-                  );
-                })}
-              </div>
-            </div>
-          </section>
-
-          <section className="rounded-[2rem] border border-slate-200/80 bg-white/94 p-6 shadow-[0_18px_40px_rgba(15,23,42,0.06)] md:p-8">
-            <div className="grid items-center gap-5 lg:grid-cols-[1fr_auto]">
+        <section className="mx-auto w-full max-w-6xl px-6 pb-14 pt-8 md:pb-20">
+          <div className="rounded-[2.25rem] border border-slate-200 bg-slate-950 px-6 py-8 text-white shadow-[0_24px_60px_rgba(15,23,42,0.18)] md:px-8 md:py-10">
+            <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
               <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.14em] text-slate-500">
-                  Descubre sin perder tiempo
+                <p className="inline-flex items-center rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-300">
+                  Comienza aqui
                 </p>
-                <h2 className="mt-2 text-2xl font-semibold text-slate-900 md:text-3xl">
-                  Encuentra IAs utiles para estudiar, investigar y aprender mas rapido
+                <h2 className="mt-4 max-w-2xl text-3xl font-semibold tracking-tight md:text-4xl">
+                  Entra a la comunidad y recibe novedades utiles sin perder el hilo.
                 </h2>
-                <p className="mt-3 max-w-2xl text-sm text-slate-600 md:text-base">
-                  Explora herramientas conocidas, compara opciones y entra a la comunidad para
-                  detectar antes cuales realmente valen la pena.
+                <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-300 md:text-base">
+                  Si quieres descubrir mejores herramientas, guias y planes gratis antes que el ruido,
+                  este es el punto de entrada.
                 </p>
               </div>
 
               <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
                 <TrackedWhatsAppLink
                   location="hero"
-                  className="inline-flex items-center justify-center rounded-full px-7 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
-                  style={{
-                    background: "linear-gradient(135deg, #2563eb, #7c3aed)",
-                    boxShadow: "0 12px 24px rgba(59,130,246,0.22)",
-                  }}
+                  className="inline-flex items-center justify-center rounded-full bg-white px-6 py-3.5 text-sm font-semibold text-slate-950 transition-opacity hover:opacity-90"
                 >
-                  Unirme al WhatsApp
+                  Entrar a la comunidad
                 </TrackedWhatsAppLink>
                 <Link
-                  href="/areas"
-                  className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-7 py-3 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+                  href="/login"
+                  className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/5 px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-white/10"
                 >
-                  Explorar por area
+                  Iniciar sesion
                 </Link>
               </div>
             </div>
-          </section>
-        </div>
-      </section>
-
-      <div className="row-start-3">
-        <Footer />
+          </div>
+        </section>
       </div>
     </main>
   );
