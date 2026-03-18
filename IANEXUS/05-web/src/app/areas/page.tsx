@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import AreasToolbar from "@/components/areas/areas-toolbar";
@@ -24,6 +25,12 @@ import type { Tool } from "@/lib/types/tool";
 
 // No static revalidation — page is dynamic when searchParams are present.
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Carreras | IA NEXUS",
+  description:
+    "Explora herramientas de IA por carrera y encuentra opciones utiles segun contexto profesional, acceso y nivel.",
+};
 
 const VALID_PLANS = new Set<string>(PLAN_OPTIONS.map((option) => option.value));
 const VALID_LEVELS = new Set<string>(LEVEL_OPTIONS.map((option) => option.value));
@@ -155,7 +162,7 @@ export default async function AreasPage({ searchParams }: PageProps) {
     .slice(0, 3)
     .map((career) => ({
       label: career.name,
-      value: career.description ?? "Curadoria viva para tu contexto profesional.",
+      value: career.description ?? "Herramientas utiles para este contexto profesional.",
     }));
 
   return (
@@ -165,17 +172,17 @@ export default async function AreasPage({ searchParams }: PageProps) {
       <section className="flex-1 w-full px-5 py-8 md:px-6 md:py-12 xl:px-8">
         <div className="editorial-frame flex flex-col gap-6">
           <div className="w-full overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_12px_36px_rgba(15,23,42,0.05)]">
-            <div className="grid gap-5 p-5 md:p-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-end lg:p-7">
+            <div className="grid gap-5 p-5 md:p-6 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-end lg:p-7">
               <div>
                 <p className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] uppercase tracking-[0.16em] text-slate-600">
-                  Carreras
+                  Hub por carrera
                 </p>
-                <h1 className="mt-4 max-w-3xl text-3xl font-semibold leading-tight text-slate-950 md:text-4xl lg:text-[3.25rem] lg:leading-[0.98]">
-                  Elige tu carrera y descubre las IAs que si te sirven.
+                <h1 className="mt-4 max-w-3xl text-3xl font-semibold leading-tight text-slate-950 md:text-4xl lg:text-[2.9rem] lg:leading-[1]">
+                  Encuentra herramientas de IA segun tu carrera
                 </h1>
                 <p className="mt-4 max-w-2xl text-sm leading-relaxed text-slate-600 md:text-[15px]">
-                  Navega por carreras reales del catalogo y combina profesion, plan y nivel
-                  para llegar mas rapido a las herramientas que si encajan contigo.
+                  Parte por una carrera, cruza acceso y nivel, y quedate con opciones que
+                  realmente encajan con tu contexto profesional.
                 </p>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {careerHighlights.map((item) => (
@@ -184,32 +191,26 @@ export default async function AreasPage({ searchParams }: PageProps) {
                       className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs text-slate-600"
                     >
                       <span className="font-semibold text-slate-900">{item.label}</span>
-                      <span className="hidden sm:inline">{item.value}</span>
+                      <span className="hidden lg:inline">{item.value}</span>
                     </span>
                   ))}
                 </div>
               </div>
 
-              <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
-                <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-                  <p className="text-[11px] uppercase tracking-[0.14em] text-slate-500">Carrera</p>
-                  <p className="mt-2 text-sm font-semibold text-slate-900">Profesiones y contextos</p>
-                  <p className="mt-1 text-sm leading-relaxed text-slate-600">
-                    Elige una o varias disciplinas para refinar la lectura.
+              <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                <p className="text-[11px] uppercase tracking-[0.14em] text-slate-500">
+                  Como usar este hub
+                </p>
+                <div className="mt-3 space-y-3 text-sm leading-relaxed text-slate-600">
+                  <p>
+                    1. Elige una o varias carreras para reducir el catalogo a un contexto real.
                   </p>
-                </div>
-                <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-                  <p className="text-[11px] uppercase tracking-[0.14em] text-slate-500">Plan</p>
-                  <p className="mt-2 text-sm font-semibold text-slate-900">Gratis, edu o pago</p>
-                  <p className="mt-1 text-sm leading-relaxed text-slate-600">
-                    Filtra segun acceso y costo antes de abrir la ficha.
+                  <p>
+                    2. Ajusta plan y nivel para separar lo gratuito, lo institucional y lo mas
+                    avanzado.
                   </p>
-                </div>
-                <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-                  <p className="text-[11px] uppercase tracking-[0.14em] text-slate-500">Nivel</p>
-                  <p className="mt-2 text-sm font-semibold text-slate-900">De simple a avanzado</p>
-                  <p className="mt-1 text-sm leading-relaxed text-slate-600">
-                    Alinea la herramienta con tu experiencia y el objetivo que buscas.
+                  <p>
+                    3. Abre solo las herramientas que ya pasaron ese primer filtro editorial.
                   </p>
                 </div>
               </div>
