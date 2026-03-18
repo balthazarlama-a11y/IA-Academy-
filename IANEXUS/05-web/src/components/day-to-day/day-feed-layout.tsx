@@ -38,12 +38,12 @@ export default function DayFeedLayout({ posts, tools }: DayFeedLayoutProps) {
       <section className="grid grid-cols-1 gap-6 lg:grid-cols-[1.08fr_0.92fr]">
         <div className="flex flex-col gap-6">
           {leadPost && (
-            <div className="rounded-[30px] border border-slate-200/80 bg-white p-5 shadow-[0_18px_60px_rgba(15,23,42,0.08)]">
+            <div className="rounded-[20px] border border-slate-200/80 bg-white p-4 shadow-[0_18px_60px_rgba(15,23,42,0.08)]">
               <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Post principal</p>
-              <h2 className="mt-2 text-2xl font-semibold tracking-[-0.03em] text-slate-950">
+              <h2 className="mt-2 text-xl font-semibold tracking-[-0.03em] text-slate-950">
                 {leadPost.title}
               </h2>
-              <p className="mt-3 text-sm leading-6 text-slate-600">
+              <p className="mt-2 text-sm leading-6 text-slate-600">
                 {leadPost.excerpt ?? "Lectura principal del día, curada para arrancar el feed con contexto."}
               </p>
             </div>
@@ -53,12 +53,12 @@ export default function DayFeedLayout({ posts, tools }: DayFeedLayoutProps) {
 
         <div className="flex flex-col gap-6">
           {leadTool && (
-            <div className="rounded-[30px] border border-slate-200/80 bg-white p-5 shadow-[0_18px_60px_rgba(15,23,42,0.08)]">
+            <div className="rounded-[20px] border border-slate-200/80 bg-white p-4 shadow-[0_18px_60px_rgba(15,23,42,0.08)]">
               <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Tool principal</p>
-              <h2 className="mt-2 text-2xl font-semibold tracking-[-0.03em] text-slate-950">
+              <h2 className="mt-2 text-xl font-semibold tracking-[-0.03em] text-slate-950">
                 {leadTool.name}
               </h2>
-              <p className="mt-3 text-sm leading-6 text-slate-600">
+              <p className="mt-2 text-sm leading-6 text-slate-600">
                 {leadTool.description ?? "Herramienta destacada para resolver una tarea concreta del día."}
               </p>
             </div>

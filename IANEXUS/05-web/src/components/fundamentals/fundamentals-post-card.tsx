@@ -16,7 +16,7 @@ export default function FundamentalsPostCard({ post }: { post: FundamentalsPost 
   return (
     <Link
       href={`/blog/${post.slug}`}
-      className="group rounded-[26px] border border-slate-200/80 bg-white p-5 shadow-[0_12px_40px_rgba(15,23,42,0.05)] transition duration-200 hover:-translate-y-0.5 hover:border-slate-300"
+      className="group rounded-[18px] border border-slate-200/80 bg-white p-4 shadow-[0_12px_40px_rgba(15,23,42,0.05)] transition duration-200 hover:-translate-y-0.5 hover:border-slate-300"
     >
       <div className="flex items-center justify-between gap-2">
         <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Blog</p>
@@ -24,10 +24,10 @@ export default function FundamentalsPostCard({ post }: { post: FundamentalsPost 
           {formatDate(post.published_at)}
         </span>
       </div>
-      <h3 className="mt-3 text-lg font-semibold tracking-[-0.02em] text-slate-950 transition group-hover:text-slate-700">
+      <h3 className="mt-3 text-[1.02rem] font-semibold tracking-[-0.02em] text-slate-950 transition group-hover:text-slate-700">
         {post.title}
       </h3>
-      <p className="mt-2 line-clamp-3 text-sm leading-6 text-slate-600">
+      <p className="mt-2 line-clamp-2 text-sm leading-6 text-slate-600">
         {post.excerpt ?? "Contenido nuevo para aplicar en tu flujo diario."}
       </p>
       <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-slate-200 pt-3">
