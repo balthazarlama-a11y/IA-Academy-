@@ -383,8 +383,30 @@ export default function StudentsToolbar({
 
   return (
     <>
-      <section className="mt-8 rounded-3xl border border-slate-200 bg-white p-5 md:p-6">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-12">
+      <section className="mt-8 overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-[0_18px_50px_rgba(15,23,42,0.05)]">
+        <div className="border-b border-slate-200 px-5 py-4 md:px-6">
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <p className="text-xs uppercase tracking-[0.16em] text-slate-500">
+                Curadoria academica
+              </p>
+              <h2 className="mt-1 text-lg font-semibold text-slate-900">
+                Encuentra acceso real, no ruido
+              </h2>
+              <p className="mt-1 max-w-2xl text-sm leading-relaxed text-slate-600">
+                Filtra por gratis total, pack estudiante o freemium para encontrar herramientas
+                que sirven de verdad en estudio, investigacion y proyectos.
+              </p>
+            </div>
+
+            <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-xs text-slate-600">
+              <span className="font-semibold text-slate-900">{tools.length}</span>
+              {hasMore ? "+" : ""} resultados visibles
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 px-5 py-5 md:px-6 md:grid-cols-12">
           <div className="md:col-span-5">
             <label
               htmlFor="q"
@@ -397,42 +419,63 @@ export default function StudentsToolbar({
               value={searchInput}
               onChange={(event) => handleSearchChange(event.target.value)}
               placeholder="Ej: chatgpt, notion, github copilot..."
-              className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-blue-300/60"
+              className="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-slate-400"
             />
+            <p className="mt-2 text-xs leading-relaxed text-slate-500">
+              Busca por nombre, descripcion o tipo de IA.
+            </p>
           </div>
 
           <div className="md:col-span-4">
             <p className="mb-2 block text-xs uppercase tracking-[0.12em] text-slate-600">
-              Filtros
+              Acceso
             </p>
-            <div className="flex flex-wrap gap-2">
-              <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-slate-300 bg-slate-50 px-3 py-1.5 text-xs text-slate-700">
+            <div className="grid gap-2">
+              <label className="inline-flex cursor-pointer items-start gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 transition hover:border-slate-300">
                 <input
                   type="radio"
                   name="scope"
                   value="all_free"
                   checked={scopeValue === "all_free"}
                   onChange={() => handleScopeChange("all_free")}
+                  className="mt-1"
                 />
-                Gratis total
+                <span>
+                  <span className="block font-semibold text-slate-900">Gratis total</span>
+                  <span className="block text-xs leading-relaxed text-slate-500">
+                    Sin pago ni tarjeta para empezar.
+                  </span>
+                </span>
               </label>
-              <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-slate-300 bg-slate-50 px-3 py-1.5 text-xs text-slate-700">
+              <label className="inline-flex cursor-pointer items-start gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 transition hover:border-slate-300">
                 <input
                   type="radio"
                   name="scope"
                   value="student_pack"
                   checked={scopeValue === "student_pack"}
                   onChange={() => handleScopeChange("student_pack")}
+                  className="mt-1"
                 />
-                Pack estudiante
+                <span>
+                  <span className="block font-semibold text-slate-900">Pack estudiante</span>
+                  <span className="block text-xs leading-relaxed text-slate-500">
+                    Beneficios para cuentas educativas o verificadas.
+                  </span>
+                </span>
               </label>
-              <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-emerald-300/30 bg-emerald-400/10 px-3 py-1.5 text-xs text-emerald-700">
+              <label className="inline-flex cursor-pointer items-start gap-3 rounded-2xl border border-emerald-300/30 bg-emerald-400/10 px-4 py-3 text-sm text-emerald-800 transition hover:border-emerald-300/50">
                 <input
                   type="checkbox"
                   checked={includeFreemiumValue}
                   onChange={(event) => handleFreemiumChange(event.target.checked)}
+                  className="mt-1"
                 />
-                Incluir freemium
+                <span>
+                  <span className="block font-semibold text-slate-900">Incluir freemium</span>
+                  <span className="block text-xs leading-relaxed text-slate-500">
+                    Empiezas gratis y luego decides si subir de nivel.
+                  </span>
+                </span>
               </label>
             </div>
           </div>
@@ -448,7 +491,7 @@ export default function StudentsToolbar({
               id="ia_type"
               value={iaTypeValue}
               onChange={(event) => handleIaTypeChange(event.target.value)}
-              className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-blue-300/60"
+              className="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-slate-400"
             >
               <option value="">Todos</option>
               {iaTypeOptions.map((option) => (
@@ -457,6 +500,9 @@ export default function StudentsToolbar({
                 </option>
               ))}
             </select>
+            <p className="mt-2 text-xs leading-relaxed text-slate-500">
+              Usa este filtro para separar asistentes, escritura, codigo u otros tipos.
+            </p>
           </div>
 
           <div className="md:col-span-12 flex flex-col gap-3 border-t border-slate-200 pt-4 md:flex-row md:items-center md:justify-between">

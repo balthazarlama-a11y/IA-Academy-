@@ -24,10 +24,17 @@ function planTone(plan: Tool["plan"]) {
   return "border-slate-300 bg-slate-50 text-slate-700";
 }
 
+function planSummary(plan: Tool["plan"]) {
+  if (plan === "edu_free") return "Pensado para correo universitario";
+  if (plan === "free") return "Acceso sin pago ni tarjeta";
+  if (plan === "freemium") return "Empieza gratis y luego decide";
+  return "Requiere pago o upgrade";
+}
+
 export default memo(function StudentToolCard({ tool }: { tool: Tool }) {
   return (
     <article
-      className="group relative overflow-hidden rounded-3xl border border-slate-200 p-6 shadow-[0_6px_16px_rgba(15,23,42,0.07)] transition-shadow duration-150 hover:shadow-[0_10px_24px_rgba(15,23,42,0.11)] hover:border-slate-300"
+      className="group relative overflow-hidden rounded-[28px] border border-slate-200 bg-white p-6 shadow-[0_8px_22px_rgba(15,23,42,0.06)] transition-all duration-150 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-[0_14px_30px_rgba(15,23,42,0.1)]"
       style={{
         background: "linear-gradient(180deg,#ffffff 0%,#f8fafc 100%)",
         contain: "layout style paint",
@@ -42,9 +49,8 @@ export default memo(function StudentToolCard({ tool }: { tool: Tool }) {
       />
 
       <div className="flex min-h-[240px] flex-col">
-        {/* Logo */}
         {tool.cover_image_url ? (
-          <div className="mb-4 flex h-14 w-14 items-center justify-center overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+          <div className="mb-4 flex h-14 w-14 items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
             <img
               src={tool.cover_image_url}
               alt={`${tool.name} logo`}
@@ -53,15 +59,14 @@ export default memo(function StudentToolCard({ tool }: { tool: Tool }) {
             />
           </div>
         ) : (
-          <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl border border-slate-200 bg-slate-50">
+          <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-slate-200 bg-slate-50">
             <span className="text-2xl font-bold text-slate-300">
               {tool.name.charAt(0).toUpperCase()}
             </span>
           </div>
         )}
 
-        {/* Badges */}
-        <div className="flex flex-wrap items-center gap-1.5">
+        <div className="flex flex-wrap items-center gap-2">
           <span className={`inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-medium ${planTone(tool.plan)}`}>
             {planLabel(tool.plan)}
           </span>
@@ -90,10 +95,17 @@ export default memo(function StudentToolCard({ tool }: { tool: Tool }) {
           )}
         </div>
 
-        <h2 className="mt-4 text-lg font-semibold leading-snug text-slate-900">{tool.name}</h2>
+        <h2 className="mt-4 text-lg font-semibold leading-snug text-slate-900">
+          {tool.name}
+        </h2>
         <p className="mt-2 text-sm leading-relaxed text-slate-600">
           {shortDescription(tool.description)}
         </p>
+
+        <div className="mt-4 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+          <p className="text-[11px] uppercase tracking-[0.14em] text-slate-500">Lectura rapida</p>
+          <p className="mt-1 text-sm font-medium text-slate-900">{planSummary(tool.plan)}</p>
+        </div>
 
         <div className="mt-auto flex flex-wrap items-center gap-3 pt-5">
           <Link

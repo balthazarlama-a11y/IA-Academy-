@@ -47,30 +47,50 @@ export default async function AreasPage({ searchParams }: PageProps) {
       <Header />
 
       <section className="flex-1 w-full px-6 py-10 md:py-14">
-        <div className="mx-auto w-full max-w-7xl flex flex-col items-center gap-10">
+        <div className="mx-auto flex w-full max-w-7xl flex-col items-center gap-10">
+          <div className="w-full overflow-hidden rounded-[32px] border border-slate-200 bg-white shadow-[0_24px_80px_rgba(15,23,42,0.06)]">
+            <div className="grid gap-8 p-6 md:p-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-end lg:p-10">
+              <div>
+                <p className="inline-flex items-center rounded-full border border-slate-300 bg-slate-50 px-3 py-1 text-xs uppercase tracking-[0.16em] text-slate-600">
+                  Areas
+                </p>
+                <h1
+                  className="mt-4 text-4xl font-semibold leading-tight text-slate-900 md:text-5xl lg:text-6xl"
+                >
+                  IA por especialidad, no por ruido
+                </h1>
+                <p className="mt-4 max-w-2xl text-base leading-relaxed text-slate-600 md:text-lg">
+                  Cruza area, plan y nivel para encontrar herramientas utiles en programacion,
+                  salud, investigacion, diseno o escritura.
+                </p>
+              </div>
 
-          {/* Hero */}
-          <div className="w-full text-center">
-            <p className="inline-flex items-center rounded-full border border-slate-300 bg-slate-50 px-3 py-1 text-xs uppercase tracking-[0.14em] text-slate-600">
-              Áreas
-            </p>
-            <h1
-              className="mt-4 text-4xl md:text-5xl lg:text-6xl font-semibold leading-tight"
-              style={{
-                backgroundImage: "linear-gradient(to right, #4f46e5, #0f766e)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}
-            >
-              Herramientas por área
-            </h1>
-            <p className="mt-4 text-lg md:text-xl text-slate-600 max-w-2xl mx-auto">
-              Filtra por especialidad y encuentra las IAs más útiles para tu campo.
-            </p>
+              <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
+                <div className="rounded-[24px] border border-slate-200 bg-slate-50 p-4">
+                  <p className="text-xs uppercase tracking-[0.14em] text-slate-500">Area</p>
+                  <p className="mt-2 text-sm font-semibold text-slate-900">Especialidad real</p>
+                  <p className="mt-1 text-sm leading-relaxed text-slate-600">
+                    Elige una o varias disciplinas para refinar la lectura.
+                  </p>
+                </div>
+                <div className="rounded-[24px] border border-slate-200 bg-slate-50 p-4">
+                  <p className="text-xs uppercase tracking-[0.14em] text-slate-500">Plan</p>
+                  <p className="mt-2 text-sm font-semibold text-slate-900">Gratis, edu o pago</p>
+                  <p className="mt-1 text-sm leading-relaxed text-slate-600">
+                    Filtra segun acceso y costo antes de abrir la ficha.
+                  </p>
+                </div>
+                <div className="rounded-[24px] border border-slate-200 bg-slate-50 p-4">
+                  <p className="text-xs uppercase tracking-[0.14em] text-slate-500">Nivel</p>
+                  <p className="mt-2 text-sm font-semibold text-slate-900">De simple a avanzado</p>
+                  <p className="mt-1 text-sm leading-relaxed text-slate-600">
+                    Alinea la herramienta con tu experiencia y el objetivo que buscas.
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
 
-          {/* Toolbar + Grid (client-side) */}
           <AreasToolbar
             initialTools={initialPage.tools}
             initialHasMore={initialPage.hasMore}
@@ -78,11 +98,9 @@ export default async function AreasPage({ searchParams }: PageProps) {
             initialFilters={initialFilters}
           />
 
-          {/* CTA Comunidad */}
           <div className="w-full max-w-3xl">
             <CommunityCtaBanner location="areas_banner" />
           </div>
-
         </div>
       </section>
 
