@@ -2,75 +2,29 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import type { ToolCategory, ToolLevel, ToolPlan } from "@/lib/types/tool";
-import type { AreaFilters as RepoAreaFilters } from "@/lib/repositories/areas-repo";
+import type { ToolLevel, ToolPlan } from "@/lib/types/tool";
 import type { Tool } from "@/lib/types/tool";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import AreaToolsGrid from "./area-tools-grid";
 import AreasEmptyState from "./areas-empty-state";
-
-const CAREER_OPTIONS = [
-  { slug: "programacion", label: "Programacion", accent: "#3b82f6", hint: "Codigo, debugging y producto" },
-  { slug: "investigacion", label: "Investigacion", accent: "#8b5cf6", hint: "Lectura, evidencia y sintesis" },
-  { slug: "salud", label: "Salud", accent: "#10b981", hint: "Estudio, resumen y apoyo clinico" },
-  { slug: "diseno", label: "Diseno", accent: "#ec4899", hint: "Creatividad visual y prototipos" },
-  { slug: "escritura", label: "Escritura", accent: "#f97316", hint: "Texto, claridad y redaccion" },
-] as const;
-
-const CAREER_SLUGS = new Set<string>(CAREER_OPTIONS.map((option) => option.slug));
-type CareerSlug = (typeof CAREER_OPTIONS)[number]["slug"];
-
-const PLAN_OPTIONS: Array<{ value: ToolPlan; label: string }> = [
-  { value: "free", label: "Gratis" },
-  { value: "edu_free", label: ".edu Gratis" },
-  { value: "freemium", label: "Freemium" },
-  { value: "paid", label: "Pago" },
-];
-
-const LEVEL_OPTIONS: Array<{ value: ToolLevel; label: string }> = [
-  { value: "beginner", label: "Principiante" },
-  { value: "intermediate", label: "Intermedio" },
-  { value: "advanced", label: "Avanzado" },
-  { value: "all", label: "Universal" },
-];
-
-type LocalFilters = {
-  search: string;
-  careerSlugs: CareerSlug[];
-  plans: ToolPlan[];
-  levels: ToolLevel[];
-};
-
-type RawCategoryRow = {
-  id: string;
-  name: string;
-  slug: string;
-  description: string | null;
-  color_accent: string | null;
-  icon_name: string | null;
-  sort_order: number;
-};
-
-type RawToolRow = {
-  id: string;
-  name: string;
-  slug: string;
-  description: string | null;
-  url: string;
-  plan: ToolPlan;
-  level: ToolLevel;
-  ia_type: string | null;
-  verified: boolean;
-  edu_verified: boolean;
-  featured: boolean;
-  category_id: string;
-  tool_categories: RawCategoryRow | null;
-};
-
-type CategoryMapRow = {
-  id: string;
-  slug: string;
-};
+import {
+  CAREER_TOOL_SELECT,
+  CACHE_TTL_MS,
+  LEVEL_OPTIONS,
+  PAGE_SIZE,
+  PLAN_OPTIONS,
+  SEARCH_DEBOUNCE_MS,
+  buildCareerIdMap,
+  buildKey,
+  hasActiveFilters,
+  mapTool,
+  mergeUniqueById,
+  sanitizeSearch,
+  toggleItem,
+  type CareerOption,
+  type LocalFilters,
+  type RawToolRow,
+} from "./areas-data";
 
 type PageResult = {
   tools: Tool[];
@@ -88,135 +42,25 @@ export type AreasToolbarProps = {
   initialTools: Tool[];
   initialHasMore: boolean;
   initialNextOffset: number | null;
-  initialFilters: RepoAreaFilters;
+  initialFilters: LocalFilters;
+  careerOptions: CareerOption[];
 };
-
-const PAGE_SIZE = 50;
-const SEARCH_DEBOUNCE_MS = 250;
-const CACHE_TTL_MS = 90_000;
-
-const TOOL_SELECT = [
-  "id, name, slug, description, url, plan, level, ia_type, verified, edu_verified, featured, category_id",
-  "tool_categories(id, name, slug, description, color_accent, icon_name, sort_order)",
-].join(", ");
-
-function mapCategory(row: RawCategoryRow | null): ToolCategory {
-  if (!row) {
-    return {
-      id: "",
-      name: "General",
-      slug: "general",
-      description: null,
-      color_accent: null,
-      icon_name: null,
-      sort_order: 0,
-    };
-  }
-
-  return row;
-}
-
-function mapTool(row: RawToolRow): Tool {
-  return {
-    id: row.id,
-    name: row.name,
-    slug: row.slug,
-    description: row.description,
-    url: row.url,
-    cover_image_url: null,
-    plan: row.plan,
-    level: row.level,
-    ia_type: row.ia_type,
-    verified: row.verified,
-    edu_verified: row.edu_verified,
-    featured: row.featured,
-    sort_order: 0,
-    created_at: "",
-    category: mapCategory(row.tool_categories),
-    guide_slug: null,
-  };
-}
-
-function sanitizeSearch(value: string) {
-  return value.trim().replaceAll(",", " ");
-}
-
-function normalizeArray(values: string[]) {
-  return [...new Set(values.map((value) => value.trim()).filter(Boolean))];
-}
-
-function normalizeCareerSlugs(values: string[] | undefined): CareerSlug[] {
-  return normalizeArray(values ?? []).filter((value) => CAREER_SLUGS.has(value)) as CareerSlug[];
-}
-
-function normalizePlans(values: string[] | undefined): ToolPlan[] {
-  const valid = new Set<ToolPlan>(PLAN_OPTIONS.map((option) => option.value));
-  return normalizeArray(values ?? []).filter((value) => valid.has(value as ToolPlan)) as ToolPlan[];
-}
-
-function normalizeLevels(values: string[] | undefined): ToolLevel[] {
-  const valid = new Set<ToolLevel>(LEVEL_OPTIONS.map((option) => option.value));
-  return normalizeArray(values ?? []).filter((value) => valid.has(value as ToolLevel)) as ToolLevel[];
-}
-
-function mergeUniqueById(previous: Tool[], incoming: Tool[]): Tool[] {
-  const seen = new Set(previous.map((tool) => tool.id));
-  const merged = [...previous];
-
-  for (const tool of incoming) {
-    if (!seen.has(tool.id)) {
-      seen.add(tool.id);
-      merged.push(tool);
-    }
-  }
-
-  return merged;
-}
-
-function toggleItem<T extends string>(list: T[], value: T): T[] {
-  return list.includes(value) ? list.filter((item) => item !== value) : [...list, value];
-}
-
-function buildKey(filters: LocalFilters, offset: number): string {
-  return JSON.stringify({
-    search: sanitizeSearch(filters.search).toLowerCase(),
-    careerSlugs: [...filters.careerSlugs].sort(),
-    plans: [...filters.plans].sort(),
-    levels: [...filters.levels].sort(),
-    offset,
-    limit: PAGE_SIZE,
-  });
-}
-
-function hasActiveFilters(filters: LocalFilters): boolean {
-  return (
-    filters.search.trim().length > 0 ||
-    filters.careerSlugs.length > 0 ||
-    filters.plans.length > 0 ||
-    filters.levels.length > 0
-  );
-}
 
 export default function AreasToolbar({
   initialTools,
   initialHasMore,
   initialNextOffset,
   initialFilters,
+  careerOptions,
 }: AreasToolbarProps) {
   const supabase = useMemo(() => getSupabaseBrowserClient(), []);
   const router = useRouter();
   const pathname = usePathname();
 
   const [searchText, setSearchText] = useState(initialFilters.search ?? "");
-  const [selectedCareers, setSelectedCareers] = useState<CareerSlug[]>(
-    normalizeCareerSlugs(initialFilters.categorySlugs),
-  );
-  const [selectedPlans, setSelectedPlans] = useState<ToolPlan[]>(
-    normalizePlans(initialFilters.plans),
-  );
-  const [selectedLevels, setSelectedLevels] = useState<ToolLevel[]>(
-    normalizeLevels(initialFilters.levels),
-  );
+  const [selectedCareers, setSelectedCareers] = useState<string[]>(initialFilters.careerSlugs);
+  const [selectedPlans, setSelectedPlans] = useState<ToolPlan[]>(initialFilters.plans);
+  const [selectedLevels, setSelectedLevels] = useState<ToolLevel[]>(initialFilters.levels);
 
   const [tools, setTools] = useState<Tool[]>(initialTools);
   const [hasMore, setHasMore] = useState(initialHasMore);
@@ -231,7 +75,7 @@ export default function AreasToolbar({
   const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const cacheRef = useRef<Map<string, CacheEntry>>(new Map());
   const inFlightRef = useRef<Map<string, Promise<PageResult>>>(new Map());
-  const categoryMapRef = useRef<Map<string, string> | null>(null);
+  const careerIdMap = useMemo(() => buildCareerIdMap(careerOptions), [careerOptions]);
 
   const currentFilters = useMemo<LocalFilters>(
     () => ({
@@ -244,14 +88,7 @@ export default function AreasToolbar({
   );
 
   useEffect(() => {
-    const initialSnapshot: LocalFilters = {
-      search: initialFilters.search ?? "",
-      careerSlugs: normalizeCareerSlugs(initialFilters.categorySlugs),
-      plans: normalizePlans(initialFilters.plans),
-      levels: normalizeLevels(initialFilters.levels),
-    };
-
-    cacheRef.current.set(buildKey(initialSnapshot, 0), {
+    cacheRef.current.set(buildKey(initialFilters, 0), {
       expiresAt: Date.now() + CACHE_TTL_MS,
       value: {
         tools: initialTools,
@@ -283,25 +120,6 @@ export default function AreasToolbar({
     [pathname, router],
   );
 
-  const ensureCategoryMap = useCallback(async (): Promise<Map<string, string>> => {
-    if (categoryMapRef.current) return categoryMapRef.current;
-
-    const { data, error } = await supabase
-      .from("tool_categories")
-      .select("id, slug")
-      .in("slug", [...CAREER_SLUGS]);
-
-    if (error) return new Map();
-
-    const map = new Map<string, string>();
-    for (const category of (data ?? []) as CategoryMapRow[]) {
-      map.set(category.slug, category.id);
-    }
-
-    categoryMapRef.current = map;
-    return map;
-  }, [supabase]);
-
   const fetchPage = useCallback(
     async (offset: number, append: boolean, filters: LocalFilters) => {
       const requestId = ++requestIdRef.current;
@@ -327,27 +145,45 @@ export default function AreasToolbar({
       const task =
         existing ??
         (async (): Promise<PageResult> => {
+          let toolIds: string[] | null = null;
+          if (filters.careerSlugs.length > 0) {
+            const selectedCareerIds = filters.careerSlugs
+              .map((slug) => careerIdMap.get(slug))
+              .filter((value): value is string => Boolean(value));
+
+            if (selectedCareerIds.length === 0) {
+              return { tools: [], hasMore: false, nextOffset: null, error: null };
+            }
+
+            const { data: relationRows, error: relationError } = await supabase
+              .from("tool_careers")
+              .select("tool_id")
+              .in("career_path_id", selectedCareerIds);
+
+            if (relationError) {
+              return {
+                tools: [],
+                hasMore: false,
+                nextOffset: null,
+                error: "No se pudo resolver la carrera seleccionada. Intenta de nuevo.",
+              };
+            }
+
+            toolIds = [...new Set((relationRows ?? []).map((row) => row.tool_id).filter(Boolean))];
+            if (toolIds.length === 0) {
+              return { tools: [], hasMore: false, nextOffset: null, error: null };
+            }
+          }
+
           let query = supabase
             .from("tools")
-            .select(TOOL_SELECT)
+            .select(CAREER_TOOL_SELECT)
             .eq("status", "published")
             .order("featured", { ascending: false })
             .order("sort_order", { ascending: true })
             .order("created_at", { ascending: false });
 
-          if (filters.careerSlugs.length > 0) {
-            const categoryMap = await ensureCategoryMap();
-            const categoryIds = filters.careerSlugs
-              .map((slug) => categoryMap.get(slug))
-              .filter((value): value is string => Boolean(value));
-
-            if (categoryIds.length === 0) {
-              return { tools: [], hasMore: false, nextOffset: null, error: null };
-            }
-
-            query = query.in("category_id", categoryIds);
-          }
-
+          if (toolIds) query = query.in("id", toolIds);
           if (filters.plans.length > 0) query = query.in("plan", filters.plans);
           if (filters.levels.length > 0) query = query.in("level", filters.levels);
 
@@ -402,7 +238,7 @@ export default function AreasToolbar({
       setIsLoading(false);
       setIsLoadingMore(false);
     },
-    [ensureCategoryMap, supabase],
+    [careerIdMap, supabase],
   );
 
   const applyFilters = useCallback(
@@ -426,9 +262,9 @@ export default function AreasToolbar({
     }, SEARCH_DEBOUNCE_MS);
   };
 
-  const onToggleCareer = (slug: CareerSlug) => {
+  const onToggleCareer = (slug: string) => {
     if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
-    const nextCareers = toggleItem(selectedCareers, slug);
+    const nextCareers = toggleItem<string>(selectedCareers, slug);
     setSelectedCareers(nextCareers);
     applyFilters({
       search: searchText.trim(),
@@ -540,16 +376,17 @@ export default function AreasToolbar({
             </div>
 
             <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-3">
-              {CAREER_OPTIONS.map((career) => {
+              {careerOptions.map((career) => {
                 const checked = selectedCareers.includes(career.slug);
+                const accent = career.color_accent ?? "#3b82f6";
                 return (
                   <label
                     key={career.slug}
                     className="flex cursor-pointer items-start gap-3 rounded-lg border px-3 py-3 text-sm transition-colors"
                     style={{
-                      borderColor: checked ? `${career.accent}66` : "rgba(148,163,184,0.28)",
-                      background: checked ? `${career.accent}14` : "rgba(255,255,255,0.95)",
-                      color: checked ? career.accent : "rgba(51,65,85,0.88)",
+                      borderColor: checked ? `${accent}66` : "rgba(148,163,184,0.28)",
+                      background: checked ? `${accent}14` : "rgba(255,255,255,0.95)",
+                      color: checked ? accent : "rgba(51,65,85,0.88)",
                     }}
                   >
                     <input
@@ -559,9 +396,9 @@ export default function AreasToolbar({
                       className="mt-1 h-4 w-4 accent-blue-600"
                     />
                     <span>
-                      <span className="block font-medium">{career.label}</span>
+                      <span className="block font-medium">{career.name}</span>
                       <span className="block text-xs leading-relaxed text-slate-500">
-                        {career.hint}
+                        {career.description ?? "Herramientas curadas para este contexto profesional."}
                       </span>
                     </span>
                   </label>
