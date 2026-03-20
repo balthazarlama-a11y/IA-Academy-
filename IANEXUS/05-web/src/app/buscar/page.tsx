@@ -1,0 +1,43 @@
+import type { Metadata } from "next";
+import Footer from "@/components/layout/footer";
+import Header from "@/components/layout/header";
+import SearchPageContent from "@/components/search/search-page-content";
+import { getSearchPageData } from "@/lib/repositories/search-repo";
+
+export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Buscar herramientas | IA NEXUS",
+  description:
+    "Busca herramientas de IA por nombre, carrera, plan y tipo de uso para descubrir opciones sin pasar primero por una sola ruta editorial.",
+};
+
+type PageProps = {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
+
+function readString(value: string | string[] | undefined) {
+  return typeof value === "string" ? value : Array.isArray(value) ? value[0] : "";
+}
+
+export default async function BuscarPage({ searchParams }: PageProps) {
+  const params = await searchParams;
+  const data = await getSearchPageData({
+    q: readString(params.q),
+    career: readString(params.career),
+    plan: readString(params.plan) as "" | "free" | "freemium" | "paid" | "edu_free",
+    iaType: readString(params.iaType),
+  });
+
+  return (
+    <main className="relative flex min-h-screen flex-col bg-[#f7f3ec]">
+      <Header />
+
+      <section className="flex-1 px-5 py-8 md:px-6 md:py-10 xl:px-8">
+        <SearchPageContent data={data} />
+      </section>
+
+      <Footer />
+    </main>
+  );
+}

@@ -8,6 +8,7 @@ import {
   LogIn,
   LogOut,
   PenSquare,
+  Search,
   Shield,
   Wrench,
   X,
@@ -182,9 +183,11 @@ export default function Header() {
 
   const nextPath = pathname || "/";
   const loginHref = `/login?next=${encodeURIComponent(nextPath)}`;
+  const searchHref = `/buscar`;
   const isStaff = session?.role === "admin" || session?.role === "master";
   const displayName =
     session?.fullName?.trim() || session?.email?.split("@")[0] || "Usuario";
+  const searchIsActive = pathname === "/buscar";
 
   return (
     <header className="relative z-50 px-4 pt-3">
@@ -233,6 +236,18 @@ export default function Header() {
               </nav>
 
               <div className="hidden items-center gap-2 md:flex">
+                <Link
+                  href={searchHref}
+                  className={`inline-flex items-center gap-2 rounded-full border px-3.5 py-2 text-sm font-medium transition-colors ${
+                    searchIsActive
+                      ? "border-slate-900 bg-slate-900 text-white"
+                      : "border-slate-300 bg-white text-slate-700 hover:bg-slate-50"
+                  }`}
+                >
+                  <Search className="h-4 w-4" />
+                  Buscar
+                </Link>
+
                 {isLoading ? (
                   <div className="h-9 w-28 rounded-full bg-slate-200 animate-pulse" />
                 ) : !session ? (
@@ -328,6 +343,18 @@ export default function Header() {
         {mobileMenuOpen ? (
           <div className="mt-2 overflow-hidden rounded-xl border border-slate-200 bg-white/96 shadow-[0_14px_32px_rgba(15,23,42,0.1)] backdrop-blur-md md:hidden">
             <nav className="grid grid-cols-2 gap-2 p-2">
+              <Link
+                href={searchHref}
+                onClick={() => setMobileMenuOpen(false)}
+                className={`col-span-2 inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-3 py-3 text-sm font-medium transition-colors ${
+                  searchIsActive
+                    ? "bg-slate-900 text-white"
+                    : "border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100"
+                }`}
+              >
+                <Search className="h-4 w-4" />
+                Buscar herramientas
+              </Link>
               {NAV_LINKS.map((item) => {
                 const isActive =
                   pathname === item.href ||
