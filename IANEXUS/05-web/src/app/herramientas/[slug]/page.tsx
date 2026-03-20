@@ -5,8 +5,10 @@ import { cache } from "react";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import ToolDetail from "@/components/tools/tool-detail";
+import RelatedTools from "@/components/tools/related-tools";
 import RelatedPosts from "@/components/tools/related-posts";
 import { getRelatedPostsByToolSlug } from "@/lib/repositories/post-tools-repo";
+import { getRelatedToolsForTool } from "@/lib/repositories/tool-detail-repo";
 import { getToolBySlug } from "@/lib/repositories/tools-repo";
 import { getCurrentUser } from "@/lib/auth/session";
 import { hasAdminAccess } from "@/lib/auth/roles";
@@ -78,15 +80,16 @@ export default async function ToolDetailPage({
     notFound();
   }
 
-  const [tool, relatedPosts, viewer] = await Promise.all([
-    getPublishedTool(decodedSlug),
-    getRelatedPostsByToolSlug(decodedSlug).catch(() => []),
-    getCurrentUser().catch(() => null),
-  ]);
-
+  const tool = await getPublishedTool(decodedSlug);
   if (!tool) {
     notFound();
   }
+
+  const [relatedPosts, relatedTools, viewer] = await Promise.all([
+    getRelatedPostsByToolSlug(decodedSlug).catch(() => []),
+    getRelatedToolsForTool(tool).catch(() => []),
+    getCurrentUser().catch(() => null),
+  ]);
 
   const isStaff = hasAdminAccess(viewer?.role ?? null);
 
@@ -95,11 +98,11 @@ export default async function ToolDetailPage({
       <Header />
 
       <section className="flex-1 px-6 py-10">
-        <div className="mx-auto w-full max-w-4xl mb-4">
+        <div className="mx-auto w-full max-w-5xl mb-4">
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-3 text-sm">
               <Link href="/areas" className="text-slate-500 hover:text-slate-700 transition-colors">
-                Areas
+                Carreras
               </Link>
               <span className="text-slate-400">/</span>
               <Link
@@ -126,9 +129,8 @@ export default async function ToolDetailPage({
           </div>
         </div>
 
-        <div className="[&>article>section:last-child]:hidden">
-          <ToolDetail tool={tool} relatedPosts={relatedPosts} />
-        </div>
+        <ToolDetail tool={tool} />
+        <RelatedTools tools={relatedTools} />
         <RelatedPosts posts={relatedPosts} />
       </section>
 

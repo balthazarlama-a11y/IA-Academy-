@@ -55,6 +55,13 @@ export default function ToolMetaBadges({ tool }: { tool: Tool }) {
           {statusLabel.text}
         </span>
       ) : null}
+
+      {tool.featured ? (
+        <span className="inline-flex items-center gap-1 rounded-md border border-amber-300/40 bg-amber-400/10 px-2.5 py-1 text-xs font-semibold text-amber-700">
+          <Sparkles className="h-3.5 w-3.5" />
+          Destacada
+        </span>
+      ) : null}
     </div>
   );
 }
