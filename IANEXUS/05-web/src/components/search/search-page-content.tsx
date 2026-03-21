@@ -43,7 +43,7 @@ export default function SearchPageContent({ data }: { data: SearchPageData }) {
             </h1>
             <p className="text-sm leading-relaxed text-slate-600 md:text-base">
               Empieza por la necesidad. Los filtros quedan debajo como ajuste fino, no como
-              barrera.
+              barrera. Los resultados priorizan coincidencia real y señales editoriales.
             </p>
           </div>
         </div>
@@ -151,7 +151,9 @@ export default function SearchPageContent({ data }: { data: SearchPageData }) {
             </h2>
           </div>
           <p className="max-w-md text-sm text-slate-500">
-            Filtra por carrera o plan cuando ya sabes mejor lo que necesitas.
+            {hasFilters
+              ? "Resultados filtrados y ordenados por relevancia para tu búsqueda actual."
+              : "Filtra por carrera o plan cuando ya sabes mejor lo que necesitas."}
           </p>
         </div>
 
