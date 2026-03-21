@@ -480,83 +480,83 @@ export default function AreasToolbar({
           </div>
         </div>
 
-        <div className="space-y-5">
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-1">
-            <div className="rounded-2xl border border-slate-200 bg-[linear-gradient(180deg,rgba(248,250,252,0.95)_0%,rgba(255,255,255,0.92)_100%)] p-4 shadow-[0_10px_24px_rgba(15,23,42,0.04)]">
-              <div className="flex items-start justify-between gap-3">
+        <div className="space-y-3">
+          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
+            <div className="rounded-xl border border-slate-200 bg-[linear-gradient(180deg,rgba(248,250,252,0.95)_0%,rgba(255,255,255,0.92)_100%)] p-3 shadow-[0_8px_16px_rgba(15,23,42,0.03)]">
+              <div className="flex items-start justify-between gap-2">
                 <div>
-                  <p className="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500"><BadgeCheck className="h-3.5 w-3.5 text-emerald-500" />Acceso</p>
-                  <h3 className="mt-1 text-base font-semibold text-slate-950">Prioriza el tipo de acceso.</h3>
+                  <p className="inline-flex items-center gap-1 text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-500"><BadgeCheck className="h-3 w-3 text-emerald-500" />Acceso</p>
+                  <h3 className="mt-0.5 text-sm font-semibold text-slate-950">Prioriza el tipo de acceso.</h3>
                 </div>
-                <span className="text-xs text-slate-500">{selectedPlanCount > 0 ? `${selectedPlanCount} activos` : "Todos"}</span>
+                <span className="text-[11px] text-slate-500 whitespace-nowrap">{selectedPlanCount > 0 ? `${selectedPlanCount} activos` : "Todos"}</span>
               </div>
-              <div className="mt-3 flex flex-wrap gap-2">
+              <div className="mt-2 flex flex-wrap gap-1.5">
                 {PLAN_OPTIONS.map((option) => {
                   const selected = plans.includes(option.value);
                   return (
-                    <button key={option.value} type="button" onClick={() => handlePlanToggle(option.value)} className={`inline-flex items-center rounded-full border px-3 py-2 text-sm font-medium transition ${selected ? "border-slate-950 bg-slate-950 text-white shadow-[0_10px_22px_rgba(15,23,42,0.14)]" : "border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50"}`}>
+                    <button key={option.value} type="button" onClick={() => handlePlanToggle(option.value)} className={`inline-flex items-center rounded-full border px-2.5 py-1.5 text-xs font-medium transition ${selected ? "border-slate-950 bg-slate-950 text-white shadow-[0_6px_14px_rgba(15,23,42,0.1)]" : "border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50"}`}>
                       {option.label}
                     </button>
                   );
                 })}
               </div>
-              <p className="mt-3 text-xs leading-relaxed text-slate-500">Selecciona uno o varios accesos. Si no marcas nada, se muestran todas las opciones.</p>
+              <p className="mt-2 text-[11px] leading-relaxed text-slate-500">Selecciona uno o varios accesos. Si no marcas nada, se muestran todas las opciones.</p>
             </div>
 
-            <div className="rounded-2xl border border-slate-200 bg-[linear-gradient(180deg,rgba(248,250,252,0.95)_0%,rgba(255,255,255,0.92)_100%)] p-4 shadow-[0_10px_24px_rgba(15,23,42,0.04)]">
-              <div className="flex items-start justify-between gap-3">
+            <div className="rounded-xl border border-slate-200 bg-[linear-gradient(180deg,rgba(248,250,252,0.95)_0%,rgba(255,255,255,0.92)_100%)] p-3 shadow-[0_8px_16px_rgba(15,23,42,0.03)]">
+              <div className="flex items-start justify-between gap-2">
                 <div>
-                  <p className="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500"><Layers3 className="h-3.5 w-3.5 text-sky-500" />Nivel</p>
-                  <h3 className="mt-1 text-base font-semibold text-slate-950">Ajusta la complejidad.</h3>
+                  <p className="inline-flex items-center gap-1 text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-500"><Layers3 className="h-3 w-3 text-sky-500" />Nivel</p>
+                  <h3 className="mt-0.5 text-sm font-semibold text-slate-950">Ajusta la complejidad.</h3>
                 </div>
-                <span className="text-xs text-slate-500">{selectedLevelCount > 0 ? `${selectedLevelCount} activos` : "Todos"}</span>
+                <span className="text-[11px] text-slate-500 whitespace-nowrap">{selectedLevelCount > 0 ? `${selectedLevelCount} activos` : "Todos"}</span>
               </div>
-              <div className="mt-3 flex flex-wrap gap-2">
+              <div className="mt-2 flex flex-wrap gap-1.5">
                 {LEVEL_OPTIONS.map((option) => {
                   const selected = levels.includes(option.value);
                   return (
-                    <button key={option.value} type="button" onClick={() => handleLevelToggle(option.value)} className={`inline-flex items-center rounded-full border px-3 py-2 text-sm font-medium transition ${selected ? "border-slate-950 bg-slate-950 text-white shadow-[0_10px_22px_rgba(15,23,42,0.14)]" : "border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50"}`}>
+                    <button key={option.value} type="button" onClick={() => handleLevelToggle(option.value)} className={`inline-flex items-center rounded-full border px-2.5 py-1.5 text-xs font-medium transition ${selected ? "border-slate-950 bg-slate-950 text-white shadow-[0_6px_14px_rgba(15,23,42,0.1)]" : "border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50"}`}>
                       {option.label}
                     </button>
                   );
                 })}
               </div>
-              <p className="mt-3 text-xs leading-relaxed text-slate-500">Util para separar herramientas de entrada rapida de opciones mas especializadas.</p>
+              <p className="mt-2 text-[11px] leading-relaxed text-slate-500">Util para separar herramientas de entrada rapida de opciones mas especializadas.</p>
             </div>
           </div>
 
-          <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-[0_10px_24px_rgba(15,23,42,0.04)]">
-            <div className="flex items-start justify-between gap-3">
+          <div className="rounded-xl border border-slate-200 bg-white p-3 shadow-[0_8px_16px_rgba(15,23,42,0.03)]">
+            <div className="flex items-start justify-between gap-2">
               <div>
-                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">Estado</p>
-                <h3 className="mt-1 text-base font-semibold text-slate-950">Lo que ya estas viendo.</h3>
+                <p className="text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-500">Estado</p>
+                <h3 className="mt-0.5 text-sm font-semibold text-slate-950">Lo que ya estas viendo.</h3>
               </div>
-              <button type="button" onClick={handleClearAll} disabled={!hasSelections} className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50">
-                <X className="h-3.5 w-3.5" />
+              <button type="button" onClick={handleClearAll} disabled={!hasSelections} className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-[11px] font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50">
+                <X className="h-3 w-3" />
                 Limpiar
               </button>
             </div>
-            <div className="mt-4 grid grid-cols-2 gap-3">
-              <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-3">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">Carreras</p>
-                <p className="mt-1 text-lg font-semibold text-slate-950">{selectedCareerCount || "Todas"}</p>
+            <div className="mt-3 grid grid-cols-2 gap-2">
+              <div className="rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-2">
+                <p className="text-[9px] font-semibold uppercase tracking-[0.14em] text-slate-500">Carreras</p>
+                <p className="mt-1 text-base font-semibold text-slate-950">{selectedCareerCount || "Todas"}</p>
               </div>
-              <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-3">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">Acceso</p>
-                <p className="mt-1 text-lg font-semibold text-slate-950">{selectedPlanCount || "Todos"}</p>
+              <div className="rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-2">
+                <p className="text-[9px] font-semibold uppercase tracking-[0.14em] text-slate-500">Acceso</p>
+                <p className="mt-1 text-base font-semibold text-slate-950">{selectedPlanCount || "Todos"}</p>
               </div>
-              <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-3">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">Nivel</p>
-                <p className="mt-1 text-lg font-semibold text-slate-950">{selectedLevelCount || "Todos"}</p>
+              <div className="rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-2">
+                <p className="text-[9px] font-semibold uppercase tracking-[0.14em] text-slate-500">Nivel</p>
+                <p className="mt-1 text-base font-semibold text-slate-950">{selectedLevelCount || "Todos"}</p>
               </div>
-              <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-3">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">Resultados</p>
-                <p className="mt-1 text-lg font-semibold text-slate-950">{visibleCountLabel}</p>
+              <div className="rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-2">
+                <p className="text-[9px] font-semibold uppercase tracking-[0.14em] text-slate-500">Resultados</p>
+                <p className="mt-1 text-base font-semibold text-slate-950">{visibleCountLabel}</p>
               </div>
             </div>
-            <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-slate-500">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5"><BadgeCheck className="h-3.5 w-3.5 text-emerald-500" />{selectedCareerCount > 0 ? "Carreras activas" : "Todas las carreras"}</span>
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5"><GraduationCap className="h-3.5 w-3.5 text-sky-500" />{selectedPlanCount > 0 ? "Refinando acceso" : "Sin filtro de acceso"}</span>
+            <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[11px] text-slate-500">
+              <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1"><BadgeCheck className="h-3 w-3 text-emerald-500" />{selectedCareerCount > 0 ? "Carreras activas" : "Todas las carreras"}</span>
+              <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1"><GraduationCap className="h-3 w-3 text-sky-500" />{selectedPlanCount > 0 ? "Refinando acceso" : "Sin filtro de acceso"}</span>
             </div>
           </div>
         </div>
