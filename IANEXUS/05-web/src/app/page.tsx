@@ -98,56 +98,48 @@ export default async function Home() {
 
   return (
     <main className="editorial-paper relative min-h-screen overflow-hidden bg-[#f6f2ea] text-[#172033]">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-[24rem] bg-[linear-gradient(180deg,rgba(255,255,255,0.58)_0%,rgba(246,242,234,0.92)_52%,rgba(246,242,234,1)_100%)]" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-[24rem] bg-[linear-gradient(180deg,rgba(255,255,255,0.62)_0%,rgba(246,242,234,0.9)_56%,rgba(246,242,234,1)_100%)]" />
 
       <div className="relative z-10">
         <EditorialTopbar />
 
-        <div className="editorial-frame px-5 pb-12 pt-6 md:px-6 lg:px-8">
-          <header className="editorial-rule border-b pb-7 text-center md:pb-9">
-            <p className="editorial-kicker editorial-muted">Issue 02 — IA NEXUS editorial cover</p>
-            <h1 className="editorial-display mt-4 text-[3.1rem] font-semibold tracking-[-0.05em] text-[#111827] md:text-[4.7rem]">
-              IA NEXUS
-            </h1>
-            <p className="editorial-muted mx-auto mt-3 max-w-2xl text-sm leading-6 md:text-[0.96rem]">
-              Un frente editorial para descubrir herramientas de inteligencia artificial con más
-              criterio, más contexto y menos ruido visual.
-            </p>
-          </header>
-
-          <section className="mt-10 grid gap-10 lg:grid-cols-10 lg:gap-8">
+        <div className="editorial-frame px-5 pb-14 pt-8 md:px-6 lg:px-8 lg:pt-10">
+          <section className="grid gap-12 lg:grid-cols-10 lg:gap-9">
             <aside className="editorial-rule flex flex-col gap-8 border-b pb-8 lg:col-span-2 lg:border-b-0 lg:border-r lg:pb-0 lg:pr-8">
-              <nav className="flex flex-col gap-5">
-                {editorialRoutes.map((route) => {
-                  const Icon = route.icon;
+              <div className="rounded-[1.75rem] border border-slate-200/70 bg-white/72 p-5 shadow-[0_20px_44px_rgba(15,23,42,0.05)]">
+                <p className="editorial-kicker editorial-muted">Mapa editorial</p>
+                <nav className="mt-5 flex flex-col gap-5">
+                  {editorialRoutes.map((route) => {
+                    const Icon = route.icon;
 
-                  return (
-                    <Link
-                      key={route.href}
-                      href={route.href}
-                      className="group flex items-start gap-3 text-[#172033] transition-colors hover:text-[var(--accent-main)]"
-                    >
-                      <span className="mt-1 rounded-full border border-slate-200 bg-white p-1.5 text-[#172033] transition-colors group-hover:border-[var(--accent-main)]/30 group-hover:text-[var(--accent-main)]">
-                        <Icon className="h-3.5 w-3.5" strokeWidth={1.8} />
-                      </span>
-                      <span className="min-w-0">
-                        <span className="editorial-display nav-link block text-[1.18rem] leading-none">
-                          {route.label}
+                    return (
+                      <Link
+                        key={route.href}
+                        href={route.href}
+                        className="group flex items-start gap-3 text-[#172033] transition-colors hover:text-[#3351c8]"
+                      >
+                        <span className="mt-1 rounded-full border border-slate-200 bg-white p-1.5 text-[#172033] transition-colors group-hover:border-[#3351c8]/30 group-hover:text-[#3351c8]">
+                          <Icon className="h-3.5 w-3.5" strokeWidth={1.8} />
                         </span>
-                        <span className="editorial-muted mt-2 block text-xs leading-5">
-                          {route.blurb}
+                        <span className="min-w-0">
+                          <span className="editorial-display nav-link block text-[1.14rem] leading-none">
+                            {route.label}
+                          </span>
+                          <span className="editorial-muted mt-2 block text-xs leading-5">
+                            {route.blurb}
+                          </span>
                         </span>
-                      </span>
-                    </Link>
-                  );
-                })}
-              </nav>
+                      </Link>
+                    );
+                  })}
+                </nav>
+              </div>
 
-              <div className="mt-auto rounded-2xl border border-slate-200/80 bg-white/80 p-4 shadow-[0_18px_40px_rgba(15,23,42,0.05)]">
+              <div className="rounded-[1.75rem] border border-[#dfe5ff] bg-[color:var(--accent-soft)]/85 p-5 shadow-[0_20px_44px_rgba(51,81,200,0.06)]">
                 <p className="editorial-kicker text-[#3351c8]">Nota editorial</p>
-                <p className="editorial-display mt-3 text-[0.98rem] leading-7 text-[#243046]">
-                  “El objetivo no es listar todo. Es ayudarte a encontrar primero lo que sí vale
-                  la pena probar.”
+                <p className="editorial-display mt-3 text-[1rem] leading-7 text-[#243046]">
+                  “El objetivo no es listar todo. Es ayudarte a encontrar primero lo que sí vale la
+                  pena probar.”
                 </p>
               </div>
             </aside>
@@ -155,7 +147,7 @@ export default async function Home() {
             <article className="editorial-rule flex flex-col gap-6 lg:col-span-5 lg:border-r lg:pr-8">
               <Link
                 href={featuredPost ? `/blog/${featuredPost.slug}` : "/blog"}
-                className="group relative block aspect-[4/3] overflow-hidden rounded-[1.75rem] border border-slate-200 bg-[#ebe6dc] shadow-[0_28px_60px_rgba(15,23,42,0.08)]"
+                className="group relative block aspect-[4/3] overflow-hidden rounded-[2rem] border border-slate-200 bg-[#ebe6dc] shadow-[0_30px_65px_rgba(15,23,42,0.08)]"
               >
                 {featuredPost?.cover_image_url ? (
                   <Image
@@ -167,10 +159,10 @@ export default async function Home() {
                     className="object-cover transition duration-700 group-hover:scale-[1.03]"
                   />
                 ) : (
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,#7aa2ff_0%,#4054b2_28%,#18243e_100%)]" />
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,#8aa8ff_0%,#6e7cff_28%,#18243e_100%)]" />
                 )}
-                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(17,24,39,0.04)_0%,rgba(17,24,39,0.32)_100%)]" />
-                <div className="absolute left-4 top-4 rounded-full bg-white/85 px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.16em] text-[#243046] backdrop-blur-sm">
+                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(17,24,39,0.03)_0%,rgba(17,24,39,0.34)_100%)]" />
+                <div className="absolute left-5 top-5 rounded-full border border-white/60 bg-white/82 px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.16em] text-[#243046] backdrop-blur-sm">
                   Cover story
                 </div>
               </Link>
@@ -179,7 +171,7 @@ export default async function Home() {
                 <p className="editorial-kicker text-[#3351c8]">
                   {featuredPost ? getPostLabel(featuredPost.post_kind) : "Portada"}
                 </p>
-                <h2 className="editorial-display max-w-3xl text-[2.7rem] leading-[0.95] font-semibold tracking-[-0.05em] text-[#111827] md:text-[4.15rem]">
+                <h2 className="editorial-display max-w-3xl text-[2.85rem] leading-[0.95] font-semibold tracking-[-0.05em] text-[#111827] md:text-[4.25rem]">
                   {featuredPost?.title ?? "La lectura principal de IA NEXUS aparecerá aquí"}
                 </h2>
                 <p className="max-w-3xl text-[1rem] leading-7 text-[#4b5568] md:text-[1.06rem]">
@@ -195,7 +187,7 @@ export default async function Home() {
                     <ArrowRight className="h-3.5 w-3.5" />
                   </Link>
                   {featuredPost ? (
-                    <span className="text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[#6b7280]">
+                    <span className="rounded-full border border-slate-200 bg-white/72 px-3 py-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[#6b7280]">
                       {formatDate(featuredPost.published_at)}
                     </span>
                   ) : null}
@@ -237,16 +229,16 @@ export default async function Home() {
                 ))}
               </div>
 
-              <div className="mt-8 rounded-[1.5rem] border border-[#3351c8]/12 bg-[#edf2ff] p-5 shadow-[0_18px_36px_rgba(51,81,200,0.08)]">
-                <p className="editorial-kicker text-[#3351c8]">Student highlight</p>
-                <p className="editorial-display mt-3 text-[1.32rem] leading-tight font-semibold text-[#172033]">
+              <div className="mt-8 rounded-[1.75rem] border border-[#dfe5ff] bg-[color:var(--accent-lilac)]/86 p-5 shadow-[0_20px_44px_rgba(108,92,231,0.05)]">
+                <p className="editorial-kicker text-[#6b4fd4]">Student highlight</p>
+                <p className="editorial-display mt-3 text-[1.34rem] leading-tight font-semibold text-[#172033]">
                   {studentHighlight
                     ? `${studentHighlight.name} aparece hoy como señal clara para estudiantes.`
                     : "Revisa beneficios estudiantiles y acceso educacional sin perder tiempo."}
                 </p>
                 <Link
                   href="/estudiantes"
-                  className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-[#172033] underline decoration-[#3351c8] decoration-2 underline-offset-4 transition-colors hover:text-[#3351c8]"
+                  className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-[#172033] underline decoration-[#6b4fd4] decoration-2 underline-offset-4 transition-colors hover:text-[#6b4fd4]"
                 >
                   Ver selección estudiantil
                   <ArrowRight className="h-4 w-4" />
@@ -274,11 +266,15 @@ export default async function Home() {
 
               <div className="mt-6 grid gap-5 md:grid-cols-2">
                 {supportingPosts.length > 0 ? (
-                  supportingPosts.map((post) => (
+                  supportingPosts.map((post, index) => (
                     <Link
                       key={post.id}
                       href={`/blog/${post.slug}`}
-                      className="rounded-[1.5rem] border border-slate-200/80 bg-white/80 p-4 shadow-[0_20px_44px_rgba(15,23,42,0.05)] transition-transform hover:-translate-y-0.5"
+                      className={`rounded-[1.5rem] border p-4 shadow-[0_20px_44px_rgba(15,23,42,0.05)] transition-transform hover:-translate-y-0.5 ${
+                        index % 2 === 0
+                          ? "border-slate-200/80 bg-white/82"
+                          : "border-[#dff1e9] bg-[color:var(--accent-mint)]/9"
+                      }`}
                     >
                       <p className="editorial-kicker text-[#3351c8]">{getPostLabel(post.post_kind)}</p>
                       <h4 className="editorial-display mt-3 text-[1.75rem] leading-tight font-semibold text-[#111827]">
@@ -293,7 +289,7 @@ export default async function Home() {
                     </Link>
                   ))
                 ) : (
-                  <div className="rounded-[1.5rem] border border-slate-200/80 bg-white/80 p-4 text-sm text-[#4b5568]">
+                  <div className="rounded-[1.5rem] border border-slate-200/80 bg-white/82 p-4 text-sm text-[#4b5568]">
                     No hay más lecturas activas todavía.
                   </div>
                 )}
@@ -307,7 +303,7 @@ export default async function Home() {
                   <Link
                     key={post.id}
                     href={`/blog/${post.slug}`}
-                    className="flex items-start gap-4 rounded-2xl px-2 py-2 transition-colors hover:bg-slate-50"
+                    className="flex items-start gap-4 rounded-2xl px-2 py-2 transition-colors hover:bg-slate-50/90"
                   >
                     <span className="editorial-display text-[1.7rem] leading-none text-[#9aa3b6]">
                       {String(index + 1).padStart(2, "0")}
