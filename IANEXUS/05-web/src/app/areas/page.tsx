@@ -157,66 +157,13 @@ export default async function AreasPage({ searchParams }: PageProps) {
   const validCareerSlugs = new Set(careerOptions.map((career) => career.slug));
   const initialFilters = parseFilters(params, validCareerSlugs);
   const initialPage = await fetchAreasPage(initialFilters, careerOptions);
-  const careerHighlights = careerOptions
-    .filter((career) => career.slug !== "general")
-    .slice(0, 3)
-    .map((career) => ({
-      label: career.name,
-      value: career.description ?? "Herramientas utiles para este contexto profesional.",
-    }));
 
   return (
-    <main className="relative min-h-screen flex flex-col">
+    <main className="relative flex min-h-screen flex-col bg-[linear-gradient(180deg,#f8f3ea_0%,#fbf8f3_40%,#ffffff_100%)]">
       <Header />
 
-      <section className="flex-1 w-full px-5 py-8 md:px-6 md:py-12 xl:px-8">
+      <section className="flex-1 w-full px-5 py-8 md:px-6 md:py-10 xl:px-8">
         <div className="editorial-frame flex flex-col gap-6">
-          <div className="w-full overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_12px_36px_rgba(15,23,42,0.05)]">
-            <div className="grid gap-5 p-5 md:p-6 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-end lg:p-7">
-              <div>
-                <p className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] uppercase tracking-[0.16em] text-slate-600">
-                  Hub por carrera
-                </p>
-                <h1 className="mt-4 max-w-3xl text-3xl font-semibold leading-tight text-slate-950 md:text-4xl lg:text-[2.9rem] lg:leading-[1]">
-                  Encuentra herramientas de IA segun tu carrera
-                </h1>
-                <p className="mt-4 max-w-2xl text-sm leading-relaxed text-slate-600 md:text-[15px]">
-                  Parte por una carrera, cruza acceso y nivel, y quedate con opciones que
-                  realmente encajan con tu contexto profesional.
-                </p>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {careerHighlights.map((item) => (
-                    <span
-                      key={item.label}
-                      className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs text-slate-600"
-                    >
-                      <span className="font-semibold text-slate-900">{item.label}</span>
-                      <span className="hidden lg:inline">{item.value}</span>
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-                <p className="text-[11px] uppercase tracking-[0.14em] text-slate-500">
-                  Como usar este hub
-                </p>
-                <div className="mt-3 space-y-3 text-sm leading-relaxed text-slate-600">
-                  <p>
-                    1. Elige una o varias carreras para reducir el catalogo a un contexto real.
-                  </p>
-                  <p>
-                    2. Ajusta plan y nivel para separar lo gratuito, lo institucional y lo mas
-                    avanzado.
-                  </p>
-                  <p>
-                    3. Abre solo las herramientas que ya pasaron ese primer filtro editorial.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
           <AreasToolbar
             initialTools={initialPage.tools}
             initialHasMore={initialPage.hasMore}
