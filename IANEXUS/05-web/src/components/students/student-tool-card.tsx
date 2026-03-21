@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { memo } from "react";
 import Link from "next/link";
 import { BadgeCheck, GraduationCap } from "lucide-react";
@@ -34,7 +35,7 @@ function planSummary(plan: Tool["plan"]) {
 export default memo(function StudentToolCard({ tool }: { tool: Tool }) {
   return (
     <article
-      className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_8px_22px_rgba(15,23,42,0.06)] transition-all duration-150 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-[0_12px_26px_rgba(15,23,42,0.08)]"
+      className="group relative overflow-hidden rounded-[1.4rem] border border-slate-200 bg-white p-5 shadow-[0_8px_22px_rgba(15,23,42,0.06)] transition-all duration-150 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-[0_12px_26px_rgba(15,23,42,0.08)]"
       style={{
         background: "linear-gradient(180deg,#ffffff 0%,#f8fafc 100%)",
         contain: "layout style paint",
@@ -48,14 +49,16 @@ export default memo(function StudentToolCard({ tool }: { tool: Tool }) {
         className="absolute right-4 top-4 z-10"
       />
 
-        <div className="flex min-h-[220px] flex-col">
+      <div className="flex min-h-[204px] flex-col">
         {tool.cover_image_url ? (
-          <div className="mb-4 flex h-14 w-14 items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-            <img
+          <div className="relative mb-4 flex h-14 w-14 items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+            <Image
               src={tool.cover_image_url}
               alt={`${tool.name} logo`}
-              className="h-full w-full object-contain p-0.5"
-              loading="lazy"
+              fill
+              unoptimized
+              className="object-contain p-0.5"
+              sizes="56px"
             />
           </div>
         ) : (
@@ -67,15 +70,11 @@ export default memo(function StudentToolCard({ tool }: { tool: Tool }) {
         )}
 
         <div className="flex flex-wrap items-center gap-2">
-          <span className={`inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-medium ${planTone(tool.plan)}`}>
+          <span
+            className={`inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-medium ${planTone(tool.plan)}`}
+          >
             {planLabel(tool.plan)}
           </span>
-          {tool.featured && (
-            <span className="inline-flex items-center gap-1 rounded-full border border-amber-300/40 bg-amber-400/10 px-2.5 py-1 text-xs font-medium text-amber-700">
-              <svg className="h-3 w-3" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-              Destacada
-            </span>
-          )}
           {tool.edu_verified && (
             <span className="inline-flex items-center gap-1 rounded-full border border-emerald-300/30 bg-emerald-400/10 px-2.5 py-1 text-xs font-medium text-emerald-700">
               <GraduationCap className="h-3 w-3" />
@@ -102,8 +101,8 @@ export default memo(function StudentToolCard({ tool }: { tool: Tool }) {
           {shortDescription(tool.description)}
         </p>
 
-        <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
-          <p className="text-[11px] uppercase tracking-[0.14em] text-slate-500">Lectura rapida</p>
+        <div className="mt-4 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+          <p className="text-[11px] uppercase tracking-[0.14em] text-slate-500">Acceso rapido</p>
           <p className="mt-1 text-sm font-medium text-slate-900">{planSummary(tool.plan)}</p>
         </div>
 
