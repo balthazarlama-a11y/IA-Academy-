@@ -83,6 +83,17 @@ function mapTool(row: RawToolRow): Tool {
   };
 }
 
+function normalizeText(value: string | null | undefined) {
+  return (value ?? "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 function extractIaTypes(tools: Tool[]) {
   return Array.from(
     new Set(tools.map((tool) => (tool.ia_type ?? "").trim()).filter(Boolean)),
@@ -116,6 +127,73 @@ function mergeUniqueById(previous: Tool[], incoming: Tool[]) {
   }
 
   return merged;
+}
+
+function planPriority(plan: Tool["plan"]) {
+  if (plan === "free") return 3;
+  if (plan === "edu_free") return 2;
+  if (plan === "freemium") return 1;
+  return 0;
+}
+
+function scoreTool(tool: Tool, filters: StudentsFilters) {
+  let score = 0;
+  const search = normalizeText(filters.search);
+  const name = normalizeText(tool.name);
+  const slug = normalizeText(tool.slug);
+  const description = normalizeText(tool.description);
+  const iaType = normalizeText(tool.ia_type);
+  const targetIaType = normalizeText(filters.iaType);
+
+  if (filters.scope === "student_pack") {
+    if (tool.plan === "edu_free") score += 50;
+    if (tool.edu_verified) score += 30;
+  } else {
+    if (tool.plan === "free") score += 40;
+    if (tool.plan === "edu_free") score += 28;
+  }
+
+  if (filters.includeFreemium) {
+    if (tool.plan === "freemium") score += 18;
+  } else if (tool.plan === "freemium") {
+    score -= 12;
+  }
+
+  if (targetIaType) {
+    if (iaType === targetIaType) score += 24;
+    else if (iaType.includes(targetIaType)) score += 10;
+  }
+
+  if (tool.featured) score += 8;
+  if (tool.edu_verified) score += 12;
+
+  if (search) {
+    if (name === search) score += 60;
+    else if (name.startsWith(search)) score += 40;
+    else if (name.includes(search)) score += 24;
+
+    if (slug.includes(search)) score += 16;
+    if (iaType.includes(search)) score += 18;
+    if (description.includes(search)) score += 8;
+  }
+
+  score += planPriority(tool.plan);
+  score += Math.max(0, 20 - Math.min(tool.sort_order, 20));
+
+  return score;
+}
+
+function rankTools(tools: Tool[], filters: StudentsFilters) {
+  return [...tools].sort((a, b) => {
+    const scoreA = scoreTool(a, filters);
+    const scoreB = scoreTool(b, filters);
+
+    if (scoreA !== scoreB) return scoreB - scoreA;
+    if (a.featured !== b.featured) return a.featured ? -1 : 1;
+    if (a.edu_verified !== b.edu_verified) return a.edu_verified ? -1 : 1;
+    if (a.sort_order !== b.sort_order) return a.sort_order - b.sort_order;
+    return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+  });
 }
 
 export default function StudentsToolbar({
@@ -194,7 +272,9 @@ export default function StudentsToolbar({
         if (requestId !== requestIdRef.current) return;
 
         setTools((previous) =>
-          append ? mergeUniqueById(previous, cached.value.tools) : cached.value.tools,
+          append
+            ? rankTools(mergeUniqueById(previous, cached.value.tools), filters)
+            : cached.value.tools,
         );
         setHasMore(cached.value.hasMore);
         setNextOffset(cached.value.nextOffset);
@@ -251,9 +331,8 @@ export default function StudentsToolbar({
             };
           }
 
-          const rawRows = ((data ?? []) as unknown as RawToolRow[]);
-          const mappedRows = rawRows.map(mapTool);
-
+          const rawRows = (data ?? []) as unknown as RawToolRow[];
+          const mappedRows = rankTools(rawRows.map(mapTool), filters);
           const more = rawRows.length === PAGE_SIZE;
 
           return {
@@ -290,7 +369,9 @@ export default function StudentsToolbar({
         value: result,
       });
 
-      setTools((previous) => (append ? mergeUniqueById(previous, result.tools) : result.tools));
+      setTools((previous) =>
+        append ? rankTools(mergeUniqueById(previous, result.tools), filters) : result.tools,
+      );
       setHasMore(result.hasMore);
       setNextOffset(result.nextOffset);
       setIsLoading(false);
@@ -380,22 +461,28 @@ export default function StudentsToolbar({
     scopeValue === "student_pack" ||
     includeFreemiumValue ||
     iaTypeValue.length > 0;
+  const activeFilterLabels = [
+    searchInput.trim() ? `Búsqueda: ${searchInput.trim()}` : null,
+    scopeValue === "student_pack" ? "Beneficio estudiantil" : null,
+    includeFreemiumValue ? "Freemium incluido" : null,
+    iaTypeValue ? `Tipo: ${iaTypeValue}` : null,
+  ].filter(Boolean) as string[];
 
   return (
     <>
-      <section className="mt-8 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_12px_36px_rgba(15,23,42,0.05)]">
-        <div className="border-b border-slate-200 px-5 py-4 md:px-6">
+      <section className="mt-6 overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-[0_12px_36px_rgba(15,23,42,0.05)]">
+        <div className="border-b border-slate-200/80 px-5 py-4 md:px-6 lg:px-7">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
             <div>
               <p className="text-xs uppercase tracking-[0.16em] text-slate-500">
-                Curadoria academica
+                Filtro rapido
               </p>
               <h2 className="mt-1 text-lg font-semibold text-slate-900">
-                Filtra por acceso y tipo de herramienta
+                Encuentra acceso util sin leer de mas
               </h2>
               <p className="mt-1 max-w-2xl text-sm leading-relaxed text-slate-600">
-                Prioriza gratis total, beneficio estudiantil o freemium para encontrar opciones
-                que puedas probar sin perder tiempo.
+                Primero acceso, luego tipo de IA. El filtro prioriza herramientas que puedes usar
+                hoy o activar con correo institucional.
               </p>
             </div>
 
@@ -406,117 +493,138 @@ export default function StudentsToolbar({
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 px-5 py-5 md:px-6 md:grid-cols-12">
-          <div className="md:col-span-5">
-            <label
-              htmlFor="q"
-              className="mb-2 block text-xs uppercase tracking-[0.12em] text-slate-600"
-            >
-              Buscador
-            </label>
-            <input
-              id="q"
-              value={searchInput}
-              onChange={(event) => handleSearchChange(event.target.value)}
-              placeholder="Ej: chatgpt, notion, github copilot..."
-              className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-slate-400"
-            />
-            <p className="mt-2 text-xs leading-relaxed text-slate-500">
-              Busca por nombre, descripcion o tipo de IA.
-            </p>
-          </div>
+        <div className="px-5 py-5 md:px-6 lg:px-7">
+          <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1.2fr)_minmax(0,0.95fr)]">
+            <div className="space-y-4">
+              <label
+                htmlFor="q"
+                className="block text-xs uppercase tracking-[0.12em] text-slate-600"
+              >
+                Buscador
+              </label>
+              <div className="rounded-2xl border border-slate-200 bg-slate-50/80 p-3">
+                <input
+                  id="q"
+                  value={searchInput}
+                  onChange={(event) => handleSearchChange(event.target.value)}
+                  placeholder="Ej: chatgpt, notion, github copilot..."
+                  className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-slate-400"
+                />
+                <p className="mt-2 text-xs leading-relaxed text-slate-500">
+                  Busca por nombre, descripcion o tipo de IA.
+                </p>
+              </div>
+            </div>
 
-          <div className="md:col-span-4">
-            <p className="mb-2 block text-xs uppercase tracking-[0.12em] text-slate-600">
-              Acceso
-            </p>
-            <div className="grid gap-2">
-              <label className="inline-flex cursor-pointer items-start gap-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 transition hover:border-slate-300">
-                <input
-                  type="radio"
-                  name="scope"
-                  value="all_free"
-                  checked={scopeValue === "all_free"}
-                  onChange={() => handleScopeChange("all_free")}
-                  className="mt-1"
-                />
-                <span>
-                  <span className="block font-semibold text-slate-900">Gratis total</span>
-                  <span className="block text-xs leading-relaxed text-slate-500">
-                    Sin pago ni tarjeta para empezar.
+            <div className="space-y-4">
+              <div>
+                <p className="mb-2 block text-xs uppercase tracking-[0.12em] text-slate-600">
+                  Acceso
+                </p>
+                <div className="grid gap-2 sm:grid-cols-3">
+                  <button
+                    type="button"
+                    onClick={() => handleScopeChange("all_free")}
+                    aria-pressed={scopeValue === "all_free"}
+                    className={`rounded-2xl border px-4 py-3 text-left text-sm transition ${
+                      scopeValue === "all_free"
+                        ? "border-cyan-300 bg-cyan-400/12 text-cyan-800 shadow-[0_0_0_1px_rgba(34,211,238,0.1)]"
+                        : "border-slate-200 bg-slate-50 text-slate-700 hover:border-slate-300"
+                    }`}
+                  >
+                    <span className="block font-semibold text-slate-900">Gratis total</span>
+                    <span className="mt-1 block text-xs leading-relaxed text-slate-500">
+                      Sin pago ni tarjeta para empezar.
+                    </span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleScopeChange("student_pack")}
+                    aria-pressed={scopeValue === "student_pack"}
+                    className={`rounded-2xl border px-4 py-3 text-left text-sm transition ${
+                      scopeValue === "student_pack"
+                        ? "border-emerald-300 bg-emerald-400/12 text-emerald-800 shadow-[0_0_0_1px_rgba(52,211,153,0.1)]"
+                        : "border-slate-200 bg-slate-50 text-slate-700 hover:border-slate-300"
+                    }`}
+                  >
+                    <span className="block font-semibold text-slate-900">Beneficio</span>
+                    <span className="mt-1 block text-xs leading-relaxed text-slate-500">
+                      Correo institucional o verificacion academica.
+                    </span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleFreemiumChange(!includeFreemiumValue)}
+                    aria-pressed={includeFreemiumValue}
+                    className={`rounded-2xl border px-4 py-3 text-left text-sm transition ${
+                      includeFreemiumValue
+                        ? "border-violet-300 bg-violet-400/12 text-violet-800 shadow-[0_0_0_1px_rgba(196,181,253,0.12)]"
+                        : "border-slate-200 bg-slate-50 text-slate-700 hover:border-slate-300"
+                    }`}
+                  >
+                    <span className="block font-semibold text-slate-900">Freemium</span>
+                    <span className="mt-1 block text-xs leading-relaxed text-slate-500">
+                      Empiezas gratis y luego decides.
+                    </span>
+                  </button>
+                </div>
+              </div>
+
+              <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
+                <label htmlFor="ia_type" className="block">
+                  <span className="mb-2 block text-xs uppercase tracking-[0.12em] text-slate-600">
+                    Tipo de IA
                   </span>
-                </span>
-              </label>
-              <label className="inline-flex cursor-pointer items-start gap-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 transition hover:border-slate-300">
-                <input
-                  type="radio"
-                  name="scope"
-                  value="student_pack"
-                  checked={scopeValue === "student_pack"}
-                  onChange={() => handleScopeChange("student_pack")}
-                  className="mt-1"
-                />
-                <span>
-                  <span className="block font-semibold text-slate-900">Beneficio estudiantil</span>
-                  <span className="block text-xs leading-relaxed text-slate-500">
-                    Beneficios con correo institucional o verificación académica.
-                  </span>
-                </span>
-              </label>
-              <label className="inline-flex cursor-pointer items-start gap-3 rounded-xl border border-emerald-300/30 bg-emerald-400/10 px-4 py-3 text-sm text-emerald-800 transition hover:border-emerald-300/50">
-                <input
-                  type="checkbox"
-                  checked={includeFreemiumValue}
-                  onChange={(event) => handleFreemiumChange(event.target.checked)}
-                  className="mt-1"
-                />
-                <span>
-                  <span className="block font-semibold text-slate-900">Incluir freemium</span>
-                  <span className="block text-xs leading-relaxed text-slate-500">
-                    Empiezas gratis y luego decides si subir de nivel.
-                  </span>
-                </span>
-              </label>
+                  <select
+                    id="ia_type"
+                    value={iaTypeValue}
+                    onChange={(event) => handleIaTypeChange(event.target.value)}
+                    className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-slate-400"
+                  >
+                    <option value="">Todos</option>
+                    {iaTypeOptions.map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+
+                <button
+                  type="button"
+                  onClick={handleClear}
+                  className="inline-flex h-11 items-center justify-center rounded-full border border-slate-300 bg-slate-50 px-4 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
+                >
+                  Limpiar
+                </button>
+              </div>
             </div>
           </div>
 
-          <div className="md:col-span-3">
-            <label
-              htmlFor="ia_type"
-              className="mb-2 block text-xs uppercase tracking-[0.12em] text-slate-600"
-            >
-              Tipo de IA
-            </label>
-            <select
-              id="ia_type"
-              value={iaTypeValue}
-              onChange={(event) => handleIaTypeChange(event.target.value)}
-              className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-slate-400"
-            >
-              <option value="">Todos</option>
-              {iaTypeOptions.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
-            <p className="mt-2 text-xs leading-relaxed text-slate-500">
-              Usa este filtro para separar asistentes, escritura, codigo u otros tipos.
-            </p>
-          </div>
+          <div className="mt-4 flex flex-col gap-3 border-t border-slate-200 pt-4 md:flex-row md:items-center md:justify-between">
+            {activeFilterLabels.length > 0 ? (
+              <div className="flex flex-wrap gap-2">
+                {activeFilterLabels.map((label) => (
+                  <span
+                    key={label}
+                    className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs text-slate-700"
+                  >
+                    {label}
+                  </span>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-slate-500">
+                Empieza por acceso y deja el resto como ajuste fino.
+              </p>
+            )}
 
-          <div className="md:col-span-12 flex flex-col gap-3 border-t border-slate-200 pt-4 md:flex-row md:items-center md:justify-between">
             <p className="text-sm text-slate-600">
               Mostrando <span className="font-semibold text-slate-900">{tools.length}</span>
               {hasMore ? "+" : ""} herramientas para estudiantes.
             </p>
-            <button
-              type="button"
-              onClick={handleClear}
-              className="inline-flex w-fit items-center rounded-full border border-slate-300 bg-slate-50 px-4 py-2 text-sm text-slate-700 transition hover:bg-slate-100"
-            >
-              Limpiar
-            </button>
           </div>
         </div>
       </section>
@@ -533,7 +641,7 @@ export default function StudentsToolbar({
         </div>
       ) : tools.length > 0 ? (
         <div
-          className={`mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3 transition-opacity duration-150 ${isLoading ? "opacity-50 pointer-events-none" : "opacity-100"}`}
+          className={`mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3 transition-opacity duration-150 ${isLoading ? "pointer-events-none opacity-50" : "opacity-100"}`}
         >
           {tools.map((tool) => (
             <StudentToolCard key={tool.id} tool={tool} />
@@ -553,11 +661,10 @@ export default function StudentsToolbar({
             disabled={isLoadingMore}
             className="inline-flex items-center rounded-full border border-slate-300 bg-slate-50 px-5 py-2.5 text-sm font-medium text-slate-800 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {isLoadingMore ? "Cargando..." : "Cargar 50 más"}
+            {isLoadingMore ? "Cargando..." : "Cargar 50 mas"}
           </button>
         </div>
       ) : null}
     </>
   );
 }
-
