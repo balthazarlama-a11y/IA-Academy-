@@ -26,6 +26,7 @@ export default function SearchPageContent({ data }: { data: SearchPageData }) {
         </h1>
         <p className="mt-3 max-w-3xl text-sm leading-relaxed text-slate-600 md:text-base">
           Cruza nombre, carrera, plan y tipo de IA para encontrar opciones útiles más rápido.
+          Los resultados se ordenan por coincidencia real y señales editoriales, no solo por destaque.
         </p>
 
         <form action="/buscar" className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-[minmax(0,1.4fr)_repeat(3,minmax(0,0.8fr))]">
@@ -116,7 +117,7 @@ export default function SearchPageContent({ data }: { data: SearchPageData }) {
           </div>
           <p className="text-sm text-slate-500">
             {hasFilters
-              ? "Resultados filtrados por tu búsqueda actual."
+              ? "Resultados filtrados y ordenados por relevancia para tu búsqueda actual."
               : "Explora todo el catálogo con una capa de discovery más directa."}
           </p>
         </div>
