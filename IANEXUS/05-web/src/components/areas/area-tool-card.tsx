@@ -1,4 +1,5 @@
 import { memo } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { ExternalLink, BookOpen, BadgeCheck, GraduationCap } from "lucide-react";
 import type { Tool, ToolPlan, ToolLevel } from "@/lib/repositories/tools-repo";
@@ -21,8 +22,7 @@ const LEVEL_LABEL: Record<ToolLevel, string> = {
 function AreaToolCard({ tool }: { tool: Tool }) {
   const plan = PLAN_CONFIG[tool.plan];
   const accentColor = tool.category.color_accent ?? "#475569";
-  const categorySummary =
-    tool.category.description ?? "Curada para esta carrera y pensada para uso practico.";
+  const categorySummary = tool.category.description ?? "Curada para esta carrera y pensada para uso practico.";
 
   return (
     <article
@@ -39,34 +39,40 @@ function AreaToolCard({ tool }: { tool: Tool }) {
 
       <div className="relative z-10 flex h-full flex-col gap-3">
         <div className="flex items-start justify-between gap-3">
-          {tool.cover_image_url ? (
-            <div className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-              <img
-                src={tool.cover_image_url}
-                alt={`${tool.name} logo`}
-                className="h-full w-full object-contain p-0.5"
-                loading="lazy"
-              />
-            </div>
-          ) : (
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-slate-50">
-              <span className="text-lg font-semibold text-slate-300">
-                {tool.name.charAt(0).toUpperCase()}
-              </span>
-            </div>
-          )}
+          <div className="flex items-center gap-3">
+            {tool.cover_image_url ? (
+              <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+                <Image
+                  src={tool.cover_image_url}
+                  alt={`${tool.name} logo`}
+                  width={48}
+                  height={48}
+                  className="h-full w-full object-contain p-0.5"
+                />
+              </div>
+            ) : (
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-slate-200 bg-slate-50">
+                <span className="text-lg font-semibold text-slate-300">
+                  {tool.name.charAt(0).toUpperCase()}
+                </span>
+              </div>
+            )}
+            <span
+              className="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold"
+              style={{ color: plan.color, background: plan.bg }}
+            >
+              {plan.label}
+            </span>
+          </div>
         </div>
 
-        <div className="flex items-start justify-between gap-3">
+        <div className="space-y-1">
           <h3 className="text-base font-semibold leading-snug text-slate-950 transition-colors duration-150 group-hover:text-slate-900">
             {tool.name}
           </h3>
-          <span
-            className="shrink-0 rounded-full px-3 py-1 text-xs font-semibold"
-            style={{ color: plan.color, background: plan.bg }}
-          >
-            {plan.label}
-          </span>
+          {tool.description ? (
+            <p className="text-sm leading-relaxed text-slate-600 line-clamp-2">{tool.description}</p>
+          ) : null}
         </div>
 
         <div className="flex flex-wrap gap-2">
@@ -88,41 +94,29 @@ function AreaToolCard({ tool }: { tool: Tool }) {
               {tool.ia_type}
             </span>
           ) : null}
-          {tool.featured ? (
-            <span className="inline-flex items-center gap-1 rounded-full border border-amber-300/35 bg-amber-400/10 px-3 py-1 text-xs font-medium text-amber-700">
-              <svg className="h-3 w-3" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-              </svg>
-              Destacada
-            </span>
-          ) : null}
         </div>
-
-        {tool.description ? (
-          <p className="text-sm leading-relaxed text-slate-600 line-clamp-2">{tool.description}</p>
-        ) : null}
 
         <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
           <p className="text-[11px] uppercase tracking-[0.14em] text-slate-500">Carrera</p>
           <p className="mt-1 text-sm font-medium text-slate-950 line-clamp-2">{categorySummary}</p>
         </div>
 
-        <div className="flex items-center gap-3 border-t border-slate-200 pt-4">
+        <div className="flex items-center gap-3 border-t border-slate-200 pt-4 text-xs">
           {tool.verified ? (
-            <span className="inline-flex items-center gap-1.5 text-xs text-emerald-600">
+            <span className="inline-flex items-center gap-1.5 text-emerald-600">
               <BadgeCheck className="h-4 w-4" />
               Verificada
             </span>
           ) : null}
           {tool.edu_verified ? (
-            <span className="inline-flex items-center gap-1.5 text-xs text-cyan-600">
+            <span className="inline-flex items-center gap-1.5 text-cyan-600">
               <GraduationCap className="h-4 w-4" />
-              Verificación académica
+              Verificacion academica
             </span>
           ) : null}
           {tool.guide_slug ? (
-            <span className="ml-auto inline-flex items-center gap-1 rounded-full border border-violet-300/25 bg-violet-400/8 px-2.5 py-1 text-xs text-violet-600">
-              Tiene guía
+            <span className="ml-auto inline-flex items-center gap-1 rounded-full border border-violet-300/25 bg-violet-400/8 px-2.5 py-1 text-violet-600">
+              Guia disponible
             </span>
           ) : null}
         </div>

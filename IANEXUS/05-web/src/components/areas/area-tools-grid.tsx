@@ -1,4 +1,4 @@
-﻿import { memo } from "react";
+import { memo } from "react";
 import type { Tool } from "@/lib/types/tool";
 import AreaToolCard from "./area-tool-card";
 
@@ -10,19 +10,14 @@ type AreaToolsGridProps = {
   onLoadMore: () => void;
 };
 
-function AreaToolsGrid({
-  tools,
-  isLoading,
-  hasMore,
-  isLoadingMore,
-  onLoadMore,
-}: AreaToolsGridProps) {
+function AreaToolsGrid({ tools, isLoading, hasMore, isLoadingMore, onLoadMore }: AreaToolsGridProps) {
   return (
     <>
       <div
         className={`grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3 transition-opacity duration-150 ${
           isLoading ? "pointer-events-none opacity-50" : "opacity-100"
         }`}
+        aria-busy={isLoading || isLoadingMore}
       >
         {tools.map((tool) => (
           <AreaToolCard key={tool.id} tool={tool} />
@@ -30,13 +25,13 @@ function AreaToolsGrid({
       </div>
 
       {hasMore ? (
-        <div className="flex justify-center pt-2">
+        <div className="flex justify-center pt-4">
           <button
             type="button"
             onClick={onLoadMore}
             disabled={isLoadingMore}
-          className="inline-flex items-center rounded-full border border-slate-300 bg-slate-50 px-5 py-2.5 text-sm font-medium text-slate-800 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60"
-        >
+            className="inline-flex items-center rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-medium text-slate-800 shadow-[0_8px_20px_rgba(15,23,42,0.04)] transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
+          >
             {isLoadingMore ? "Cargando..." : "Mostrar 50 mas"}
           </button>
         </div>
@@ -46,4 +41,3 @@ function AreaToolsGrid({
 }
 
 export default memo(AreaToolsGrid);
-
