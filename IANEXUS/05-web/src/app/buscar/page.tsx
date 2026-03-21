@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Buscar herramientas | IA NEXUS",
   description:
-    "Busca herramientas de IA por nombre, carrera, plan y tipo de uso para descubrir opciones sin pasar primero por una sola ruta editorial.",
+    "Encuentra herramientas de IA por necesidad, carrera o plan con una búsqueda directa y editorial.",
 };
 
 type PageProps = {
