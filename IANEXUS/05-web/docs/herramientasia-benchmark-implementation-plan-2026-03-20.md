@@ -127,6 +127,60 @@ Agregar las capas mínimas de descubrimiento que hoy faltan.
 - una tool detail se siente más útil antes de salir al sitio externo
 - el header deja de depender solo de navegación estática
 
+Nota:
+Parte de esta base ya existe en el producto. La Fase 1 deja el suelo levantado; la Fase 1.5 cierra la capa de discovery para que las fases siguientes no hereden una busqueda inmadura.
+
+## Fase 1.5: Search Cleanup / Relevance Pass
+Objetivo:
+Cerrar la capa de busqueda y filtros antes de seguir abriendo fases mas profundas.
+
+IA NEXUS gana por criterio editorial, pero ese criterio solo sirve si la busqueda responde a la intencion del usuario de forma limpia y confiable. Esta fase no agrega una capa nueva de producto; termina de madurar una capa que ya existe.
+
+#### Entregables
+1. search UX mas clara y consistente
+2. filtros visibles, utiles y faciles de resetear
+3. relevancia mejor alineada con intencion
+4. estados vacios y sin resultados mas utiles
+5. cards de resultado mas legibles y menos ruidosas
+
+#### Alcance funcional
+##### 1. Search UX cleanup
+- simplificar el recorrido entre buscar, filtrar y abrir resultados
+- hacer visibles los filtros activos y su estado de limpieza
+- reducir friccion en mobile
+- aclarar query state, placeholders y mensajes de ayuda
+- evitar una interfaz que se sienta como lista generica sin contexto
+
+##### 2. Search relevance cleanup
+- ajustar el orden de resultados para que responda mejor a la intencion
+- priorizar coincidencia en nombre, luego descripcion, luego guia, carrera y tipo segun señales existentes
+- resolver empates con señales editoriales ya disponibles
+- evitar grupos de resultados poco utiles al inicio de la lista
+- mantener la formula sencilla y explicable, no un ranking opaco
+
+##### 3. Filtros y claridad
+- revisar filtros existentes para eliminar ruido
+- mantener solo filtros que ayuden a decidir
+- reforzar etiquetas, chips y copy para que el usuario entienda por que algo aparecio
+- preparar base para filtros mas serios luego sin introducir taxonomia nueva innecesaria
+
+##### 4. Empty states / no-result states
+- cuando la busqueda no devuelve nada, mostrar alternativas utiles
+- sugerir ajustes de query o filtros
+- evitar pantallas vacias que parezcan fallo del sistema
+
+#### Dependencias
+- busqueda publica ya existente
+- filtros y taxonomia actuales de tools
+- señales editoriales ya disponibles en tools, guide links y featured
+- criterios de contenido editorial ya existentes
+
+#### Criterio de exito
+- un usuario entiende por que obtuvo esos resultados
+- la busqueda se siente confiable y no accidental
+- los filtros ayudan a reducir el set sin confundir
+- la capa de discovery queda lista para fases posteriores sin deuda conceptual
+
 ## Fase 2: Tool Detail As Product Surface
 Objetivo:
 Convertir la ficha de herramienta en una unidad de decisión real, no solo una ficha editorial bonita.
@@ -342,30 +396,36 @@ Unificar búsqueda, tendencias, guardados, carreras y casos de uso en una experi
 ## Priorización Recomendada
 
 ### Prioridad inmediata
-1. búsqueda global
-2. screenshot en tool detail
-3. mejor linking tool ↔ guía
-4. página de tendencias
+1. Fase 1.5: search UX cleanup
+2. Fase 1.5: search relevance cleanup
+3. filtros y estados vacios de discovery
+4. detalle de herramienta solo en lo que refuerza la decision
 
 ### Prioridad siguiente
 1. guardados
 2. tool detail enriquecido
-3. alternativas relacionadas
+3. tendencias con ranking mas serio
 
 ### Prioridad posterior
 1. casos de uso
-2. ranking más serio
-3. experiencia “para ti”
+2. experiencia “para ti”
 
 ## Orden De Trabajo Recomendado Para Agentes
 
 ### Workstream 1
-`search-foundations`
-- header search entry
-- search page
-- query and results experience
+`search-ux-cleanup`
+- query state
+- filter chips
+- empty states
+- result cards
 
 ### Workstream 2
+`search-relevance-cleanup`
+- ranking de resultados
+- weighting de campos
+- intent matching
+
+### Workstream 3
 `tool-detail-enrichment`
 - screenshot
 - overview
@@ -373,19 +433,19 @@ Unificar búsqueda, tendencias, guardados, carreras y casos de uso en una experi
 - related alternatives
 - task links
 
-### Workstream 3
+### Workstream 4
 `trending-surface`
 - trends page
 - ranking cards
 - home integration
 
-### Workstream 4
+### Workstream 5
 `saved-tools-loop`
 - save action
 - saved page
 - auth redirect flow
 
-### Workstream 5
+### Workstream 6
 `use-cases-taxonomy`
 - data model
 - initial curated pages
@@ -415,7 +475,7 @@ Este benchmark estará bien implementado cuando:
 
 ## Próximo Paso
 Usar este documento como fuente única para lanzar agentes por fases, empezando por:
-1. búsqueda global
-2. enriquecimiento de tool detail
-3. tendencias
+1. search UX cleanup
+2. search relevance cleanup
+3. enriquecimiento de tool detail
 
