@@ -1,8 +1,7 @@
 export type ToolPlan = "free" | "freemium" | "paid" | "edu_free";
 export type ToolLevel = "beginner" | "intermediate" | "advanced" | "all";
-export type ToolTaxonomySource = "career_paths" | "synthetic";
 
-export type ToolCareer = {
+export type ToolArea = {
   id: string;
   name: string;
   slug: string;
@@ -10,19 +9,33 @@ export type ToolCareer = {
   color_accent: string | null;
   icon_name: string | null;
   sort_order: number;
-  source?: ToolTaxonomySource;
 };
 
-// Deprecated compatibility alias kept only for leaf UI that still reads `tool.category`.
-export type ToolCategory = ToolCareer;
+export type ToolUseCase = {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  color_accent: string | null;
+  icon_name: string | null;
+  sort_order: number;
+};
+
+export type ToolFaqItem = {
+  question: string;
+  answer: string;
+};
 
 export type Tool = {
   id: string;
   name: string;
   slug: string;
   description: string | null;
+  tagline: string | null;
   url: string;
   cover_image_url: string | null;
+  screenshot_url: string | null;
+  company_name: string | null;
   plan: ToolPlan;
   level: ToolLevel;
   ia_type: string | null;
@@ -30,18 +43,22 @@ export type Tool = {
   edu_verified: boolean;
   featured: boolean;
   sort_order: number;
-  careers?: ToolCareer[];
-  primaryCareer?: ToolCareer;
-  category: ToolCategory;
+  platform_tags: string[];
+  language_codes: string[];
+  spanish_available: boolean;
+  feature_bullets: string[];
+  faq_items: ToolFaqItem[];
+  areas: ToolArea[];
+  primaryArea: ToolArea | null;
+  useCases: ToolUseCase[];
   guide_slug: string | null;
   created_at: string;
 };
 
 export type ToolFilters = {
   search?: string;
-  // Deprecated transitional alias. Prefer `careerSlugs`.
-  categorySlug?: string;
-  careerSlugs?: string[];
+  areaSlugs?: string[];
+  useCaseSlugs?: string[];
   plans?: ToolPlan[];
   levels?: ToolLevel[];
   onlyFree?: boolean;

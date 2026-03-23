@@ -24,7 +24,8 @@ export default async function BuscarPage({ searchParams }: PageProps) {
   const params = await searchParams;
   const data = await getSearchPageData({
     q: readString(params.q),
-    career: readString(params.career),
+    area: readString(params.area),
+    useCase: readString(params.useCase),
     plan: readString(params.plan) as "" | "free" | "freemium" | "paid" | "edu_free",
     iaType: readString(params.iaType),
   });

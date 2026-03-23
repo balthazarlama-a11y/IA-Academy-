@@ -20,7 +20,9 @@ const COVER_BACKGROUND = { r: 248, g: 250, b: 252, alpha: 1 };
 const TOOL_LOGO_SIZE = 720;
 const TOOL_LOGO_BACKGROUND = { r: 255, g: 255, b: 255, alpha: 0 };
 
-async function normalizeUploadImage(file: File, folder: "posts" | "tools") {
+type UploadPreset = "cover" | "logo";
+
+async function normalizeUploadImage(file: File, preset: UploadPreset) {
   const arrayBuffer = await file.arrayBuffer();
   const inputBuffer = Buffer.from(arrayBuffer);
   const processor = sharp(inputBuffer, {
@@ -29,7 +31,7 @@ async function normalizeUploadImage(file: File, folder: "posts" | "tools") {
   }).rotate();
 
   const normalizedBuffer =
-    folder === "tools"
+    preset === "logo"
       ? await processor
           .resize(TOOL_LOGO_SIZE, TOOL_LOGO_SIZE, {
             fit: "contain",
@@ -55,14 +57,7 @@ async function normalizeUploadImage(file: File, folder: "posts" | "tools") {
   };
 }
 
-/**
- * Uploads a File (from FormData) to the "media" bucket.
- * Returns the public URL on success, or an error string on failure.
- */
-export async function uploadMediaFile(
-  file: File,
-  folder: "posts" | "tools" = "posts"
-): Promise<UploadResult> {
+export async function uploadMediaFile(file: File, folder: "posts" | "tools" = "posts", preset?: UploadPreset): Promise<UploadResult> {
   try {
     if (!file || file.size === 0) {
       return { url: null, error: "El archivo está vacío" };
@@ -82,7 +77,8 @@ export async function uploadMediaFile(
     }
 
     const uniqueId = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-    const { buffer, contentType, extension } = await normalizeUploadImage(file, folder);
+    const effectivePreset = preset ?? (folder === "tools" ? "logo" : "cover");
+    const { buffer, contentType, extension } = await normalizeUploadImage(file, effectivePreset);
     const storagePath = `${folder}/${uniqueId}.${extension}`;
 
     const supabase = getSupabaseServiceRoleClient();

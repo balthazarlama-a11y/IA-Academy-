@@ -1,12 +1,13 @@
-import { getCareerPaths } from "@/lib/repositories/careers-repo";
+import { getAreas, getUseCases } from "@/lib/repositories/tool-taxonomy-repo";
 import { compareToolsByEditorialPriority, normalizeSearchText, scoreToolRelevance } from "@/lib/repositories/search-ranking";
 import { getTools } from "@/lib/repositories/tools-repo";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
-import type { Tool, ToolCareer, ToolPlan } from "@/lib/types/tool";
+import type { Tool, ToolArea, ToolPlan, ToolUseCase } from "@/lib/types/tool";
 
 type SearchFilters = {
   q?: string;
-  career?: string;
+  area?: string;
+  useCase?: string;
   plan?: ToolPlan | "";
   iaType?: string;
 };
@@ -15,9 +16,10 @@ type SearchOptions = {
   limit?: number;
 };
 
-type SearchPageData = {
+export type SearchPageData = {
   tools: Tool[];
-  careers: ToolCareer[];
+  areas: ToolArea[];
+  useCases: ToolUseCase[];
   iaTypes: string[];
   filters: Required<SearchFilters>;
   resultCount: number;
@@ -30,7 +32,8 @@ function cleanSearch(value: string | undefined) {
 function normalizeFilters(filters: SearchFilters): Required<SearchFilters> {
   return {
     q: cleanSearch(filters.q),
-    career: (filters.career ?? "").trim(),
+    area: (filters.area ?? "").trim(),
+    useCase: (filters.useCase ?? "").trim(),
     plan: filters.plan ?? "",
     iaType: (filters.iaType ?? "").trim(),
   };
@@ -42,9 +45,7 @@ function matchesIaType(tool: Tool, iaType: string) {
 }
 
 function applySearchOrdering(tools: Tool[], query: string) {
-  if (!query) {
-    return [...tools].sort(compareToolsByEditorialPriority);
-  }
+  if (!query) return [...tools].sort(compareToolsByEditorialPriority);
 
   return [...tools]
     .map((tool) => ({ tool, score: scoreToolRelevance(tool, query) }))
@@ -73,21 +74,15 @@ async function getAvailableIaTypes() {
   return [...new Set(((data as Array<{ ia_type: string | null }> | null) ?? []).map((row) => row.ia_type).filter(Boolean) as string[])];
 }
 
-export async function getSearchPageData(
-  inputFilters: SearchFilters = {},
-  options: SearchOptions = {},
-): Promise<SearchPageData> {
+export async function getSearchPageData(inputFilters: SearchFilters = {}, options: SearchOptions = {}): Promise<SearchPageData> {
   const limit = Math.max(1, Math.min(options.limit ?? 48, 60));
   const filters = normalizeFilters(inputFilters);
-  const careers = await getCareerPaths();
+  const [areas, useCases] = await Promise.all([getAreas(), getUseCases()]);
 
   const structuralFilters: Parameters<typeof getTools>[0] = {};
-  if (filters.career) {
-    structuralFilters.careerSlugs = [filters.career];
-  }
-  if (filters.plan) {
-    structuralFilters.plans = [filters.plan];
-  }
+  if (filters.area) structuralFilters.areaSlugs = [filters.area];
+  if (filters.useCase) structuralFilters.useCaseSlugs = [filters.useCase];
+  if (filters.plan) structuralFilters.plans = [filters.plan];
 
   let tools = await getTools(structuralFilters);
   tools = tools.filter((tool) => matchesIaType(tool, filters.iaType));
@@ -95,11 +90,10 @@ export async function getSearchPageData(
 
   return {
     tools: tools.slice(0, limit),
-    careers,
+    areas,
+    useCases,
     iaTypes: await getAvailableIaTypes(),
     filters,
     resultCount: tools.length,
   };
 }
-
-export type { SearchFilters, SearchPageData };

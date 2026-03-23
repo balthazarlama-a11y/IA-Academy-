@@ -34,7 +34,7 @@ export default function DayToolsFeed({ tools, filters }: DayToolsFeedProps) {
         tool.name.toLowerCase().includes(searchLower) ||
         (tool.description?.toLowerCase().includes(searchLower) ?? false) ||
         (tool.ia_type?.toLowerCase().includes(searchLower) ?? false) ||
-        tool.category.name.toLowerCase().includes(searchLower);
+        (tool.primaryArea?.name.toLowerCase().includes(searchLower) ?? false);
       if (!matchesSearch) return false;
     }
 
@@ -42,7 +42,7 @@ export default function DayToolsFeed({ tools, filters }: DayToolsFeedProps) {
       return false;
     }
 
-    if (filters.category && tool.category.name !== filters.category) {
+    if (filters.category && (tool.primaryArea?.name ?? "Área general") !== filters.category) {
       return false;
     }
 
@@ -80,7 +80,7 @@ export default function DayToolsFeed({ tools, filters }: DayToolsFeedProps) {
       <div className="flex flex-col gap-4">
         {filteredTools.map((tool) => {
           const plan = PLAN_CONFIG[tool.plan];
-          const accentColor = tool.category.color_accent ?? "#6366f1";
+          const accentColor = tool.primaryArea?.color_accent ?? "#6366f1";
 
           return (
             <article
@@ -133,7 +133,7 @@ export default function DayToolsFeed({ tools, filters }: DayToolsFeedProps) {
                             border: `1px solid ${accentColor}24`,
                           }}
                         >
-                          {tool.category.name}
+                          {tool.primaryArea?.name ?? "Área general"}
                         </span>
                         <span className="inline-flex items-center rounded-full border border-slate-200 bg-white px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-slate-500">
                           {LEVEL_LABEL[tool.level]}

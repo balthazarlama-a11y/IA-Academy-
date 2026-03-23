@@ -33,7 +33,7 @@ const HEADER_CACHE_TTL_MS = 120_000;
 const NAV_LINKS = [
   { href: "/", label: "Inicio" },
   { href: "/estudiantes", label: "Estudiantes" },
-  { href: "/areas", label: "Carreras" },
+  { href: "/areas", label: "Areas" },
   { href: "/dia-a-dia", label: "Día a Día" },
   { href: "/blog", label: "Blog" },
 ] as const;
@@ -431,4 +431,5 @@ export default function Header() {
     </header>
   );
 }
+
 

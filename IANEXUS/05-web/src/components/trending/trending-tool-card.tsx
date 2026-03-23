@@ -48,7 +48,7 @@ export function TrendingToolCard({ tool, rank, compact = false }: TrendingToolCa
           <div className="mt-3 flex items-start justify-between gap-3">
             <div className="min-w-0">
               <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
-                {tool.category.name}
+                {tool.primaryArea?.name ?? "Área general"}
               </p>
               <h3 className={cn("mt-1 font-semibold leading-snug text-slate-950", compact ? "text-[0.98rem]" : "text-[1.1rem] md:text-[1.15rem]")}>
                 {tool.name}
