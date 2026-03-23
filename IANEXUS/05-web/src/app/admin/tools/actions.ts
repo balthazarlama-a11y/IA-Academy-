@@ -124,6 +124,7 @@ export async function createToolAction(formData: FormData) {
     const description = normalizeNullableText(formData.get("description"));
     const tagline = normalizeNullableText(formData.get("tagline"));
     const companyName = normalizeNullableText(formData.get("company_name"));
+    const demoVideoUrl = normalizeNullableText(formData.get("demo_video_url"));
     const rawUrl = (formData.get("url")?.toString() ?? "").trim();
     const url = normalizeUrl(rawUrl);
     const plan = (formData.get("plan")?.toString() ?? "free") as ToolPlan;
@@ -167,6 +168,7 @@ export async function createToolAction(formData: FormData) {
         description,
         tagline,
         company_name: companyName,
+        demo_video_url: demoVideoUrl ? normalizeUrl(demoVideoUrl) : null,
         url,
         cover_image_url: coverImageUrl,
         screenshot_url: screenshotUrl,
@@ -252,6 +254,7 @@ export async function updateToolAction(formData: FormData) {
     const description = normalizeNullableText(formData.get("description"));
     const tagline = normalizeNullableText(formData.get("tagline"));
     const companyName = normalizeNullableText(formData.get("company_name"));
+    const demoVideoUrl = normalizeNullableText(formData.get("demo_video_url"));
     const rawUrl = (formData.get("url")?.toString() ?? "").trim();
     const url = normalizeUrl(rawUrl);
     const plan = (formData.get("plan")?.toString() ?? "free") as ToolPlan;
@@ -305,6 +308,7 @@ export async function updateToolAction(formData: FormData) {
         description,
         tagline,
         company_name: companyName,
+        demo_video_url: demoVideoUrl ? normalizeUrl(demoVideoUrl) : null,
         url,
         cover_image_url: coverImageUrl,
         screenshot_url: screenshotUrl,

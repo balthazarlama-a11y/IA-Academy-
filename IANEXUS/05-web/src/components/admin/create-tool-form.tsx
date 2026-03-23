@@ -32,6 +32,7 @@ export function CreateToolForm({
       <input name="slug" placeholder="slug-opcional" disabled={isPending} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50" />
       <input name="company_name" placeholder="Empresa / equipo creador" disabled={isPending} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50" />
       <input name="tagline" placeholder="Tagline breve" disabled={isPending} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50" />
+      <input name="demo_video_url" placeholder="URL demo YouTube (opcional)" disabled={isPending} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50 md:col-span-2" />
       <input name="url" required placeholder="https://..." disabled={isPending} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50 md:col-span-2" />
       <textarea name="description" rows={3} placeholder="Descripción editorial breve" disabled={isPending} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50 md:col-span-2" />
       <UploadImageField fileInputName="cover_image_file" urlInputName="cover_image_url" label="Logo / imagen principal" colSpan="md:col-span-1" assetKind="logo" />

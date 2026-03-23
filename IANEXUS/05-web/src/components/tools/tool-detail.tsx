@@ -14,9 +14,37 @@ function formatLanguages(codes: string[]) {
   return codes.map((code) => code.toUpperCase()).join(" · ");
 }
 
+function getYouTubeEmbedUrl(url: string | null) {
+  if (!url) return null;
+
+  try {
+    const parsed = new URL(url);
+
+    if (parsed.hostname.includes("youtu.be")) {
+      const videoId = parsed.pathname.replaceAll("/", "").trim();
+      return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
+    }
+
+    if (parsed.hostname.includes("youtube.com")) {
+      const videoId = parsed.searchParams.get("v");
+      if (videoId) return `https://www.youtube.com/embed/${videoId}`;
+
+      const parts = parsed.pathname.split("/").filter(Boolean);
+      if (parts[0] === "embed" && parts[1]) {
+        return `https://www.youtube.com/embed/${parts[1]}`;
+      }
+    }
+  } catch {
+    return null;
+  }
+
+  return null;
+}
+
 export default function ToolDetail({ tool, relatedPosts }: { tool: Tool; relatedPosts: RelatedPostSummary[] }) {
   const primaryContext = tool.primaryArea;
   const accent = primaryContext?.color_accent ?? "#6366f1";
+  const demoEmbedUrl = getYouTubeEmbedUrl(tool.demo_video_url);
 
   return (
     <article className="mx-auto w-full max-w-5xl rounded-2xl border border-slate-200 bg-white p-6 shadow-[0_18px_50px_rgba(15,23,42,0.05)] md:p-8">
@@ -45,6 +73,27 @@ export default function ToolDetail({ tool, relatedPosts }: { tool: Tool; related
             <div className="mt-6 overflow-hidden rounded-[1.75rem] border border-slate-200 bg-slate-50 shadow-[0_14px_36px_rgba(15,23,42,0.06)]">
               <Image src={tool.screenshot_url} alt={`Vista previa de ${tool.name}`} width={1440} height={810} className="h-auto w-full object-cover" />
             </div>
+          ) : null}
+
+          {demoEmbedUrl ? (
+            <section className="mt-6 overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-[0_14px_36px_rgba(15,23,42,0.06)]">
+              <div className="border-b border-slate-200 px-5 py-4">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                  Demo en video
+                </p>
+              </div>
+              <div className="aspect-video w-full">
+                <iframe
+                  src={demoEmbedUrl}
+                  title={`Demo de ${tool.name}`}
+                  className="h-full w-full"
+                  loading="lazy"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  referrerPolicy="strict-origin-when-cross-origin"
+                  allowFullScreen
+                />
+              </div>
+            </section>
           ) : null}
 
           <div className="mt-6 flex flex-wrap gap-3">

@@ -17,6 +17,7 @@ type Tool = {
   url: string;
   cover_image_url: string | null;
   screenshot_url: string | null;
+  demo_video_url: string | null;
   platform_tags: string[] | null;
   language_codes: string[] | null;
   spanish_available: boolean;
@@ -96,6 +97,7 @@ export function ToolEditorItem({ tool, areas, useCases, updateAction, deleteActi
           <input name="slug" required defaultValue={tool.slug} disabled={isPending} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50" />
           <input name="company_name" defaultValue={tool.company_name ?? ""} disabled={isPending} placeholder="Empresa / equipo creador" className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50" />
           <input name="tagline" defaultValue={tool.tagline ?? ""} disabled={isPending} placeholder="Tagline breve" className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50" />
+          <input name="demo_video_url" defaultValue={tool.demo_video_url ?? ""} disabled={isPending} placeholder="URL demo YouTube (opcional)" className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50 md:col-span-2" />
           <input name="url" required defaultValue={tool.url} disabled={isPending} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50 md:col-span-2" />
           <textarea name="description" rows={3} defaultValue={tool.description ?? ""} disabled={isPending} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50 md:col-span-2" />
           <UploadImageField fileInputName="cover_image_file" urlInputName="cover_image_url" existingUrl={tool.cover_image_url} label="Logo / imagen principal" colSpan="md:col-span-1" assetKind="logo" />

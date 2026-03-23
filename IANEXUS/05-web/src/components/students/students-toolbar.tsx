@@ -62,6 +62,7 @@ function mapTool(row: RawToolRow): Tool {
     url: row.url,
     cover_image_url: row.cover_image_url,
     screenshot_url: null,
+    demo_video_url: null,
     company_name: null,
     plan: row.plan,
     level: "all",

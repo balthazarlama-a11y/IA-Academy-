@@ -35,6 +35,7 @@ export type Tool = {
   url: string;
   cover_image_url: string | null;
   screenshot_url: string | null;
+  demo_video_url: string | null;
   company_name: string | null;
   plan: ToolPlan;
   level: ToolLevel;

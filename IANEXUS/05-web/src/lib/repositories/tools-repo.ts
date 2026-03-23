@@ -42,6 +42,7 @@ type RawToolRow = {
   url: string;
   cover_image_url: string | null;
   screenshot_url: string | null;
+  demo_video_url: string | null;
   company_name: string | null;
   plan: ToolPlan;
   level: ToolLevel;
@@ -91,6 +92,7 @@ const TOOL_SELECT = [
   "url",
   "cover_image_url",
   "screenshot_url",
+  "demo_video_url",
   "company_name",
   "plan",
   "level",
@@ -202,6 +204,7 @@ function buildTool(row: RawToolRow): Tool {
     url: row.url,
     cover_image_url: row.cover_image_url,
     screenshot_url: row.screenshot_url,
+    demo_video_url: row.demo_video_url,
     company_name: row.company_name,
     plan: row.plan,
     level: row.level,
