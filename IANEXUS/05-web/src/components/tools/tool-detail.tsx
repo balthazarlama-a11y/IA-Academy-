@@ -1,4 +1,5 @@
-﻿import Link from "next/link";
+import Image from "next/image";
+import Link from "next/link";
 import { ArrowUpRight, BookOpenText } from "lucide-react";
 import type { RelatedPostSummary, Tool } from "@/lib/types/tool";
 import ToolMetaBadges from "@/components/tools/tool-meta-badges";
@@ -26,9 +27,11 @@ export default function ToolDetail({
     <article className="mx-auto w-full max-w-4xl rounded-2xl border border-slate-200 bg-white p-6 shadow-[0_18px_50px_rgba(15,23,42,0.05)] md:p-8">
       {tool.cover_image_url ? (
         <div className="mb-5 flex h-20 w-20 items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-          <img
+          <Image
             src={tool.cover_image_url}
             alt={`${tool.name} logo`}
+            width={80}
+            height={80}
             className="h-full w-full object-contain p-2"
           />
         </div>
@@ -126,4 +129,5 @@ export default function ToolDetail({
     </article>
   );
 }
+
 

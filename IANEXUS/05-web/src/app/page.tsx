@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, BookOpen, GraduationCap, Layers3, Sparkles } from "lucide-react";
-import EditorialTopbar from "@/components/home/editorial-topbar";
+import Header from "@/components/layout/header";
 import EditorialCoverRotator, {
   type EditorialCoverSlide,
 } from "@/components/home/editorial-cover-rotator";
@@ -155,7 +155,7 @@ export default async function Home() {
       <div className="pointer-events-none absolute left-[30%] bottom-[12rem] h-56 w-56 rounded-full bg-[radial-gradient(circle,rgba(107,194,162,0.13)_0%,rgba(107,194,162,0)_74%)] blur-2xl" />
 
       <div className="relative z-10">
-        <EditorialTopbar />
+        <Header />
 
         <div className="editorial-frame px-5 pb-16 pt-8 md:px-6 lg:px-8 lg:pt-10">
           <section className="grid gap-10 lg:grid-cols-[1.45fr_2.75fr_1.35fr] lg:gap-8">
@@ -336,3 +336,4 @@ export default async function Home() {
     </main>
   );
 }
+

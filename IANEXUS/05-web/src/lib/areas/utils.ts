@@ -1,77 +1,29 @@
 import type { Tool, ToolCategory, ToolLevel, ToolPlan } from "@/lib/types/tool";
+import {
+  CACHE_TTL_MS,
+  CAREER_TOOL_SELECT,
+  LEVEL_OPTIONS,
+  PAGE_SIZE,
+  PLAN_OPTIONS,
+  SEARCH_DEBOUNCE_MS,
+} from "@/lib/areas/config";
+import type {
+  CareerOption,
+  LocalFilters,
+  RawCareerPathRow,
+  RawCareerRelation,
+  RawToolRow,
+} from "@/lib/areas/types";
 
-export type CareerOption = {
-  id: string;
-  name: string;
-  slug: string;
-  description: string | null;
-  color_accent: string | null;
-  icon_name: string | null;
-  sort_order: number;
+export {
+  CACHE_TTL_MS,
+  CAREER_TOOL_SELECT,
+  LEVEL_OPTIONS,
+  PAGE_SIZE,
+  PLAN_OPTIONS,
+  SEARCH_DEBOUNCE_MS,
 };
-
-export type LocalFilters = {
-  search: string;
-  careerSlugs: string[];
-  plans: ToolPlan[];
-  levels: ToolLevel[];
-};
-
-export type RawCareerPathRow = {
-  id: string;
-  name: string;
-  slug: string;
-  description: string | null;
-  color_accent: string | null;
-  icon_name: string | null;
-  sort_order: number;
-};
-
-type RawCareerRelation = {
-  sort_order: number;
-  career_paths: RawCareerPathRow | RawCareerPathRow[] | null;
-};
-
-export type RawToolRow = {
-  id: string;
-  name: string;
-  slug: string;
-  description: string | null;
-  url: string;
-  cover_image_url: string | null;
-  plan: ToolPlan;
-  level: ToolLevel;
-  ia_type: string | null;
-  verified: boolean;
-  edu_verified: boolean;
-  featured: boolean;
-  created_at: string | null;
-  sort_order: number | null;
-  tool_careers: RawCareerRelation[] | null;
-};
-
-export const PLAN_OPTIONS: Array<{ value: ToolPlan; label: string }> = [
-  { value: "free", label: "Gratis" },
-  { value: "edu_free", label: "Beneficio estudiantil" },
-  { value: "freemium", label: "Freemium" },
-  { value: "paid", label: "Pago" },
-];
-
-export const LEVEL_OPTIONS: Array<{ value: ToolLevel; label: string }> = [
-  { value: "beginner", label: "Principiante" },
-  { value: "intermediate", label: "Intermedio" },
-  { value: "advanced", label: "Avanzado" },
-  { value: "all", label: "Universal" },
-];
-
-export const PAGE_SIZE = 50;
-export const SEARCH_DEBOUNCE_MS = 250;
-export const CACHE_TTL_MS = 90_000;
-
-export const CAREER_TOOL_SELECT = [
-  "id, name, slug, description, url, cover_image_url, plan, level, ia_type, verified, edu_verified, featured, sort_order, created_at",
-  "tool_careers(sort_order, career_paths(id, name, slug, description, color_accent, icon_name, sort_order))",
-].join(", ");
+export type { CareerOption, LocalFilters, RawCareerPathRow, RawCareerRelation, RawToolRow };
 
 export function mapCareerOption(row: RawCareerPathRow): CareerOption {
   return {
@@ -143,10 +95,6 @@ export function hasActiveFilters(filters: LocalFilters): boolean {
     filters.plans.length > 0 ||
     filters.levels.length > 0
   );
-}
-
-export function buildCareerIdMap(careerOptions: CareerOption[]) {
-  return new Map(careerOptions.map((career) => [career.slug, career.id]));
 }
 
 export function getCareerPaths(relations: RawCareerRelation[] | null | undefined): CareerOption[] {

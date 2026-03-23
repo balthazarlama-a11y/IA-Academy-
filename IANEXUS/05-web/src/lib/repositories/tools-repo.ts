@@ -376,44 +376,6 @@ export async function getToolsPage(
   }
 }
 
-export async function getAreasToolsPage(
-  filters: ToolFilters = {},
-  options: ToolsPageOptions = {},
-): Promise<ToolsPage> {
-  const limit = Math.min(TOOLS_PAGE_SIZE, Math.max(1, options.limit ?? TOOLS_PAGE_SIZE));
-  const offset = Math.max(0, options.offset ?? 0);
-  const cacheKey = `areas:${buildToolsPageCacheKey(filters, limit, offset)}`;
-
-  const cached = getCachedToolsPage(cacheKey);
-  if (cached) {
-    return cached;
-  }
-
-  const existingRequest = inFlightToolsPage.get(cacheKey);
-  if (existingRequest) {
-    return existingRequest;
-  }
-
-  const request = (async () => {
-    const pageResult = await runToolsQuery(TOOL_BASE_SELECT, filters, { limit, offset, paginate: true });
-
-    toolsPageCache.set(cacheKey, {
-      expiresAt: Date.now() + TOOLS_CACHE_TTL_MS,
-      value: pageResult,
-    });
-
-    return pageResult;
-  })();
-
-  inFlightToolsPage.set(cacheKey, request);
-
-  try {
-    return await request;
-  } finally {
-    inFlightToolsPage.delete(cacheKey);
-  }
-}
-
 export async function getToolBySlug(slug: string): Promise<Tool | null> {
   const supabase = getSupabaseServerClient();
 
@@ -471,6 +433,3 @@ export async function getRelatedPostsByTool(
     }));
 }
 
-export async function fetchPublishedTools(): Promise<Tool[]> {
-  return getTools();
-}

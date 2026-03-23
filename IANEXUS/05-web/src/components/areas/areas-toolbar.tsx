@@ -30,7 +30,7 @@ import {
   type RawToolRow,
   getCareerPaths,
   mapTool,
-} from "@/components/areas/areas-data";
+} from "@/lib/areas/utils";
 
 type AreasToolbarProps = {
   initialTools: Tool[];
@@ -576,6 +576,7 @@ export default function AreasToolbar({
     </section>
   );
 }
+
 
 
 

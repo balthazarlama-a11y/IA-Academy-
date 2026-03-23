@@ -18,7 +18,7 @@ import {
   type LocalFilters,
   type RawCareerPathRow,
   type RawToolRow,
-} from "@/components/areas/areas-data";
+} from "@/lib/areas/utils";
 import { CommunityCtaBanner } from "@/components/marketing/community-cta-banner";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import type { Tool } from "@/lib/types/tool";
@@ -182,3 +182,4 @@ export default async function AreasPage({ searchParams }: PageProps) {
     </main>
   );
 }
+
