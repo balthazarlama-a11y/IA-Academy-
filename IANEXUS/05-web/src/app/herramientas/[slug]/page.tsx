@@ -5,7 +5,6 @@ import { cache } from "react";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import ToolDetail from "@/components/tools/tool-detail";
-import RelatedPosts from "@/components/tools/related-posts";
 import { getRelatedPostsByToolSlug } from "@/lib/repositories/post-tools-repo";
 import { getToolBySlug } from "@/lib/repositories/tools-repo";
 import { getCurrentUser } from "@/lib/auth/session";
@@ -76,10 +75,7 @@ export default async function ToolDetailPage({ params }: { params: Promise<{ slu
           </div>
         </div>
 
-        <div className="[&>article>section:last-child]:hidden">
-          <ToolDetail tool={tool} relatedPosts={relatedPosts} />
-        </div>
-        <RelatedPosts posts={relatedPosts} />
+        <ToolDetail tool={tool} relatedPosts={relatedPosts} />
       </section>
       <Footer />
     </main>

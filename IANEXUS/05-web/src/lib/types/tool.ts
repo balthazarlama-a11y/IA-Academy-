@@ -32,6 +32,7 @@ export type Tool = {
   slug: string;
   description: string | null;
   tagline: string | null;
+  editorial_summary: string | null;
   url: string;
   cover_image_url: string | null;
   screenshot_url: string | null;

@@ -123,6 +123,7 @@ export async function createToolAction(formData: FormData) {
     const slug = slugify(providedSlug || name);
     const description = normalizeNullableText(formData.get("description"));
     const tagline = normalizeNullableText(formData.get("tagline"));
+    const editorialSummary = normalizeNullableText(formData.get("editorial_summary"));
     const companyName = normalizeNullableText(formData.get("company_name"));
     const demoVideoUrl = normalizeNullableText(formData.get("demo_video_url"));
     const rawUrl = (formData.get("url")?.toString() ?? "").trim();
@@ -167,6 +168,7 @@ export async function createToolAction(formData: FormData) {
         slug,
         description,
         tagline,
+        editorial_summary: editorialSummary,
         company_name: companyName,
         demo_video_url: demoVideoUrl ? normalizeUrl(demoVideoUrl) : null,
         url,
@@ -253,6 +255,7 @@ export async function updateToolAction(formData: FormData) {
     const slug = slugify(providedSlug || name);
     const description = normalizeNullableText(formData.get("description"));
     const tagline = normalizeNullableText(formData.get("tagline"));
+    const editorialSummary = normalizeNullableText(formData.get("editorial_summary"));
     const companyName = normalizeNullableText(formData.get("company_name"));
     const demoVideoUrl = normalizeNullableText(formData.get("demo_video_url"));
     const rawUrl = (formData.get("url")?.toString() ?? "").trim();
@@ -307,6 +310,7 @@ export async function updateToolAction(formData: FormData) {
         slug,
         description,
         tagline,
+        editorial_summary: editorialSummary,
         company_name: companyName,
         demo_video_url: demoVideoUrl ? normalizeUrl(demoVideoUrl) : null,
         url,

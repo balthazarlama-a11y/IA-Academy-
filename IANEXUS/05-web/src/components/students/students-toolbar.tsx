@@ -59,6 +59,7 @@ function mapTool(row: RawToolRow): Tool {
     slug: row.slug,
     description: row.description,
     tagline: null,
+    editorial_summary: null,
     url: row.url,
     cover_image_url: row.cover_image_url,
     screenshot_url: null,

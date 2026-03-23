@@ -31,6 +31,7 @@ type AdminToolRow = {
   slug: string;
   description: string | null;
   tagline: string | null;
+  editorial_summary: string | null;
   company_name: string | null;
   url: string;
   cover_image_url: string | null;
@@ -75,7 +76,7 @@ export default async function AdminToolsPage({ searchParams }: { searchParams: P
   const [{ data: toolsData }, { data: areasData }, { data: useCasesData }] = await Promise.all([
     supabase
       .from("tools")
-      .select("id, name, slug, description, tagline, company_name, url, cover_image_url, screenshot_url, demo_video_url, platform_tags, language_codes, spanish_available, feature_bullets, faq_items, plan, level, ia_type, verified, edu_verified, featured, status, sort_order, updated_at, tool_areas(sort_order, areas(id, name, slug)), tool_use_cases(sort_order, use_cases(id, name, slug))")
+      .select("id, name, slug, description, tagline, editorial_summary, company_name, url, cover_image_url, screenshot_url, demo_video_url, platform_tags, language_codes, spanish_available, feature_bullets, faq_items, plan, level, ia_type, verified, edu_verified, featured, status, sort_order, updated_at, tool_areas(sort_order, areas(id, name, slug)), tool_use_cases(sort_order, use_cases(id, name, slug))")
       .order("updated_at", { ascending: false })
       .limit(100),
     supabase.from("areas").select("id, name, slug").eq("status", "published").order("sort_order", { ascending: true }).order("name", { ascending: true }),

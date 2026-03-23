@@ -13,6 +13,7 @@ type Tool = {
   slug: string;
   description: string | null;
   tagline: string | null;
+  editorial_summary: string | null;
   company_name: string | null;
   url: string;
   cover_image_url: string | null;
@@ -97,6 +98,7 @@ export function ToolEditorItem({ tool, areas, useCases, updateAction, deleteActi
           <input name="slug" required defaultValue={tool.slug} disabled={isPending} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50" />
           <input name="company_name" defaultValue={tool.company_name ?? ""} disabled={isPending} placeholder="Empresa / equipo creador" className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50" />
           <input name="tagline" defaultValue={tool.tagline ?? ""} disabled={isPending} placeholder="Tagline breve" className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50" />
+          <textarea name="editorial_summary" rows={5} defaultValue={tool.editorial_summary ?? ""} disabled={isPending} placeholder="Resumen editorial largo: qué es, para quién sirve, cuándo conviene usarla y sus límites." className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm leading-6 text-slate-900 outline-none disabled:opacity-50 md:col-span-2" />
           <input name="demo_video_url" defaultValue={tool.demo_video_url ?? ""} disabled={isPending} placeholder="URL demo YouTube (opcional)" className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50 md:col-span-2" />
           <input name="url" required defaultValue={tool.url} disabled={isPending} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50 md:col-span-2" />
           <textarea name="description" rows={3} defaultValue={tool.description ?? ""} disabled={isPending} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50 md:col-span-2" />

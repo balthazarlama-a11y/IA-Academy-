@@ -39,6 +39,7 @@ type RawToolRow = {
   slug: string;
   description: string | null;
   tagline: string | null;
+  editorial_summary: string | null;
   url: string;
   cover_image_url: string | null;
   screenshot_url: string | null;
@@ -89,6 +90,7 @@ const TOOL_SELECT = [
   "slug",
   "description",
   "tagline",
+  "editorial_summary",
   "url",
   "cover_image_url",
   "screenshot_url",
@@ -201,6 +203,7 @@ function buildTool(row: RawToolRow): Tool {
     slug: row.slug,
     description: row.description,
     tagline: row.tagline,
+    editorial_summary: row.editorial_summary,
     url: row.url,
     cover_image_url: row.cover_image_url,
     screenshot_url: row.screenshot_url,
