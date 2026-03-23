@@ -44,7 +44,9 @@ export default function RelatedTools({ tools }: { tools: RelatedToolForPost[] })
               {tool.description ? (
                 <p className="text-sm text-slate-600 mt-1 line-clamp-2">{tool.description}</p>
               ) : null}
-              <p className="text-xs text-slate-500 mt-3">{tool.category.name}</p>
+              <p className="text-xs text-slate-500 mt-3">
+                {tool.primaryArea?.name ?? "Área general"}
+              </p>
             </Link>
           ))}
         </div>

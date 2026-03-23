@@ -21,7 +21,9 @@ export default function DayFeedLayout({ posts, tools }: DayFeedLayoutProps) {
   });
 
   const categories = useMemo(() => {
-    const toolCategories = new Set(tools.map((t) => t.category.name));
+    const toolCategories = new Set(
+      tools.map((tool) => tool.primaryArea?.name).filter((value): value is string => Boolean(value)),
+    );
     const postCategories = new Set(
       posts.map((p) => p.ia_type).filter((value): value is string => Boolean(value)),
     );

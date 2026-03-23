@@ -52,24 +52,19 @@ const CACHE_TTL_MS = 90_000;
 const TOOL_SELECT =
   "id, name, slug, description, url, cover_image_url, plan, ia_type, edu_verified, featured, sort_order, created_at";
 
-const DEFAULT_CATEGORY = {
-  id: "",
-  name: "General",
-  slug: "general",
-  description: null,
-  color_accent: null,
-  icon_name: null,
-  sort_order: 0,
-} as const;
-
 function mapTool(row: RawToolRow): Tool {
   return {
     id: row.id,
     name: row.name,
     slug: row.slug,
     description: row.description,
+    tagline: null,
+    editorial_summary: null,
     url: row.url,
     cover_image_url: row.cover_image_url,
+    screenshot_url: null,
+    demo_video_url: null,
+    company_name: null,
     plan: row.plan,
     level: "all",
     ia_type: row.ia_type,
@@ -77,8 +72,15 @@ function mapTool(row: RawToolRow): Tool {
     edu_verified: row.edu_verified,
     featured: row.featured,
     sort_order: row.sort_order,
+    platform_tags: [],
+    language_codes: [],
+    spanish_available: false,
+    feature_bullets: [],
+    faq_items: [],
+    areas: [],
+    primaryArea: null,
+    useCases: [],
     created_at: row.created_at,
-    category: DEFAULT_CATEGORY,
     guide_slug: null,
   };
 }

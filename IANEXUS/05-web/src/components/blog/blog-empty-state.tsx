@@ -16,7 +16,7 @@ export default function BlogEmptyState({
   primaryHref = "/",
   primaryLabel = "Volver al inicio",
   secondaryHref = "/areas",
-  secondaryLabel = "Explorar carreras",
+  secondaryLabel = "Explorar áreas",
 }: BlogEmptyStateProps) {
   return (
     <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white px-6 py-10 text-center shadow-[0_18px_50px_rgba(15,23,42,0.05)] md:px-10">

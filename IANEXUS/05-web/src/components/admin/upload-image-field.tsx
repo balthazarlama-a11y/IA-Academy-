@@ -3,33 +3,17 @@
 import { useRef, useState } from "react";
 
 interface UploadImageFieldProps {
-  /** Name of the file input — sent to the Server Action as a File */
   fileInputName: string;
-  /** Name of the hidden text input holding the existing/fallback URL */
   urlInputName: string;
-  /** Pre-existing image URL (for edit forms) */
   existingUrl?: string | null;
-  /** Optional label shown above the field */
   label?: string;
-  /** Column span class for the grid (e.g. "md:col-span-2") */
   colSpan?: string;
-  /** Preview/render intent for the uploaded asset */
   assetKind?: "cover" | "logo";
 }
 
 const INPUT_CLASSES =
   "rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none";
 
-/**
- * UploadImageField
- *
- * Renders a file picker with live preview. The selected file is submitted
- * as `fileInputName` via multipart form data so the Server Action can
- * pick it up with `formData.get(fileInputName) as File`.
- *
- * A hidden `urlInputName` input preserves the current URL so the server
- * action can keep it if no new file is chosen.
- */
 export default function UploadImageField({
   fileInputName,
   urlInputName,
@@ -83,7 +67,6 @@ export default function UploadImageField({
     <div className={`flex flex-col gap-2 ${colSpan}`}>
       <span className="text-xs font-medium text-slate-500">{label}</span>
 
-      {/* Image preview */}
       {preview ? (
         <div className="relative overflow-hidden rounded-lg border border-slate-200 bg-slate-50">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -93,7 +76,7 @@ export default function UploadImageField({
             className={
               assetKind === "logo"
                 ? "aspect-square h-auto w-full object-contain p-4"
-                : "aspect-video h-auto w-full object-contain"
+                : "aspect-video h-auto w-full object-cover"
             }
             aria-hidden="true"
           />
@@ -111,10 +94,9 @@ export default function UploadImageField({
       <p className="text-[11px] text-slate-500">
         {assetKind === "logo"
           ? "El logo final se comprime y se ajusta automaticamente a un formato cuadrado para mantener consistencia visual."
-          : "La portada final se comprime y se recorta automaticamente en formato horizontal 16:9 para evitar que se vea pequena o con demasiado aire."}
+          : "La imagen se comprime y se recorta en horizontal para que sirva como hero, screenshot o portada editorial."}
       </p>
 
-      {/* File picker row */}
       <div className="flex items-center gap-2">
         <button
           type="button"
@@ -122,17 +104,7 @@ export default function UploadImageField({
           className={`${INPUT_CLASSES} cursor-pointer inline-flex items-center gap-2 px-4`}
           style={{ border: "1px solid rgba(148, 163, 184, 0.36)" }}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-4 w-4 text-slate-600"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.8"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
             <polyline points="17 8 12 3 7 8" />
             <line x1="12" y1="3" x2="12" y2="15" />
@@ -140,17 +112,11 @@ export default function UploadImageField({
           {fileName ? "Cambiar imagen" : preview ? "Reemplazar imagen" : "Subir imagen"}
         </button>
 
-        {fileName ? (
-          <span className="text-xs text-slate-500 truncate max-w-[200px]">{fileName}</span>
-        ) : null}
+        {fileName ? <span className="max-w-[200px] truncate text-xs text-slate-500">{fileName}</span> : null}
       </div>
 
-      {/* Error message */}
-      {error ? (
-        <p className="text-xs text-red-700">{error}</p>
-      ) : null}
+      {error ? <p className="text-xs text-red-700">{error}</p> : null}
 
-      {/* Hidden file input (actually submitted) */}
       <input
         ref={fileRef}
         type="file"
@@ -161,7 +127,6 @@ export default function UploadImageField({
         aria-label={label}
       />
 
-      {/* Hidden URL input — keeps existing URL if no new file picked */}
       <input
         type="hidden"
         name={urlInputName}
@@ -171,4 +136,3 @@ export default function UploadImageField({
     </div>
   );
 }
-

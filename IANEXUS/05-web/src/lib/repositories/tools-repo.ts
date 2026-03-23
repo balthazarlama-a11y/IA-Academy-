@@ -1,26 +1,27 @@
-import { resolveCareerPathToolIds } from "@/lib/repositories/careers-repo";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import type {
   RelatedPostSummary,
   Tool,
-  ToolCareer,
-  ToolCategory,
+  ToolArea,
+  ToolFaqItem,
   ToolFilters,
   ToolLevel,
   ToolPlan,
+  ToolUseCase,
 } from "@/lib/types/tool";
 
 export type {
   RelatedPostSummary,
   Tool,
-  ToolCareer,
-  ToolCategory,
+  ToolArea,
+  ToolFaqItem,
   ToolFilters,
   ToolLevel,
   ToolPlan,
+  ToolUseCase,
 };
 
-type RawCareer = {
+type RawArea = {
   id: string;
   name: string;
   slug: string;
@@ -30,13 +31,20 @@ type RawCareer = {
   sort_order: number;
 };
 
-type RawTool = {
+type RawUseCase = RawArea;
+
+type RawToolRow = {
   id: string;
   name: string;
   slug: string;
   description: string | null;
+  tagline: string | null;
+  editorial_summary: string | null;
   url: string;
   cover_image_url: string | null;
+  screenshot_url: string | null;
+  demo_video_url: string | null;
+  company_name: string | null;
   plan: ToolPlan;
   level: ToolLevel;
   ia_type: string | null;
@@ -44,37 +52,25 @@ type RawTool = {
   edu_verified: boolean;
   featured: boolean;
   sort_order: number;
+  platform_tags: string[] | null;
+  language_codes: string[] | null;
+  spanish_available: boolean | null;
+  feature_bullets: string[] | null;
+  faq_items: ToolFaqItem[] | null;
   created_at: string;
-  post_tools?: Array<{ posts: { slug: string } | null }> | null;
-};
-
-type RawToolCareerRelation = {
-  tool_id: string;
-  sort_order: number;
-  career_paths:
-    | RawCareer
-    | RawCareer[]
-    | null;
-};
-
-type RawPostRelation = {
-  sort_order: number;
-  posts:
+  tool_areas:
     | {
-        id: string;
-        slug: string;
-        title: string;
-        excerpt: string | null;
-        published_at: string | null;
-      }
-    | {
-        id: string;
-        slug: string;
-        title: string;
-        excerpt: string | null;
-        published_at: string | null;
+        sort_order: number;
+        areas: RawArea | RawArea[] | null;
       }[]
     | null;
+  tool_use_cases:
+    | {
+        sort_order: number;
+        use_cases: RawUseCase | RawUseCase[] | null;
+      }[]
+    | null;
+  post_tools?: Array<{ posts: { slug: string | null } | { slug: string | null }[] | null }> | null;
 };
 
 type ToolsPageOptions = {
@@ -88,13 +84,18 @@ export type ToolsPage = {
   nextOffset: number | null;
 };
 
-const TOOL_BASE_SELECT = [
+const TOOL_SELECT = [
   "id",
   "name",
   "slug",
   "description",
+  "tagline",
+  "editorial_summary",
   "url",
   "cover_image_url",
+  "screenshot_url",
+  "demo_video_url",
+  "company_name",
   "plan",
   "level",
   "ia_type",
@@ -102,41 +103,37 @@ const TOOL_BASE_SELECT = [
   "edu_verified",
   "featured",
   "sort_order",
+  "platform_tags",
+  "language_codes",
+  "spanish_available",
+  "feature_bullets",
+  "faq_items",
   "created_at",
+  "tool_areas(sort_order, areas(id, name, slug, description, color_accent, icon_name, sort_order))",
+  "tool_use_cases(sort_order, use_cases(id, name, slug, description, color_accent, icon_name, sort_order))",
+  "post_tools(posts(slug))",
 ].join(", ");
 
-const DETAIL_TOOLS_SELECT = [TOOL_BASE_SELECT, "post_tools(posts(slug))"].join(", ");
+const CATALOG_LIMIT = 500;
+const CACHE_TTL_MS = 90_000;
 
-const TOOL_CAREER_SELECT = [
-  "tool_id",
-  "sort_order",
-  "career_paths(id, name, slug, description, color_accent, icon_name, sort_order)",
-].join(", ");
-
-const TOOLS_PAGE_SIZE = 50;
-const TOOLS_CACHE_TTL_MS = 90_000;
-
-type ToolsPageCacheEntry = {
+type CatalogCacheEntry = {
   expiresAt: number;
-  value: ToolsPage;
+  value: Tool[];
 };
 
-const toolsPageCache = new Map<string, ToolsPageCacheEntry>();
-const inFlightToolsPage = new Map<string, Promise<ToolsPage>>();
+const catalogCache = new Map<string, CatalogCacheEntry>();
+const inFlightCatalog = new Map<string, Promise<Tool[]>>();
 
-const FALLBACK_CAREER: ToolCareer = {
-  id: "general",
-  name: "General",
-  slug: "general",
-  description: "Clasificacion general mientras una tool termina de asociarse a una carrera.",
-  color_accent: null,
-  icon_name: null,
-  sort_order: 0,
-  source: "synthetic",
-};
-
-function cleanSearch(value: string | undefined) {
-  return (value ?? "").trim().replaceAll(",", " ");
+function normalizeText(value: string | null | undefined) {
+  return (value ?? "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 function normalizeList(values: string[] | undefined | null): string[] {
@@ -144,41 +141,8 @@ function normalizeList(values: string[] | undefined | null): string[] {
   return [...new Set(values.map((value) => value.trim()).filter(Boolean))];
 }
 
-function normalizeCareerSlugs(filters: ToolFilters): string[] {
-  const careerSlugs = normalizeList(filters.careerSlugs);
-  if (careerSlugs.length > 0) {
-    return careerSlugs;
-  }
-
-  // Transitional fallback while a few call sites still pass `categorySlug`.
-  return filters.categorySlug ? [filters.categorySlug.trim()] : [];
-}
-
-function buildToolsPageCacheKey(filters: ToolFilters, limit: number, offset: number) {
-  const normalized = {
-    careerSlugs: normalizeCareerSlugs(filters),
-    plans: normalizeList(filters.plans),
-    levels: normalizeList(filters.levels),
-    onlyFree: Boolean(filters.onlyFree),
-    onlyEdu: Boolean(filters.onlyEdu),
-    search: cleanSearch(filters.search).toLowerCase(),
-    limit,
-    offset,
-  };
-
-  return JSON.stringify(normalized);
-}
-
-function getCachedToolsPage(key: string): ToolsPage | null {
-  const cached = toolsPageCache.get(key);
-  if (!cached) return null;
-
-  if (cached.expiresAt < Date.now()) {
-    toolsPageCache.delete(key);
-    return null;
-  }
-
-  return cached.value;
+function cleanSearch(value: string | undefined) {
+  return (value ?? "").trim().replaceAll(",", " ");
 }
 
 function pickFirst<T>(value: T | T[] | null): T | null {
@@ -186,11 +150,8 @@ function pickFirst<T>(value: T | T[] | null): T | null {
   return Array.isArray(value) ? (value[0] ?? null) : value;
 }
 
-function mapCareer(row: RawCareer | null): ToolCareer {
-  if (!row) {
-    return FALLBACK_CAREER;
-  }
-
+function mapArea(row: RawArea | null): ToolArea | null {
+  if (!row) return null;
   return {
     id: row.id,
     name: row.name,
@@ -199,49 +160,55 @@ function mapCareer(row: RawCareer | null): ToolCareer {
     color_accent: row.color_accent,
     icon_name: row.icon_name,
     sort_order: row.sort_order,
-    source: "career_paths",
   };
 }
 
-async function getCareerAssignmentsByToolIds(toolIds: string[]): Promise<Map<string, ToolCareer[]>> {
-  const assignments = new Map<string, ToolCareer[]>();
-  if (toolIds.length === 0) {
-    return assignments;
-  }
-
-  const supabase = getSupabaseServerClient();
-  const { data, error } = await supabase
-    .from("tool_careers")
-    .select(TOOL_CAREER_SELECT)
-    .in("tool_id", toolIds)
-    .order("sort_order", { ascending: true });
-
-  if (error) {
-    console.error("[tools-repo] getCareerAssignmentsByToolIds:", error.message);
-    return assignments;
-  }
-
-  for (const row of ((data as unknown as RawToolCareerRelation[] | null) ?? [])) {
-    const career = mapCareer(pickFirst(row.career_paths));
-    const existing = assignments.get(row.tool_id) ?? [];
-    existing.push(career);
-    assignments.set(row.tool_id, existing);
-  }
-
-  return assignments;
+function mapUseCase(row: RawUseCase | null): ToolUseCase | null {
+  if (!row) return null;
+  return {
+    id: row.id,
+    name: row.name,
+    slug: row.slug,
+    description: row.description,
+    color_accent: row.color_accent,
+    icon_name: row.icon_name,
+    sort_order: row.sort_order,
+  };
 }
 
-function buildTool(row: RawTool, careers: ToolCareer[]): Tool {
-  const resolvedCareers = careers.length > 0 ? careers : [FALLBACK_CAREER];
-  const primaryCareer = resolvedCareers[0];
+function buildTool(row: RawToolRow): Tool {
+  const areas = (row.tool_areas ?? [])
+    .map((relation) => ({ sort_order: relation.sort_order, area: mapArea(pickFirst(relation.areas)) }))
+    .filter((entry): entry is { sort_order: number; area: ToolArea } => Boolean(entry.area))
+    .sort((left, right) => left.sort_order - right.sort_order)
+    .map((entry) => entry.area);
+
+  const useCases = (row.tool_use_cases ?? [])
+    .map((relation) => ({ sort_order: relation.sort_order, useCase: mapUseCase(pickFirst(relation.use_cases)) }))
+    .filter((entry): entry is { sort_order: number; useCase: ToolUseCase } => Boolean(entry.useCase))
+    .sort((left, right) => left.sort_order - right.sort_order)
+    .map((entry) => entry.useCase);
+
+  const guideSlug = (() => {
+    for (const relation of row.post_tools ?? []) {
+      const post = pickFirst(relation.posts);
+      if (post?.slug) return post.slug;
+    }
+    return null;
+  })();
 
   return {
     id: row.id,
     name: row.name,
     slug: row.slug,
     description: row.description,
+    tagline: row.tagline,
+    editorial_summary: row.editorial_summary,
     url: row.url,
     cover_image_url: row.cover_image_url,
+    screenshot_url: row.screenshot_url,
+    demo_video_url: row.demo_video_url,
+    company_name: row.company_name,
     plan: row.plan,
     level: row.level,
     ia_type: row.ia_type,
@@ -249,82 +216,130 @@ function buildTool(row: RawTool, careers: ToolCareer[]): Tool {
     edu_verified: row.edu_verified,
     featured: row.featured,
     sort_order: row.sort_order,
+    platform_tags: normalizeList(row.platform_tags),
+    language_codes: normalizeList(row.language_codes),
+    spanish_available: Boolean(row.spanish_available),
+    feature_bullets: normalizeList(row.feature_bullets),
+    faq_items: Array.isArray(row.faq_items)
+      ? row.faq_items.filter((item) => item && typeof item.question === "string" && typeof item.answer === "string")
+      : [],
+    areas,
+    primaryArea: areas[0] ?? null,
+    useCases,
+    guide_slug: guideSlug,
     created_at: row.created_at,
-    careers: resolvedCareers,
-    primaryCareer,
-    category: primaryCareer,
-    guide_slug: row.post_tools?.[0]?.posts?.slug ?? null,
   };
 }
 
-async function runToolsQuery(
-  selectClause: string,
-  filters: ToolFilters,
-  options: { limit?: number; offset?: number; paginate?: boolean } = {},
-): Promise<ToolsPage> {
-  const supabase = getSupabaseServerClient();
-  const limit = Math.min(TOOLS_PAGE_SIZE, Math.max(1, options.limit ?? TOOLS_PAGE_SIZE));
-  const offset = Math.max(0, options.offset ?? 0);
-
-  let query = supabase
-    .from("tools")
-    .select(selectClause)
-    .eq("status", "published")
-    .order("featured", { ascending: false })
-    .order("sort_order", { ascending: true })
-    .order("created_at", { ascending: false });
-
-  const careerSlugs = normalizeCareerSlugs(filters);
-  if (careerSlugs.length > 0) {
-    const toolIds = await resolveCareerPathToolIds(careerSlugs);
-    if (toolIds.length === 0) {
-      return { tools: [], hasMore: false, nextOffset: null };
-    }
-
-    query = query.in("id", toolIds);
+async function fetchPublishedCatalog(): Promise<Tool[]> {
+  const cacheKey = "published-catalog";
+  const cached = catalogCache.get(cacheKey);
+  if (cached && cached.expiresAt > Date.now()) {
+    return cached.value;
   }
 
+  const existing = inFlightCatalog.get(cacheKey);
+  if (existing) return existing;
+
+  const task = (async () => {
+    const supabase = getSupabaseServerClient();
+    const { data, error } = await supabase
+      .from("tools")
+      .select(TOOL_SELECT)
+      .eq("status", "published")
+      .order("featured", { ascending: false })
+      .order("sort_order", { ascending: true })
+      .order("created_at", { ascending: false })
+      .limit(CATALOG_LIMIT);
+
+    if (error) {
+      console.error("[tools-repo] fetchPublishedCatalog:", error.message);
+      return [];
+    }
+
+    const tools = (((data as unknown) as RawToolRow[] | null) ?? []).map(buildTool);
+    catalogCache.set(cacheKey, { expiresAt: Date.now() + CACHE_TTL_MS, value: tools });
+    return tools;
+  })();
+
+  inFlightCatalog.set(cacheKey, task);
+  try {
+    return await task;
+  } finally {
+    inFlightCatalog.delete(cacheKey);
+  }
+}
+
+function matchesSearch(tool: Tool, query: string) {
+  if (!query) return true;
+  const normalized = normalizeText(query);
+  if (!normalized) return true;
+
+  const haystack = normalizeText([
+    tool.name,
+    tool.slug,
+    tool.description,
+    tool.tagline,
+    tool.company_name,
+    tool.ia_type,
+    tool.platform_tags.join(" "),
+    tool.language_codes.join(" "),
+    tool.areas.map((area) => `${area.name} ${area.slug}`).join(" "),
+    tool.useCases.map((useCase) => `${useCase.name} ${useCase.slug}`).join(" "),
+    tool.feature_bullets.join(" "),
+  ].filter(Boolean).join(" "));
+
+  return haystack.includes(normalized);
+}
+
+function filterTools(catalog: Tool[], filters: ToolFilters) {
+  const areaSlugs = normalizeList(filters.areaSlugs);
+  const useCaseSlugs = normalizeList(filters.useCaseSlugs);
   const plans = normalizeList(filters.plans);
-  if (plans.length > 0) {
-    query = query.in("plan", plans);
-  } else if (filters.onlyFree) {
-    query = query.in("plan", ["free", "edu_free"]);
-  }
-
   const levels = normalizeList(filters.levels);
-  if (levels.length > 0) {
-    query = query.in("level", levels);
-  }
+  const search = cleanSearch(filters.search);
 
-  if (filters.onlyEdu) {
-    query = query.or("plan.eq.edu_free,edu_verified.eq.true");
-  }
-
-  if (filters.search) {
-    const normalized = cleanSearch(filters.search);
-    if (normalized.length > 0) {
-      query = query.or(`name.ilike.%${normalized}%,ia_type.ilike.%${normalized}%,description.ilike.%${normalized}%`);
+  return catalog.filter((tool) => {
+    if (areaSlugs.length > 0 && !tool.areas.some((area) => areaSlugs.includes(area.slug))) {
+      return false;
     }
-  }
 
-  if (options.paginate !== false) {
-    query = query.range(offset, offset + limit - 1);
-  } else if (filters.limit && filters.limit > 0) {
-    query = query.limit(filters.limit);
-  }
+    if (useCaseSlugs.length > 0 && !tool.useCases.some((useCase) => useCaseSlugs.includes(useCase.slug))) {
+      return false;
+    }
 
-  const { data, error } = await query;
+    if (plans.length > 0 && !plans.includes(tool.plan)) {
+      return false;
+    }
 
-  if (error) {
-    console.error("[tools-repo] runToolsQuery:", error.message);
-    return { tools: [], hasMore: false, nextOffset: null };
-  }
+    if (levels.length > 0 && !levels.includes(tool.level)) {
+      return false;
+    }
 
-  const rows = (data as unknown as RawTool[] | null) ?? [];
-  const toolIds = rows.map((row) => row.id);
-  const careerAssignments = await getCareerAssignmentsByToolIds(toolIds);
-  const tools = rows.map((row) => buildTool(row, careerAssignments.get(row.id) ?? []));
-  const hasMore = options.paginate !== false && tools.length === limit;
+    if (filters.onlyFree && !["free", "edu_free"].includes(tool.plan)) {
+      return false;
+    }
+
+    if (filters.onlyEdu && !(tool.plan === "edu_free" || tool.edu_verified)) {
+      return false;
+    }
+
+    return matchesSearch(tool, search);
+  });
+}
+
+export async function getTools(filters: ToolFilters = {}): Promise<Tool[]> {
+  const filtered = filterTools(await fetchPublishedCatalog(), filters);
+  const limit = filters.limit && filters.limit > 0 ? filters.limit : filtered.length;
+  return filtered.slice(0, limit);
+}
+
+export async function getToolsPage(filters: ToolFilters = {}, options: ToolsPageOptions = {}): Promise<ToolsPage> {
+  const filtered = filterTools(await fetchPublishedCatalog(), filters);
+  const limit = Math.max(1, Math.min(options.limit ?? 50, 100));
+  const offset = Math.max(0, options.offset ?? 0);
+  const tools = filtered.slice(offset, offset + limit);
+  const hasMore = offset + limit < filtered.length;
 
   return {
     tools,
@@ -333,57 +348,13 @@ async function runToolsQuery(
   };
 }
 
-export async function getTools(filters: ToolFilters = {}): Promise<Tool[]> {
-  const page = await runToolsQuery(DETAIL_TOOLS_SELECT, filters, { paginate: false, limit: filters.limit });
-  return page.tools;
-}
-
-export async function getToolsPage(
-  filters: ToolFilters = {},
-  options: ToolsPageOptions = {},
-): Promise<ToolsPage> {
-  const limit = Math.min(TOOLS_PAGE_SIZE, Math.max(1, options.limit ?? TOOLS_PAGE_SIZE));
-  const offset = Math.max(0, options.offset ?? 0);
-  const cacheKey = buildToolsPageCacheKey(filters, limit, offset);
-
-  const cached = getCachedToolsPage(cacheKey);
-  if (cached) {
-    return cached;
-  }
-
-  const existingRequest = inFlightToolsPage.get(cacheKey);
-  if (existingRequest) {
-    return existingRequest;
-  }
-
-  const request = (async () => {
-    const pageResult = await runToolsQuery(TOOL_BASE_SELECT, filters, { limit, offset, paginate: true });
-
-    toolsPageCache.set(cacheKey, {
-      expiresAt: Date.now() + TOOLS_CACHE_TTL_MS,
-      value: pageResult,
-    });
-
-    return pageResult;
-  })();
-
-  inFlightToolsPage.set(cacheKey, request);
-
-  try {
-    return await request;
-  } finally {
-    inFlightToolsPage.delete(cacheKey);
-  }
-}
-
 export async function getToolBySlug(slug: string): Promise<Tool | null> {
   const supabase = getSupabaseServerClient();
-
   const { data, error } = await supabase
     .from("tools")
-    .select(DETAIL_TOOLS_SELECT)
-    .eq("status", "published")
+    .select(TOOL_SELECT)
     .eq("slug", slug)
+    .eq("status", "published")
     .maybeSingle();
 
   if (error) {
@@ -391,45 +362,6 @@ export async function getToolBySlug(slug: string): Promise<Tool | null> {
     return null;
   }
 
-  if (!data) {
-    return null;
-  }
-
-  const row = data as unknown as RawTool;
-  const careerAssignments = await getCareerAssignmentsByToolIds([row.id]);
-
-  return buildTool(row, careerAssignments.get(row.id) ?? []);
+  if (!data) return null;
+  return buildTool((data as unknown) as RawToolRow);
 }
-
-export async function getRelatedPostsByTool(
-  toolId: string,
-): Promise<RelatedPostSummary[]> {
-  const supabase = getSupabaseServerClient();
-
-  const { data, error } = await supabase
-    .from("post_tools")
-    .select("sort_order, posts(id, slug, title, excerpt, published_at)")
-    .eq("tool_id", toolId)
-    .order("sort_order", { ascending: true });
-
-  if (error) {
-    console.error("[tools-repo] getRelatedPostsByTool:", error.message);
-    return [];
-  }
-
-  return (((data as unknown as RawPostRelation[]) ?? []))
-    .map((row) => ({
-      post: Array.isArray(row.posts) ? row.posts[0] : row.posts,
-      sortOrder: row.sort_order,
-    }))
-    .filter((row) => Boolean(row.post))
-    .map((row) => ({
-      id: row.post!.id,
-      slug: row.post!.slug,
-      title: row.post!.title,
-      excerpt: row.post!.excerpt,
-      publishedAt: row.post!.published_at,
-      sortOrder: row.sortOrder,
-    }));
-}
-

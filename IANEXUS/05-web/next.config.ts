@@ -12,6 +12,14 @@ const nextConfig: NextConfig = {
         hostname: "*.supabase.co",
         pathname: "/storage/v1/object/public/**",
       },
+      {
+        protocol: "https",
+        hostname: "lf3-static.bytednsdoc.com",
+      },
+      {
+        protocol: "https",
+        hostname: "p11-sign.douyinpic.com",
+      },
     ],
   },
 

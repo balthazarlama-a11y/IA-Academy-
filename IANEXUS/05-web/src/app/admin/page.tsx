@@ -88,7 +88,7 @@ export default async function AdminDashboardPage() {
       {/* Welcome */}
       <section>
         <h2 className="text-2xl font-bold text-slate-900 mb-1">Bienvenido al Panel</h2>
-        <p className="text-slate-500 text-sm">Gestiona el contenido de IA NEXUS y clasifica tools por carreras desde aquí.</p>
+        <p className="text-slate-500 text-sm">Gestiona el contenido de IA NEXUS y clasifica tools por áreas y casos de uso desde aquí.</p>
       </section>
 
       {/* Stats Grid */}
@@ -167,8 +167,8 @@ export default async function AdminDashboardPage() {
             </h4>
             <p className="text-sm text-slate-500">
               {stats.totalTools === 0
-                ? "Aún no hay tools. Añade la primera y asígnale carreras."
-                : `${stats.totalTools} tools · ${stats.publishedTools} publicadas · listas para asignar a carreras`}
+                ? "Aún no hay tools. Añade la primera y asígnale áreas y casos de uso."
+                : `${stats.totalTools} tools · ${stats.publishedTools} publicadas · listas para asignar a áreas`}
             </p>
           </Link>
         </div>

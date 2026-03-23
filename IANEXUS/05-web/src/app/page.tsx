@@ -11,7 +11,7 @@ export const revalidate = 300;
 export const metadata = {
   title: "IA NEXUS | Portada editorial de inteligencia artificial",
   description:
-    "Descubre herramientas, guías y novedades de inteligencia artificial curadas por carrera y necesidad, con foco en utilidad real para estudiantes y profesionales.",
+    "Descubre herramientas, guías y novedades de inteligencia artificial curadas por area y necesidad, con foco en utilidad real para estudiantes y profesionales.",
 };
 
 const editorialRoutes = [
@@ -23,7 +23,7 @@ const editorialRoutes = [
     accent: "from-[#e9efff] to-[#f7f9ff] text-[#3351c8] border-[#cfd9ff]",
   },
   {
-    label: "Carreras",
+    label: "Areas",
     href: "/areas",
     icon: Layers3,
     blurb: "Herramientas ordenadas por contexto profesional.",
@@ -228,7 +228,9 @@ export default async function Home() {
                           {tool.description ?? "Herramienta seleccionada por utilidad, guía vinculada y señal editorial."}
                         </span>
                         <span className="mt-3 block text-[0.66rem] font-semibold uppercase tracking-[0.16em] text-[#6b7280]">
-                          {[getPlanLabel(tool.plan), tool.category.name].filter(Boolean).join(" · ")}
+                          {[getPlanLabel(tool.plan), tool.primaryArea?.name ?? "Área general"]
+                            .filter(Boolean)
+                            .join(" · ")}
                         </span>
                       </span>
                     </Link>
@@ -336,4 +338,5 @@ export default async function Home() {
     </main>
   );
 }
+
 

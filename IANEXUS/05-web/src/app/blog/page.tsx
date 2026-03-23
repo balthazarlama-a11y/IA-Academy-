@@ -64,7 +64,7 @@ export default async function BlogPage() {
                     href="/areas"
                     className="inline-flex items-center gap-2 rounded-full bg-slate-950 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-slate-800"
                   >
-                    Explorar por carreras
+                    Explorar por áreas
                     <ArrowUpRight className="h-4 w-4" />
                   </Link>
                   <Link
@@ -144,7 +144,7 @@ export default async function BlogPage() {
                 primaryHref="/dia-a-dia"
                 primaryLabel="Abrir feed del día"
                 secondaryHref="/areas"
-                secondaryLabel="Explorar carreras"
+                secondaryLabel="Explorar áreas"
               />
             ) : (
               <BlogEmptyState />

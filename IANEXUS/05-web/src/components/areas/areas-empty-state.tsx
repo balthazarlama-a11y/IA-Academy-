@@ -14,8 +14,8 @@ export default function AreasEmptyState({ hasFilters, onReset }: AreasEmptyState
       </h3>
       <p className="mt-2 max-w-sm text-sm text-slate-500">
         {hasFilters
-          ? "Quita un filtro o amplia una carrera para descubrir mas herramientas."
-          : "Las herramientas por carrera apareceran aqui a medida que sumemos nuevas curadurias."}
+          ? "Quita un filtro o amplia una area para descubrir mas herramientas."
+          : "Las herramientas por area apareceran aqui a medida que sumemos nuevas curadurias."}
       </p>
       {hasFilters && onReset ? (
         <button
@@ -29,3 +29,4 @@ export default function AreasEmptyState({ hasFilters, onReset }: AreasEmptyState
     </div>
   );
 }
+
