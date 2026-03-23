@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Fraunces, Inter } from "next/font/google";
 import WhatsAppStickyButton from "@/components/layout/whatsapp-sticky-button";
 import { buildRootMetadata } from "@/lib/seo";
 import "./globals.css";
@@ -11,6 +11,13 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  display: "swap",
+  preload: true,
+  variable: "--font-display",
+});
+
 export const metadata: Metadata = buildRootMetadata();
 
 export default function RootLayout({
@@ -19,7 +26,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className={inter.variable}>
+    <html lang="es" className={`${inter.variable} ${fraunces.variable}`}>
       <body
         className={`min-h-screen bg-[#f7f4ee] text-slate-900 antialiased ${inter.className}`}
       >

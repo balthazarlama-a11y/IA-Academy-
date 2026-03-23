@@ -32,7 +32,7 @@ const HEADER_SESSION_CACHE_KEY = "ianexus:header-session:v1";
 const HEADER_CACHE_TTL_MS = 120_000;
 const NAV_LINKS = [
   { href: "/", label: "Inicio" },
-  { href: "/estudiantes", label: "Gratis para estudiantes" },
+  { href: "/estudiantes", label: "Estudiantes" },
   { href: "/areas", label: "Carreras" },
   { href: "/dia-a-dia", label: "Día a Día" },
   { href: "/blog", label: "Blog" },
@@ -82,13 +82,11 @@ function HeaderBadge({
   tone = "slate",
 }: {
   children: React.ReactNode;
-  tone?: "slate" | "blue" | "emerald" | "violet";
+  tone?: "slate" | "blue";
 }) {
   const tones = {
-    slate: "border-slate-300 bg-white/75 text-slate-700",
-    blue: "border-blue-200 bg-blue-50 text-blue-700",
-    emerald: "border-emerald-200 bg-emerald-50 text-emerald-700",
-    violet: "border-violet-200 bg-violet-50 text-violet-700",
+    slate: "border-slate-300/80 bg-white/78 text-slate-700",
+    blue: "border-blue-200/80 bg-[color:var(--accent-soft)] text-[#3351c8]",
   } as const;
 
   return (
@@ -97,6 +95,34 @@ function HeaderBadge({
     >
       {children}
     </span>
+  );
+}
+function ActionPill({
+  href,
+  children,
+  tone,
+  title,
+}: {
+  href: string;
+  children: React.ReactNode;
+  tone: "default" | "emerald" | "violet" | "blue";
+  title?: string;
+}) {
+  const styles = {
+    default: "border-slate-300/80 bg-white/82 text-slate-700 hover:bg-white",
+    emerald: "border-emerald-200/80 bg-[#eef8f4] text-emerald-700 hover:brightness-95",
+    violet: "border-violet-200/80 bg-[#f3efff] text-violet-700 hover:brightness-95",
+    blue: "border-blue-200/80 bg-[color:var(--accent-soft)] text-[#3351c8] hover:brightness-95",
+  } as const;
+
+  return (
+    <Link
+      href={href}
+      title={title}
+      className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-2 text-sm font-medium transition-colors ${styles[tone]}`}
+    >
+      {children}
+    </Link>
   );
 }
 
@@ -183,214 +209,176 @@ export default function Header() {
 
   const nextPath = pathname || "/";
   const loginHref = `/login?next=${encodeURIComponent(nextPath)}`;
-  const searchHref = `/buscar`;
+  const searchHref = "/buscar";
   const isStaff = session?.role === "admin" || session?.role === "master";
-  const displayName =
-    session?.fullName?.trim() || session?.email?.split("@")[0] || "Usuario";
+  const displayName = session?.fullName?.trim() || session?.email?.split("@")[0] || "Usuario";
   const searchIsActive = pathname === "/buscar";
 
   return (
-    <header className="relative z-50 px-4 pt-3">
-      <div className="editorial-frame relative">
-        <div className="relative overflow-hidden rounded-xl border border-slate-200/80 bg-white/88 shadow-[0_10px_28px_rgba(15,23,42,0.06)] backdrop-blur-md editorial-surface">
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(255,255,255,0.84))]" />
-          <div className="relative z-10 px-4 py-3 md:px-5">
-            <div className="flex items-center justify-between gap-3">
-              <Link
-                href="/"
-                className="flex min-w-0 items-center gap-3 flex-none"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-slate-900 text-white shadow-sm">
-                  <BookOpen className="h-5 w-5" />
-                </div>
-                <div className="flex flex-col leading-tight">
-                  <span className="text-[0.92rem] font-semibold tracking-tight text-slate-900">
-                    IA NEXUS
-                  </span>
-                  <span className="hidden text-[11px] text-slate-500 md:block">
-                    Curación editorial de IA por carrera
-                  </span>
-                </div>
-              </Link>
-
-              <nav className="hidden items-center gap-1 rounded-full border border-slate-200 bg-slate-50/80 px-1.5 py-1 md:flex">
-                {NAV_LINKS.map((item) => {
-                  const isActive =
-                    pathname === item.href ||
-                    (item.href !== "/" && pathname.startsWith(item.href + "/"));
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className={`rounded-full px-3 py-2 text-sm font-medium transition-colors ${
-                        isActive
-                          ? "bg-white text-slate-950 shadow-sm"
-                          : "text-slate-600 hover:bg-white/75 hover:text-slate-900"
-                      }`}
-                    >
-                      {item.label}
-                    </Link>
-                  );
-                })}
-              </nav>
-
-              <div className="hidden items-center gap-2 md:flex">
-                <Link
-                  href={searchHref}
-                  className={`inline-flex items-center gap-2 rounded-full border px-3.5 py-2 text-sm font-medium transition-colors ${
-                    searchIsActive
-                      ? "border-slate-900 bg-slate-900 text-white"
-                      : "border-slate-300 bg-white text-slate-700 hover:bg-slate-50"
-                  }`}
-                >
-                  <Search className="h-4 w-4" />
-                  Buscar
-                </Link>
-
-                {isLoading ? (
-                  <div className="h-9 w-28 rounded-full bg-slate-200 animate-pulse" />
-                ) : !session ? (
-                  <Link
-                    href={loginHref}
-                    className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-800 transition-colors hover:bg-slate-50"
-                  >
-                    <LogIn className="h-4 w-4" />
-                    Iniciar sesión
-                  </Link>
-                ) : (
-                  <>
-                    <div className="hidden items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-2 lg:flex">
-                      {isStaff ? <Shield className="h-3.5 w-3.5 text-blue-700" /> : null}
-                      <div className="flex flex-col leading-tight">
-                        <span className="text-[11px] font-medium text-slate-500">
-                          Sesión activa
-                        </span>
-                        <span className="text-sm text-slate-800">{displayName}</span>
-                      </div>
-                    </div>
-
-                    {isStaff ? (
-                      <>
-                        <Link
-                          href="/admin/tools"
-                          className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs font-medium text-emerald-700 transition-colors hover:bg-emerald-100"
-                          title="Añadir tool"
-                        >
-                          <Wrench className="h-3.5 w-3.5" />
-                          <span className="hidden xl:inline">Añadir tool</span>
-                        </Link>
-                        <Link
-                          href="/admin/posts"
-                          className="inline-flex items-center gap-1.5 rounded-full border border-violet-200 bg-violet-50 px-3 py-2 text-xs font-medium text-violet-700 transition-colors hover:bg-violet-100"
-                          title="Subir post"
-                        >
-                          <PenSquare className="h-3.5 w-3.5" />
-                          <span className="hidden xl:inline">Subir post</span>
-                        </Link>
-                        <Link
-                          href="/admin"
-                          className="inline-flex items-center rounded-full border border-blue-200 bg-blue-50 px-3 py-2 text-xs font-medium text-blue-700 transition-colors hover:bg-blue-100"
-                        >
-                          Admin
-                        </Link>
-                      </>
-                    ) : null}
-
-                    <button
-                      type="button"
-                      onClick={async () => {
-                        await supabase.auth.signOut();
-                        setSession(null);
-                        writeCachedHeaderSession(null);
-                        router.refresh();
-                      }}
-                      className="inline-flex items-center gap-1.5 rounded-full border border-slate-300 bg-white px-3 py-2 text-xs font-medium text-slate-700 transition-colors hover:bg-slate-50"
-                    >
-                      <LogOut className="h-3.5 w-3.5" />
-                      Salir
-                    </button>
-                  </>
-                )}
-              </div>
-
-              <div className="md:hidden">
-                <button
-                  type="button"
-                  onClick={() => setMobileMenuOpen((v) => !v)}
-                  aria-label={mobileMenuOpen ? "Cerrar menu" : "Abrir menu"}
-                  aria-expanded={mobileMenuOpen}
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-300 bg-white text-slate-700 shadow-sm"
-                >
-                  {mobileMenuOpen ? (
-                    <X className="h-5 w-5" />
-                  ) : (
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                      <path
-                        d="M4 7h16M4 12h16M4 17h16"
-                        stroke="currentColor"
-                        strokeWidth="1.8"
-                        strokeLinecap="round"
-                      />
-                    </svg>
-                  )}
-                </button>
+    <header className="relative z-50 w-full border-b border-[color:var(--line-muted)] bg-[rgba(246,242,234,0.92)] backdrop-blur-md">
+      <div className="editorial-frame flex min-h-[102px] items-center justify-between gap-8 px-4 py-4 md:px-6 md:py-5 xl:gap-10">
+        <Link href="/" className="min-w-0 shrink-0">
+          <div className="flex items-center gap-4">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-slate-200/80 bg-white/82 text-[#172033] shadow-sm">
+              <BookOpen className="h-[18px] w-[18px]" />
+            </div>
+            <div className="min-w-0">
+              <p className="editorial-kicker editorial-muted">IA NEXUS editorial desk</p>
+              <div className="editorial-display mt-1 text-[2.05rem] leading-none font-semibold tracking-[-0.05em] text-[#111827] md:text-[2.7rem]">
+                IA NEXUS
               </div>
             </div>
           </div>
+        </Link>
+
+        <div className="hidden min-w-0 flex-1 items-center justify-end gap-10 xl:flex">
+          <nav className="flex min-w-0 items-center gap-8 2xl:gap-10">
+            {NAV_LINKS.map((item) => {
+              const isActive =
+                pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href + "/"));
+
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`editorial-display nav-link whitespace-nowrap text-[1.12rem] leading-none transition-colors ${
+                    isActive ? "text-[#172033]" : "text-[#5a6478] hover:text-[#3351c8]"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
+          </nav>
+
+          <div className="flex shrink-0 items-center gap-2.5">
+            <Link
+              href={searchHref}
+              className={`inline-flex h-11 items-center gap-2 rounded-full border px-4 text-sm font-medium transition-colors ${
+                searchIsActive
+                  ? "border-[#172033] bg-[#172033] text-white"
+                  : "border-slate-300/80 bg-white/72 text-slate-700 hover:bg-white"
+              }`}
+            >
+              <Search className="h-4 w-4" />
+              Buscar
+            </Link>
+
+            {isLoading ? (
+              <div className="h-10 w-28 rounded-full bg-slate-200 animate-pulse" />
+            ) : !session ? (
+              <ActionPill href={loginHref} tone="default">
+                <LogIn className="h-4 w-4" />
+                Iniciar sesión
+              </ActionPill>
+            ) : (
+              <>
+                <div className="inline-flex h-11 items-center gap-2 rounded-full border border-slate-200/80 bg-white/72 px-4">
+                  {isStaff ? <Shield className="h-3.5 w-3.5 text-[#3351c8]" /> : null}
+                  <div className="flex flex-col leading-tight">
+                    <span className="text-[10px] font-medium uppercase tracking-[0.16em] text-slate-500">
+                      Sesión activa
+                    </span>
+                    <span className="text-sm text-slate-800">{displayName}</span>
+                  </div>
+                </div>
+
+                {isStaff ? (
+                  <>
+                    <ActionPill href="/admin/tools" tone="emerald" title="Añadir tool">
+                      <Wrench className="h-3.5 w-3.5" />
+                      Tool
+                    </ActionPill>
+                    <ActionPill href="/admin/posts" tone="violet" title="Subir post">
+                      <PenSquare className="h-3.5 w-3.5" />
+                      Post
+                    </ActionPill>
+                    <ActionPill href="/admin" tone="blue">
+                      Admin
+                    </ActionPill>
+                  </>
+                ) : null}
+
+                <button
+                  type="button"
+                  onClick={async () => {
+                    await supabase.auth.signOut();
+                    setSession(null);
+                    writeCachedHeaderSession(null);
+                    router.refresh();
+                  }}
+                  className="inline-flex h-11 items-center gap-1.5 rounded-full border border-slate-300/80 bg-white/72 px-4 text-sm font-medium text-slate-700 transition-colors hover:bg-white"
+                >
+                  <LogOut className="h-3.5 w-3.5" />
+                  Salir
+                </button>
+              </>
+            )}
+          </div>
         </div>
 
-        {mobileMenuOpen ? (
-          <div className="mt-2 overflow-hidden rounded-xl border border-slate-200 bg-white/96 shadow-[0_14px_32px_rgba(15,23,42,0.1)] backdrop-blur-md md:hidden">
-            <nav className="grid grid-cols-2 gap-2 p-2">
+        <div className="md:hidden">
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen((v) => !v)}
+            aria-label={mobileMenuOpen ? "Cerrar menu" : "Abrir menu"}
+            aria-expanded={mobileMenuOpen}
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-300/80 bg-white/80 text-slate-700 shadow-sm"
+          >
+            {mobileMenuOpen ? <X className="h-5 w-5" /> : (<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" /></svg>)}
+          </button>
+        </div>
+      </div>
+
+      {mobileMenuOpen ? (
+        <div className="editorial-rule border-t bg-[rgba(246,242,234,0.96)] md:hidden">
+          <div className="editorial-frame px-4 py-4">
+            <div className="grid gap-2">
               <Link
                 href={searchHref}
                 onClick={() => setMobileMenuOpen(false)}
-                className={`col-span-2 inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-3 py-3 text-sm font-medium transition-colors ${
+                className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-4 py-3 text-sm font-medium transition-colors ${
                   searchIsActive
-                    ? "bg-slate-900 text-white"
-                    : "border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100"
+                    ? "bg-[#172033] text-white"
+                    : "border border-slate-300/80 bg-white/85 text-slate-700 hover:bg-white"
                 }`}
               >
                 <Search className="h-4 w-4" />
                 Buscar herramientas
               </Link>
+
               {NAV_LINKS.map((item) => {
                 const isActive =
-                  pathname === item.href ||
-                  (item.href !== "/" && pathname.startsWith(item.href + "/"));
+                  pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href + "/"));
+
                 return (
                   <Link
                     key={item.href}
                     href={item.href}
                     onClick={() => setMobileMenuOpen(false)}
-                    className={`min-h-11 rounded-xl px-3 py-3 text-sm font-medium transition-colors ${
+                    className={`rounded-[1.15rem] px-4 py-3 text-left transition-colors ${
                       isActive
-                        ? "bg-slate-900 text-white"
-                        : "text-slate-700 hover:bg-slate-100"
+                        ? "bg-[#172033] text-white"
+                        : "border border-slate-200 bg-white/82 text-slate-700 hover:bg-white"
                     }`}
                   >
-                    {item.label}
+                    <span className="editorial-display text-[1.15rem] leading-none">{item.label}</span>
                   </Link>
                 );
               })}
-            </nav>
+            </div>
 
-            <div className="border-t border-slate-200 p-3">
+            <div className="mt-4 border-t border-slate-200 pt-4">
               {isLoading ? (
                 <div className="h-9 w-28 rounded-full bg-slate-200 animate-pulse" />
               ) : !session ? (
-                <Link
-                  href={loginHref}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-800"
-                >
+                <ActionPill href={loginHref} tone="default">
                   <LogIn className="h-4 w-4" />
                   Iniciar sesión
-                </Link>
+                </ActionPill>
               ) : (
                 <div className="flex flex-col gap-3">
-                  <div className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-3">
+                  <div className="flex items-center justify-between gap-3 rounded-[1.2rem] border border-slate-200 bg-white/82 px-3 py-3">
                     <div className="min-w-0">
                       <div className="text-[11px] font-medium uppercase tracking-widest text-slate-500">
                         {isStaff ? "Editor" : "Cuenta"}
@@ -404,29 +392,19 @@ export default function Header() {
 
                   {isStaff ? (
                     <div className="grid grid-cols-2 gap-2">
-                      <Link
-                        href="/admin/tools"
-                        onClick={() => setMobileMenuOpen(false)}
-                        className="inline-flex items-center justify-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2.5 text-sm font-medium text-emerald-700"
-                      >
+                      <ActionPill href="/admin/tools" tone="emerald">
                         <Wrench className="h-4 w-4" />
                         Tool
-                      </Link>
-                      <Link
-                        href="/admin/posts"
-                        onClick={() => setMobileMenuOpen(false)}
-                        className="inline-flex items-center justify-center gap-2 rounded-xl border border-violet-200 bg-violet-50 px-3 py-2.5 text-sm font-medium text-violet-700"
-                      >
+                      </ActionPill>
+                      <ActionPill href="/admin/posts" tone="violet">
                         <PenSquare className="h-4 w-4" />
                         Post
-                      </Link>
-                      <Link
-                        href="/admin"
-                        onClick={() => setMobileMenuOpen(false)}
-                        className="col-span-2 inline-flex items-center justify-center rounded-xl border border-blue-200 bg-blue-50 px-3 py-2.5 text-sm font-medium text-blue-700"
-                      >
-                        Admin
-                      </Link>
+                      </ActionPill>
+                      <div className="col-span-2 flex justify-center">
+                        <ActionPill href="/admin" tone="blue">
+                          Admin
+                        </ActionPill>
+                      </div>
                     </div>
                   ) : null}
 
@@ -439,7 +417,7 @@ export default function Header() {
                       setMobileMenuOpen(false);
                       router.refresh();
                     }}
-                    className="inline-flex items-center justify-center gap-1.5 rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700"
+                    className="inline-flex items-center justify-center gap-1.5 rounded-full border border-slate-300/80 bg-white/82 px-4 py-2 text-sm font-medium text-slate-700"
                   >
                     <LogOut className="h-4 w-4" />
                     Salir
@@ -448,8 +426,9 @@ export default function Header() {
               )}
             </div>
           </div>
-        ) : null}
-      </div>
+        </div>
+      ) : null}
     </header>
   );
 }
+
