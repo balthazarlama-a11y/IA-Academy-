@@ -110,8 +110,8 @@ export default function UploadImageField({
 
       <p className="text-[11px] text-slate-500">
         {assetKind === "logo"
-          ? "El logo final se ajusta automaticamente a un formato cuadrado para mantener consistencia visual."
-          : "La portada final se ajusta automaticamente a formato horizontal 16:9 para cards y listados."}
+          ? "El logo final se comprime y se ajusta automaticamente a un formato cuadrado para mantener consistencia visual."
+          : "La portada final se comprime y se recorta automaticamente en formato horizontal 16:9 para evitar que se vea pequena o con demasiado aire."}
       </p>
 
       {/* File picker row */}

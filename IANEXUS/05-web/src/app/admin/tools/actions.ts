@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth/session";
 import { getSupabaseServerAuthClient } from "@/lib/supabase/server";
-import { uploadMediaFile } from "@/lib/supabase/admin-storage";
+import { deleteMediaFileByUrl, uploadMediaFile } from "@/lib/supabase/admin-storage";
 
 type ToolPlan = "free" | "freemium" | "paid" | "edu_free";
 type ToolLevel = "beginner" | "intermediate" | "advanced" | "all";
@@ -111,11 +111,13 @@ export async function createToolAction(formData: FormData) {
 
     let coverImageUrl = normalizeNullableText(formData.get("cover_image_url"));
     const fileInput = formData.get("cover_image_file");
+    let uploadedReplacementUrl: string | null = null;
     if (fileInput instanceof File && fileInput.size > 0) {
       const { url: uploadedUrl, error: uploadErr } = await uploadMediaFile(fileInput, "tools");
       if (uploadErr) {
         redirect(`/admin/tools?err=${encodeURIComponent("Error subiendo imagen: " + uploadErr)}`);
       }
+      uploadedReplacementUrl = uploadedUrl;
       coverImageUrl = uploadedUrl;
     }
 
@@ -140,6 +142,9 @@ export async function createToolAction(formData: FormData) {
       .single();
 
     if (error) {
+      if (uploadedReplacementUrl) {
+        await deleteMediaFileByUrl(uploadedReplacementUrl);
+      }
       redirect(`/admin/tools?err=${encodeURIComponent(error.message)}`);
     }
 
@@ -167,6 +172,16 @@ export async function deleteToolAction(formData: FormData) {
       redirect("/admin/tools?err=ID%20de%20tool%20requerido");
     }
 
+    const { data: existingTool, error: existingToolError } = await supabase
+      .from("tools")
+      .select("cover_image_url")
+      .eq("id", id)
+      .maybeSingle();
+
+    if (existingToolError) {
+      redirect(`/admin/tools?err=${encodeURIComponent(existingToolError.message)}`);
+    }
+
     const { error: postToolsError } = await supabase.from("post_tools").delete().eq("tool_id", id);
     if (postToolsError) {
       redirect(`/admin/tools?err=${encodeURIComponent("Error eliminando relaciones: " + postToolsError.message)}`);
@@ -180,6 +195,14 @@ export async function deleteToolAction(formData: FormData) {
     const { error } = await supabase.from("tools").delete().eq("id", id);
     if (error) {
       redirect(`/admin/tools?err=${encodeURIComponent(error.message)}`);
+    }
+
+    const { error: deleteMediaError } = await deleteMediaFileByUrl(existingTool?.cover_image_url);
+    if (deleteMediaError) {
+      console.error("Failed to delete tool media after record deletion", {
+        toolId: id,
+        deleteMediaError,
+      });
     }
 
     revalidatePath("/areas");
@@ -219,11 +242,25 @@ export async function updateToolAction(formData: FormData) {
 
     let coverImageUrl = normalizeNullableText(formData.get("cover_image_url"));
     const fileInput = formData.get("cover_image_file");
+    let uploadedReplacementUrl: string | null = null;
+
+    const { data: existingTool, error: existingToolError } = await supabase
+      .from("tools")
+      .select("cover_image_url")
+      .eq("id", id)
+      .maybeSingle();
+
+    if (existingToolError) {
+      redirect(`/admin/tools?err=${encodeURIComponent(existingToolError.message)}`);
+    }
+
+    const previousCoverImageUrl = existingTool?.cover_image_url ?? null;
     if (fileInput instanceof File && fileInput.size > 0) {
       const { url: uploadedUrl, error: uploadErr } = await uploadMediaFile(fileInput, "tools");
       if (uploadErr) {
         redirect(`/admin/tools?err=${encodeURIComponent("Error subiendo imagen: " + uploadErr)}`);
       }
+      uploadedReplacementUrl = uploadedUrl;
       coverImageUrl = uploadedUrl;
     }
 
@@ -247,7 +284,22 @@ export async function updateToolAction(formData: FormData) {
       .eq("id", id);
 
     if (error) {
+      if (uploadedReplacementUrl) {
+        await deleteMediaFileByUrl(uploadedReplacementUrl);
+      }
       redirect(`/admin/tools?err=${encodeURIComponent(error.message)}`);
+    }
+
+    const coverChanged = previousCoverImageUrl && previousCoverImageUrl !== coverImageUrl;
+    if (coverChanged) {
+      const { error: deleteMediaError } = await deleteMediaFileByUrl(previousCoverImageUrl);
+      if (deleteMediaError) {
+        console.error("Failed to delete replaced tool media", {
+          toolId: id,
+          previousCoverImageUrl,
+          deleteMediaError,
+        });
+      }
     }
 
     await syncToolCareers(supabase, id, careerIds);

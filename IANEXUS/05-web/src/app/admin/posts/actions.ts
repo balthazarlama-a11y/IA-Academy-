@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth/session";
 import { getSupabaseServerAuthClient } from "@/lib/supabase/server";
-import { uploadMediaFile } from "@/lib/supabase/admin-storage";
+import { deleteMediaFileByUrl, uploadMediaFile } from "@/lib/supabase/admin-storage";
 
 type PostKind = "blog" | "tool" | "guide" | "news";
 type PostStatus = "draft" | "scheduled" | "published" | "archived";
@@ -63,11 +63,13 @@ export async function createPostAction(formData: FormData) {
 
     let coverImage = normalizeNullableText(formData.get("cover_image_url"));
     const fileInput = formData.get("cover_image_file");
+    let uploadedReplacementUrl: string | null = null;
     if (fileInput instanceof File && fileInput.size > 0) {
       const { url: uploadedUrl, error: uploadErr } = await uploadMediaFile(fileInput, "posts");
       if (uploadErr) {
         redirect(`/admin/posts?err=${encodeURIComponent("Error subiendo imagen: " + uploadErr)}`);
       }
+      uploadedReplacementUrl = uploadedUrl;
       coverImage = uploadedUrl;
     }
 
@@ -92,6 +94,9 @@ export async function createPostAction(formData: FormData) {
     });
 
     if (error) {
+      if (uploadedReplacementUrl) {
+        await deleteMediaFileByUrl(uploadedReplacementUrl);
+      }
       redirect(`/admin/posts?err=${encodeURIComponent(error.message)}`);
     }
 
@@ -115,6 +120,16 @@ export async function deletePostAction(formData: FormData) {
       redirect("/admin/posts?err=ID%20de%20post%20requerido");
     }
 
+    const { data: existingPost, error: existingPostError } = await supabase
+      .from("posts")
+      .select("cover_image_url")
+      .eq("id", id)
+      .maybeSingle();
+
+    if (existingPostError) {
+      redirect(`/admin/posts?err=${encodeURIComponent(existingPostError.message)}`);
+    }
+
     // 1. Eliminar primero las relaciones en post_tools (integridad referencial)
     const { error: relError } = await supabase
       .from("post_tools")
@@ -133,6 +148,14 @@ export async function deletePostAction(formData: FormData) {
 
     if (error) {
       redirect(`/admin/posts?err=${encodeURIComponent(error.message)}`);
+    }
+
+    const { error: deleteMediaError } = await deleteMediaFileByUrl(existingPost?.cover_image_url);
+    if (deleteMediaError) {
+      console.error("Failed to delete post media after record deletion", {
+        postId: id,
+        deleteMediaError,
+      });
     }
 
     revalidatePath("/blog");
@@ -168,11 +191,25 @@ export async function updatePostAction(formData: FormData) {
 
     let coverImage = normalizeNullableText(formData.get("cover_image_url"));
     const fileInput = formData.get("cover_image_file");
+    let uploadedReplacementUrl: string | null = null;
+
+    const { data: existingPost, error: existingPostError } = await supabase
+      .from("posts")
+      .select("cover_image_url")
+      .eq("id", id)
+      .maybeSingle();
+
+    if (existingPostError) {
+      redirect(`/admin/posts?err=${encodeURIComponent(existingPostError.message)}`);
+    }
+
+    const previousCoverImageUrl = existingPost?.cover_image_url ?? null;
     if (fileInput instanceof File && fileInput.size > 0) {
       const { url: uploadedUrl, error: uploadErr } = await uploadMediaFile(fileInput, "posts");
       if (uploadErr) {
         redirect(`/admin/posts?err=${encodeURIComponent("Error subiendo imagen: " + uploadErr)}`);
       }
+      uploadedReplacementUrl = uploadedUrl;
       coverImage = uploadedUrl;
     }
 
@@ -199,7 +236,22 @@ export async function updatePostAction(formData: FormData) {
       .eq("id", id);
 
     if (error) {
+      if (uploadedReplacementUrl) {
+        await deleteMediaFileByUrl(uploadedReplacementUrl);
+      }
       redirect(`/admin/posts?err=${encodeURIComponent(error.message)}`);
+    }
+
+    const coverChanged = previousCoverImageUrl && previousCoverImageUrl !== coverImage;
+    if (coverChanged) {
+      const { error: deleteMediaError } = await deleteMediaFileByUrl(previousCoverImageUrl);
+      if (deleteMediaError) {
+        console.error("Failed to delete replaced post media", {
+          postId: id,
+          previousCoverImageUrl,
+          deleteMediaError,
+        });
+      }
     }
 
     revalidatePath("/blog");
