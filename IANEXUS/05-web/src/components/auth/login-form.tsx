@@ -83,7 +83,7 @@ export default function LoginForm({ nextPath }: LoginFormProps) {
       }
 
       setSuccessMessage(
-        "Cuenta creada. Revisa tu correo para confirmar y luego iniciar sesión.",
+        "Cuenta creada. Revisa tu email para confirmar y luego iniciar sesión.",
       );
       setMode("signin");
       setPassword("");
@@ -163,7 +163,7 @@ export default function LoginForm({ nextPath }: LoginFormProps) {
 
       <div>
         <label htmlFor="email" className="block text-sm text-slate-700 mb-1.5">
-          Correo
+          Email
         </label>
         <input
           id="email"
@@ -173,7 +173,7 @@ export default function LoginForm({ nextPath }: LoginFormProps) {
           value={email}
           onChange={(event) => setEmail(event.target.value)}
           className="w-full rounded-xl bg-white border border-slate-200 px-3.5 py-2.5 text-slate-900 outline-none focus:border-blue-400/60"
-          placeholder="tu-correo@dominio.com"
+          placeholder="tu-email@dominio.com"
         />
       </div>
 
@@ -182,7 +182,7 @@ export default function LoginForm({ nextPath }: LoginFormProps) {
           htmlFor="password"
           className="block text-sm text-slate-700 mb-1.5"
         >
-          Contraseña
+          Password
         </label>
         <input
           id="password"
@@ -192,7 +192,7 @@ export default function LoginForm({ nextPath }: LoginFormProps) {
           value={password}
           onChange={(event) => setPassword(event.target.value)}
           className="w-full rounded-xl bg-white border border-slate-200 px-3.5 py-2.5 text-slate-900 outline-none focus:border-blue-400/60"
-          placeholder="Tu contraseña"
+          placeholder="Tu password"
         />
       </div>
 
@@ -202,7 +202,7 @@ export default function LoginForm({ nextPath }: LoginFormProps) {
             htmlFor="confirm_password"
             className="block text-sm text-slate-700 mb-1.5"
           >
-            Confirmar contraseña
+            Confirmar password
           </label>
           <input
             id="confirm_password"
@@ -212,7 +212,7 @@ export default function LoginForm({ nextPath }: LoginFormProps) {
             value={confirmPassword}
             onChange={(event) => setConfirmPassword(event.target.value)}
             className="w-full rounded-xl bg-white border border-slate-200 px-3.5 py-2.5 text-slate-900 outline-none focus:border-blue-400/60"
-            placeholder="Repite tu contraseña"
+            placeholder="Repite tu password"
           />
         </div>
       ) : null}

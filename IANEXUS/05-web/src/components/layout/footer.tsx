@@ -4,7 +4,7 @@ import { Instagram, Linkedin, Youtube, X } from "lucide-react";
 const FOOTER_LINKS = [
   { href: "/", label: "Inicio" },
   { href: "/estudiantes", label: "Gratis para estudiantes" },
-  { href: "/areas", label: "Áreas" },
+  { href: "/areas", label: "Areas" },
   { href: "/dia-a-dia", label: "Día a Día" },
   { href: "/blog", label: "Blog" },
 ] as const;
@@ -47,7 +47,7 @@ export default function Footer() {
                   IA NEXUS
                 </span>
                 <span className="text-xs text-slate-500">
-                  Portada editorial para descubrir IA por área
+                  Portada editorial para descubrir IA por area
                 </span>
               </div>
             </div>

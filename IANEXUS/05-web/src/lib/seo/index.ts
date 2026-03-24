@@ -12,11 +12,11 @@ type BuildPageMetadataArgs = {
 
 const DEFAULT_TITLE = "IA NEXUS | Portada editorial de inteligencia artificial";
 const DEFAULT_DESCRIPTION =
-  "Herramientas, guías y novedades de inteligencia artificial curadas por carrera y necesidad, con foco en utilidad real.";
+  "Herramientas, guias y novedades de inteligencia artificial curadas por carrera y necesidad, con foco en utilidad real.";
 const DEFAULT_KEYWORDS = [
   "IA",
   "herramientas de inteligencia artificial",
-  "guías de IA",
+  "guias de IA",
   "IA para estudiantes",
   "IA por carrera",
 ];

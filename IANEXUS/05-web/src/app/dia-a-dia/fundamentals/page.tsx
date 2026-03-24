@@ -89,7 +89,7 @@ export default async function FundamentalsPage() {
                   </div>
                 ) : (
                   <div className="rounded-xl border border-slate-200/80 bg-white p-5 text-sm text-slate-600 shadow-sm">
-                    Aún no hay herramientas recomendadas para hoy.
+                    Aún no hay tools recomendadas para hoy.
                   </div>
                 )}
               </section>

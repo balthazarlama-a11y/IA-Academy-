@@ -10,7 +10,7 @@ export const revalidate = 300;
 export const metadata: Metadata = {
   title: "Estudiantes | IA NEXUS",
   description:
-    "Descubre herramientas de IA con acceso gratis, institucional o freemium para estudiar, investigar y avanzar más rápido.",
+    "Descubre herramientas de IA con acceso gratis, institucional o freemium para estudiar, investigar y avanzar mas rapido.",
 };
 
 export default async function EstudiantesPage() {
@@ -28,10 +28,10 @@ export default async function EstudiantesPage() {
                 Hub para estudiantes
               </p>
               <h1 className="mt-4 max-w-4xl text-3xl font-semibold leading-tight text-slate-900 md:text-4xl lg:text-[2.9rem]">
-                Encuentra herramientas útiles sin navegar una landing de descuentos
+                Encuentra herramientas utiles sin navegar una landing de descuentos
               </h1>
               <p className="mt-4 max-w-3xl text-sm leading-relaxed text-slate-600 md:text-base">
-                Empieza por acceso: gratis total, beneficio institucional o freemium. Lo demás
+                Empieza por acceso: gratis total, beneficio institucional o freemium. Lo demas
                 queda como ajuste fino.
               </p>
             </div>
