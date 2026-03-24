@@ -104,7 +104,7 @@ export default function AreasToolbar({ initialTools, areas, useCases }: { initia
             <span className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">Buscar</span>
             <div className="relative">
               <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-              <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Ej: investigar papers, programar, salud, video..." className="w-full rounded-[1.1rem] border border-slate-300/80 bg-white px-11 py-3.5 text-sm text-slate-950 shadow-[0_8px_24px_rgba(15,23,42,0.04)] outline-none transition placeholder:text-slate-400 focus:border-slate-400 focus:ring-4 focus:ring-slate-200/50" />
+              <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Ej.: investigar papers, programar, salud, video..." className="w-full rounded-[1.1rem] border border-slate-300/80 bg-white px-11 py-3.5 text-sm text-slate-950 shadow-[0_8px_24px_rgba(15,23,42,0.04)] outline-none transition placeholder:text-slate-400 focus:border-slate-400 focus:ring-4 focus:ring-slate-200/50" />
             </div>
           </label>
 

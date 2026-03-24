@@ -37,9 +37,9 @@ export function PostContent({ content, contentJson, isLoggedIn, slug }: PostCont
       <div className="mt-8 space-y-2.5">{previewBlocks.map((block, index) => renderPostBlock(block, index))}</div>
 
       <div className="mt-8 rounded-xl border border-violet-300/25 bg-violet-400/8 p-5">
-        <h2 className="text-base font-semibold text-slate-900">Desbloquea la guia completa</h2>
+        <h2 className="text-base font-semibold text-slate-900">Desbloquea la guía completa</h2>
         <p className="mt-2 text-sm leading-relaxed text-slate-600">
-          Inicia sesión para ver todos los pasos, recomendaciones y el catalogo completo de
+          Inicia sesión para ver todos los pasos, recomendaciones y el catálogo completo de
           herramientas relacionadas.
         </p>
         <div className="mt-4 flex flex-wrap gap-3">
@@ -53,7 +53,7 @@ export function PostContent({ content, contentJson, isLoggedIn, slug }: PostCont
             href="/estudiantes"
             className="inline-flex rounded-full border border-slate-200 bg-transparent px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:text-slate-900"
           >
-            Ver catalogo
+            Ver catálogo
           </Link>
         </div>
       </div>

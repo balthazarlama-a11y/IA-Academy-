@@ -51,7 +51,7 @@ export default async function DiaADiaPage() {
                   href="/dia-a-dia/fundamentals"
                   className="inline-flex items-center gap-2 rounded-full bg-slate-950 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-slate-800"
                 >
-                  Abrir fundamentals
+                  Abrir fundamentos
                   <ArrowUpRight className="h-4 w-4" />
                 </Link>
                 <Link

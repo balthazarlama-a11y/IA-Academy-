@@ -329,7 +329,7 @@ export default function StudentsToolbar({
               tools: [],
               hasMore: false,
               nextOffset: null,
-              error: "No se pudo cargar el catalogo. Intenta nuevamente.",
+              error: "No se pudo cargar el catálogo. Intenta nuevamente.",
             };
           }
 
@@ -477,10 +477,10 @@ export default function StudentsToolbar({
           <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
             <div>
               <p className="text-xs uppercase tracking-[0.16em] text-slate-500">
-                Filtro rapido
+                Filtro rápido
               </p>
               <h2 className="mt-1 text-lg font-semibold text-slate-900">
-                Encuentra acceso util sin leer de mas
+                Encuentra acceso útil sin leer de más
               </h2>
               <p className="mt-1 max-w-2xl text-sm leading-relaxed text-slate-600">
                 Primero acceso, luego tipo de IA. El filtro prioriza herramientas que puedes usar
@@ -509,11 +509,11 @@ export default function StudentsToolbar({
                   id="q"
                   value={searchInput}
                   onChange={(event) => handleSearchChange(event.target.value)}
-                  placeholder="Ej: chatgpt, notion, github copilot..."
+                  placeholder="Ej.: ChatGPT, Notion, GitHub Copilot..."
                   className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-slate-400"
                 />
                 <p className="mt-2 text-xs leading-relaxed text-slate-500">
-                  Busca por nombre, descripcion o tipo de IA.
+                  Busca por nombre, descripción o tipo de IA.
                 </p>
               </div>
             </div>
@@ -552,7 +552,7 @@ export default function StudentsToolbar({
                   >
                     <span className="block font-semibold text-slate-900">Beneficio</span>
                     <span className="mt-1 block text-xs leading-relaxed text-slate-500">
-                      Correo institucional o verificacion academica.
+                      Correo institucional o verificación académica.
                     </span>
                   </button>
 
@@ -663,7 +663,7 @@ export default function StudentsToolbar({
             disabled={isLoadingMore}
             className="inline-flex items-center rounded-full border border-slate-300 bg-slate-50 px-5 py-2.5 text-sm font-medium text-slate-800 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {isLoadingMore ? "Cargando..." : "Cargar 50 mas"}
+            {isLoadingMore ? "Cargando..." : "Cargar 50 más"}
           </button>
         </div>
       ) : null}

@@ -33,7 +33,7 @@ const HEADER_CACHE_TTL_MS = 120_000;
 const NAV_LINKS = [
   { href: "/", label: "Inicio" },
   { href: "/estudiantes", label: "Estudiantes" },
-  { href: "/areas", label: "Areas" },
+  { href: "/areas", label: "Áreas" },
   { href: "/dia-a-dia", label: "Día a Día" },
   { href: "/blog", label: "Blog" },
 ] as const;
@@ -223,7 +223,7 @@ export default function Header() {
               <BookOpen className="h-[18px] w-[18px]" />
             </div>
             <div className="min-w-0">
-              <p className="editorial-kicker editorial-muted">IA NEXUS editorial desk</p>
+              <p className="editorial-kicker editorial-muted">Mesa editorial de IA NEXUS</p>
               <div className="editorial-display mt-1 text-[2.05rem] leading-none font-semibold tracking-[-0.05em] text-[#111827] md:text-[2.7rem]">
                 IA NEXUS
               </div>
@@ -287,11 +287,11 @@ export default function Header() {
                   <>
                     <ActionPill href="/admin/tools" tone="emerald" title="Añadir tool">
                       <Wrench className="h-3.5 w-3.5" />
-                      Tool
+                      Herramienta
                     </ActionPill>
                     <ActionPill href="/admin/posts" tone="violet" title="Subir post">
                       <PenSquare className="h-3.5 w-3.5" />
-                      Post
+                      Artículo
                     </ActionPill>
                     <ActionPill href="/admin" tone="blue">
                       Admin
@@ -321,7 +321,7 @@ export default function Header() {
           <button
             type="button"
             onClick={() => setMobileMenuOpen((v) => !v)}
-            aria-label={mobileMenuOpen ? "Cerrar menu" : "Abrir menu"}
+            aria-label={mobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
             aria-expanded={mobileMenuOpen}
             className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-300/80 bg-white/80 text-slate-700 shadow-sm"
           >
@@ -394,11 +394,11 @@ export default function Header() {
                     <div className="grid grid-cols-2 gap-2">
                       <ActionPill href="/admin/tools" tone="emerald">
                         <Wrench className="h-4 w-4" />
-                        Tool
+                        Herramienta
                       </ActionPill>
                       <ActionPill href="/admin/posts" tone="violet">
                         <PenSquare className="h-4 w-4" />
-                        Post
+                        Artículo
                       </ActionPill>
                       <div className="col-span-2 flex justify-center">
                         <ActionPill href="/admin" tone="blue">

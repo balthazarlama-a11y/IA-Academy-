@@ -18,14 +18,14 @@ function planLabel(plan: RelatedToolForPost["plan"]) {
 export default function RelatedTools({ tools }: { tools: RelatedToolForPost[] }) {
   return (
     <section className="mt-10 border-t border-slate-200 pt-7">
-      <h2 className="text-xl font-semibold text-slate-900">Tools relacionadas</h2>
+      <h2 className="text-xl font-semibold text-slate-900">Herramientas relacionadas</h2>
       <p className="mt-2 text-sm text-slate-600">
         Herramientas conectadas a este post para aplicarlo rápido.
       </p>
 
       {tools.length === 0 ? (
         <div className="mt-4 rounded-2xl border border-slate-200 bg-white p-4 text-sm text-slate-600">
-          Aún no hay tools relacionadas para este post.
+          Aún no hay herramientas relacionadas para este post.
         </div>
       ) : (
         <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2">

@@ -12,7 +12,7 @@ export const revalidate = 300;
 export const metadata = {
   title: "IA NEXUS | Portada editorial de inteligencia artificial",
   description:
-    "Descubre herramientas, guías y novedades de inteligencia artificial curadas por area y necesidad, con foco en utilidad real para estudiantes y profesionales.",
+    "Descubre herramientas, guías y novedades de inteligencia artificial curadas por área y necesidad, con foco en utilidad real para estudiantes y profesionales.",
 };
 
 const editorialRoutes = [
@@ -24,7 +24,7 @@ const editorialRoutes = [
     accent: "from-[#e9efff] to-[#f7f9ff] text-[#3351c8] border-[#cfd9ff]",
   },
   {
-    label: "Areas",
+    label: "Áreas",
     href: "/areas",
     icon: Layers3,
     blurb: "Herramientas ordenadas por contexto profesional.",
@@ -211,7 +211,7 @@ export default async function Home() {
               <div className="rounded-[1.6rem] border-2 border-[#1f2740]/7 bg-[linear-gradient(180deg,rgba(255,255,255,0.86),rgba(233,239,255,0.24)_100%)] p-5 shadow-[0_20px_44px_rgba(15,23,42,0.05)] md:p-5">
                 <div className="flex items-center justify-between">
                   <h3 className="editorial-display text-[1.8rem] font-semibold leading-none text-[#111827]">
-                    Trending Tools
+                    Herramientas en tendencia
                   </h3>
                   <span className="editorial-kicker editorial-muted">Top 3</span>
                 </div>
@@ -244,7 +244,7 @@ export default async function Home() {
                 </div>
 
                 <div className="mt-7 rounded-[1.35rem] border border-[#ddd0ff] bg-[linear-gradient(180deg,rgba(242,237,255,0.92),rgba(255,255,255,0.82))] p-4 shadow-[0_12px_32px_rgba(108,92,231,0.05)]">
-                  <p className="editorial-kicker text-[#6b4fd4]">Student highlight</p>
+                  <p className="editorial-kicker text-[#6b4fd4]">Selección para estudiantes</p>
                   <p className="editorial-display mt-3 text-[1.18rem] leading-tight font-semibold text-[#172033]">
                     {studentHighlight
                       ? `${studentHighlight.name} aparece hoy como señal clara para estudiantes.`

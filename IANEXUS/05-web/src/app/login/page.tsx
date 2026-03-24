@@ -4,7 +4,7 @@ import Footer from "@/components/layout/footer";
 import LoginForm from "@/components/auth/login-form";
 
 export const metadata = {
-  title: "Login - IA NEXUS",
+  title: "Iniciar sesión - IA NEXUS",
   description: "Acceso a contenido y panel de IA NEXUS.",
 };
 
@@ -18,14 +18,14 @@ export default async function LoginPage({
     params.next && params.next.startsWith("/") ? params.next : "/estudiantes";
 
   return (
-    <main className="relative min-h-screen flex flex-col">
+    <main className="relative flex min-h-screen flex-col">
       <Header />
 
-      <section className="flex-1 flex items-center justify-center px-6 py-10">
+      <section className="flex flex-1 items-center justify-center px-6 py-10">
         <div className="w-full max-w-md rounded-3xl border border-slate-200 bg-white backdrop-blur-xl p-7">
-          <h1 className="text-2xl font-semibold text-slate-900">Accede a IA NEXUS</h1>
+          <h1 className="text-2xl font-semibold text-slate-900">Inicia sesión en IA NEXUS</h1>
           <p className="mt-2 text-slate-600 text-sm">
-            Inicia sesión o crea tu cuenta para ver contenido completo, herramientas y más!
+            Inicia sesión o crea tu cuenta para ver contenido completo, herramientas y más.
           </p>
 
           <div className="mt-6">
@@ -35,9 +35,9 @@ export default async function LoginPage({
           <div className="mt-6 pt-4 border-t border-slate-200 text-sm text-slate-600">
             Puedes volver al{" "}
             <Link href="/" className="text-blue-600 hover:text-blue-700">
-             inicio
+              inicio
             </Link>
-             en cualquier momento.
+            en cualquier momento.
           </div>
         </div>
       </section>

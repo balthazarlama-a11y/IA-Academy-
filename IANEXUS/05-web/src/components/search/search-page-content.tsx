@@ -42,7 +42,7 @@ export default function SearchPageContent({ data }: { data: SearchPageData }) {
             <span className="sr-only">Buscar herramientas</span>
             <div className="relative">
               <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
-              <input type="search" name="q" defaultValue={data.filters.q} placeholder="Ej: resumir PDFs, estudiar derecho, hacer presentaciones" className="h-14 w-full rounded-2xl border border-slate-300 bg-white pl-11 pr-4 text-[15px] text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-slate-400 focus:ring-2 focus:ring-slate-200" />
+              <input type="search" name="q" defaultValue={data.filters.q} placeholder="Ej.: resumir PDFs, estudiar derecho, hacer presentaciones" className="h-14 w-full rounded-2xl border border-slate-300 bg-white pl-11 pr-4 text-[15px] text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-slate-400 focus:ring-2 focus:ring-slate-200" />
             </div>
           </label>
 

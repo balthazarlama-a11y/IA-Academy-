@@ -102,7 +102,7 @@ export default memo(function StudentToolCard({ tool }: { tool: Tool }) {
         </p>
 
         <div className="mt-4 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
-          <p className="text-[11px] uppercase tracking-[0.14em] text-slate-500">Acceso rapido</p>
+          <p className="text-[11px] uppercase tracking-[0.14em] text-slate-500">Acceso rápido</p>
           <p className="mt-1 text-sm font-medium text-slate-900">{planSummary(tool.plan)}</p>
         </div>
 

@@ -14,7 +14,7 @@ export const revalidate = 300;
 export const metadata: Metadata = {
   title: "Blog de IA | IA NEXUS",
   description:
-    "Archivo editorial de IA NEXUS con guias, notas y actualizaciones para seguir herramientas y cambios relevantes sin ruido.",
+    "Archivo editorial de IA NEXUS con guías, notas y actualizaciones para seguir herramientas y cambios relevantes sin ruido.",
 };
 
 export default async function BlogPage() {
@@ -51,11 +51,11 @@ export default async function BlogPage() {
                 </p>
 
                 <h1 className="mt-3 max-w-2xl text-2xl font-semibold tracking-tight text-slate-950 md:text-3xl">
-                  Blog, guias y notas para seguir IA con criterio.
+                  Blog, guías y notas para seguir IA con criterio.
                 </h1>
 
                 <p className="mt-3 max-w-xl text-sm leading-relaxed text-slate-600 md:text-base">
-                  Un archivo curado para leer lanzamientos, herramientas y piezas utiles sin
+                  Un archivo curado para leer lanzamientos, herramientas y piezas útiles sin
                   caer en ruido promocional.
                 </p>
 
@@ -140,7 +140,7 @@ export default async function BlogPage() {
             ) : posts.length > 0 ? (
               <BlogEmptyState
                 title="Por ahora hay una sola lectura en portada"
-                description="El archivo ya está abierto. Cuando publiquemos más guias y notas aparecerán aquí como biblioteca."
+                description="El archivo ya está abierto. Cuando publiquemos más guías y notas aparecerán aquí como biblioteca."
                 primaryHref="/dia-a-dia"
                 primaryLabel="Abrir feed del día"
                 secondaryHref="/areas"
