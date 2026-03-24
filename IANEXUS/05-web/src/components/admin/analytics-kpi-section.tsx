@@ -1,5 +1,4 @@
 import { getSupabaseServerAuthClient } from "@/lib/supabase/server";
-// Icons as SVGs to avoid lucide-react version issues
 
 type LocationRow = { location: string; clicks: number };
 type PageRow = { page_path: string; clicks: number };
@@ -42,140 +41,142 @@ async function fetchWhatsappKpis() {
   }
 }
 
+function tinyBar(value: number, max: number) {
+  if (max <= 0) return "0%";
+  return `${Math.max(6, Math.round((value / max) * 100))}%`;
+}
+
 export async function AnalyticsKpiSection() {
   const kpis = await fetchWhatsappKpis();
   const hasData = kpis.clicks30 > 0;
+  const maxLocation = Math.max(...kpis.byLocation.map((row) => Number(row.clicks)), 0);
 
   return (
-    <section className="space-y-4">
-      <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-widest">
-        WhatsApp Analytics
-      </h3>
-
-      {/* Summary cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div
-          className="p-5 rounded-xl"
-          style={{
-            background: "rgba(34,197,94,0.12)",
-            border: "1px solid rgba(148,163,184,0.28)",
-          }}
-        >
-          <div className="flex items-start justify-between gap-2">
-            <div>
-              <p className="text-xs text-slate-500 mb-1">Clicks WhatsApp · 7 días</p>
-              <p className="text-3xl font-bold text-slate-900 tabular-nums">{kpis.clicks7}</p>
-              <p className="text-xs text-slate-400 mt-1">click_whatsapp_cta</p>
-            </div>
-            <div className="p-2 rounded-lg" style={{ background: "rgba(241,245,249,0.92)" }}>
-              <svg className="h-5 w-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-            </div>
-          </div>
+    <section className="rounded-[2rem] border border-slate-200 bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(248,250,252,0.95))] p-6 shadow-[0_18px_44px_rgba(15,23,42,0.04)]">
+      <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+        <div>
+          <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-[#3351c8]">
+            WhatsApp analytics
+          </p>
+          <h3 className="mt-2 text-lg font-semibold text-slate-950">Señales de intención</h3>
+          <p className="mt-1 text-sm text-slate-500">
+            Lectura de clics por ubicación y páginas que mejor empujan la conversación.
+          </p>
         </div>
-
-        <div
-          className="p-5 rounded-xl"
-          style={{
-            background: "rgba(34,197,94,0.07)",
-            border: "1px solid rgba(148,163,184,0.28)",
-          }}
-        >
-          <div className="flex items-start justify-between gap-2">
-            <div>
-              <p className="text-xs text-slate-500 mb-1">Clicks WhatsApp · 30 días</p>
-              <p className="text-3xl font-bold text-slate-900 tabular-nums">{kpis.clicks30}</p>
-              <p className="text-xs text-slate-400 mt-1">click_whatsapp_cta</p>
-            </div>
-            <div className="p-2 rounded-lg" style={{ background: "rgba(241,245,249,0.92)" }}>
-              <svg className="h-5 w-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path d="M23 6l-9.5 9.5-5-5L1 18"/><path d="M17 6h6v6"/></svg>
-            </div>
-          </div>
+        <div className="flex flex-wrap gap-2">
+          <span className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-medium uppercase tracking-[0.16em] text-slate-500">
+            7 días: {kpis.clicks7}
+          </span>
+          <span className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-medium uppercase tracking-[0.16em] text-slate-500">
+            30 días: {kpis.clicks30}
+          </span>
         </div>
       </div>
 
-      {!hasData ? (
-        <div className="rounded-xl border border-slate-200 bg-white px-4 py-6 text-center text-sm text-slate-400">
-          Aún no hay eventos registrados. Los datos aparecerán aquí una vez que se instrumenten los CTAs.
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* CTR by location */}
+      <div className="mt-6 grid gap-4 sm:grid-cols-2">
+        {[
+          {
+            label: "Clicks WhatsApp · 7 días",
+            value: kpis.clicks7,
+            hint: "click_whatsapp_cta",
+            accent: "rgba(34,197,94,0.12)",
+            tone: "text-emerald-600",
+          },
+          {
+            label: "Clicks WhatsApp · 30 días",
+            value: kpis.clicks30,
+            hint: "click_whatsapp_cta",
+            accent: "rgba(59,130,246,0.12)",
+            tone: "text-blue-600",
+          },
+        ].map((card) => (
           <div
-            className="rounded-xl p-5"
-            style={{
-              background: "rgba(255,255,255,0.88)",
-              border: "1px solid rgba(148,163,184,0.28)",
-            }}
+            key={card.label}
+            className="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-[0_14px_30px_rgba(15,23,42,0.04)]"
           >
-            <div className="flex items-center gap-2 mb-3">
-              <svg className="h-4 w-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-              <p className="text-xs font-semibold text-slate-600 uppercase tracking-wide">
-                Clicks por ubicación · 30 días
-              </p>
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <p className="text-xs font-medium uppercase tracking-[0.18em] text-slate-500">
+                  {card.label}
+                </p>
+                <p className="mt-3 text-3xl font-semibold text-slate-950 tabular-nums">{card.value}</p>
+                <p className="mt-1 text-xs text-slate-500">{card.hint}</p>
+              </div>
+              <div className="rounded-2xl border border-slate-200 p-2.5" style={{ background: card.accent }}>
+                <svg className={`h-5 w-5 ${card.tone}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                  <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+                </svg>
+              </div>
             </div>
-            {kpis.byLocation.length === 0 ? (
-              <p className="text-xs text-slate-400">Sin datos</p>
-            ) : (
-              <ul className="space-y-2">
-                {kpis.byLocation.map((row) => {
-                  const pct =
-                    kpis.clicks30 > 0
-                      ? Math.round((Number(row.clicks) / kpis.clicks30) * 100)
-                      : 0;
-                  return (
-                    <li key={row.location} className="flex items-center gap-3 text-sm">
-                      <span className="w-24 shrink-0 truncate text-slate-700 font-medium">
-                        {row.location}
-                      </span>
-                      <div className="flex-1 rounded-full bg-slate-100 h-2 overflow-hidden">
-                        <div
-                          className="h-full rounded-full bg-green-400"
-                          style={{ width: `${pct}%` }}
-                        />
-                      </div>
-                      <span className="w-10 text-right text-xs text-slate-500 tabular-nums">
-                        {row.clicks}
-                      </span>
-                    </li>
-                  );
-                })}
-              </ul>
-            )}
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+        <div className="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-[0_14px_30px_rgba(15,23,42,0.04)]">
+          <div className="mb-3 flex items-center gap-2">
+            <svg className="h-4 w-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+              <circle cx="12" cy="12" r="10" />
+              <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+            </svg>
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">
+              Clicks por ubicación · 30 días
+            </p>
           </div>
 
-          {/* Top pages */}
-          <div
-            className="rounded-xl p-5"
-            style={{
-              background: "rgba(255,255,255,0.88)",
-              border: "1px solid rgba(148,163,184,0.28)",
-            }}
-          >
-            <div className="flex items-center gap-2 mb-3">
-              <svg className="h-4 w-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
-              <p className="text-xs font-semibold text-slate-600 uppercase tracking-wide">
-                Top páginas → WhatsApp · 30 días
-              </p>
-            </div>
-            {kpis.topPages.length === 0 ? (
-              <p className="text-xs text-slate-400">Sin datos</p>
-            ) : (
-              <ul className="space-y-2">
-                {kpis.topPages.map((row) => (
-                  <li key={row.page_path} className="flex items-center justify-between gap-3 text-sm">
-                    <span className="truncate text-slate-700 font-mono text-xs">
-                      {row.page_path}
-                    </span>
-                    <span className="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600 tabular-nums">
-                      {row.clicks}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
+          {!hasData ? (
+            <p className="text-sm text-slate-400">Aún no hay datos registrados.</p>
+          ) : (
+            <ul className="space-y-3">
+              {kpis.byLocation.map((row) => (
+                <li key={row.location} className="space-y-1">
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="truncate text-sm font-medium text-slate-700">{row.location}</span>
+                    <span className="text-xs text-slate-500 tabular-nums">{row.clicks}</span>
+                  </div>
+                  <div className="h-2 rounded-full bg-slate-100">
+                    <div
+                      className="h-2 rounded-full bg-gradient-to-r from-emerald-400 to-blue-400"
+                      style={{ width: tinyBar(Number(row.clicks), maxLocation) }}
+                    />
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
-      )}
+
+        <div className="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-[0_14px_30px_rgba(15,23,42,0.04)]">
+          <div className="mb-3 flex items-center gap-2">
+            <svg className="h-4 w-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+              <path d="M18 20V10M12 20V4M6 20v-6" />
+            </svg>
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">
+              Top páginas → WhatsApp · 30 días
+            </p>
+          </div>
+
+          {!hasData ? (
+            <p className="text-sm text-slate-400">Aún no hay datos registrados.</p>
+          ) : (
+            <ul className="space-y-2">
+              {kpis.topPages.map((row) => (
+                <li
+                  key={row.page_path}
+                  className="flex items-center justify-between gap-3 rounded-2xl border border-slate-100 bg-slate-50 px-3 py-2.5"
+                >
+                  <span className="truncate text-xs font-medium text-slate-700">
+                    {row.page_path}
+                  </span>
+                  <span className="shrink-0 rounded-full bg-white px-2.5 py-1 text-xs font-medium text-slate-600 tabular-nums">
+                    {row.clicks}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
     </section>
   );
 }

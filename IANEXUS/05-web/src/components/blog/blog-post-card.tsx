@@ -66,6 +66,11 @@ export default function BlogPostCard({ post, compact = false }: BlogPostCardProp
               <h2 className={`font-semibold leading-snug text-slate-950 ${compact ? "text-xl md:text-2xl" : "text-[1rem] md:text-[1.05rem]"}`}>
                 {post.title}
               </h2>
+              {post.subtitle ? (
+                <p className={`text-slate-500 ${compact ? "text-sm md:text-[0.95rem]" : "text-sm"}`}>
+                  {post.subtitle}
+                </p>
+              ) : null}
             </div>
             <ArrowUpRight className="mt-1 h-4 w-4 shrink-0 text-slate-400 transition group-hover:text-slate-700" />
           </div>

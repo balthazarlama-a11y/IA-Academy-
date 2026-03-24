@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, type ChangeEvent } from "react";
 
 interface UploadImageFieldProps {
   fileInputName: string;
@@ -10,9 +10,6 @@ interface UploadImageFieldProps {
   colSpan?: string;
   assetKind?: "cover" | "logo";
 }
-
-const INPUT_CLASSES =
-  "rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none";
 
 export default function UploadImageField({
   fileInputName,
@@ -27,7 +24,7 @@ export default function UploadImageField({
   const [error, setError] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+  function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
     setError(null);
     const file = e.target.files?.[0];
     if (!file) {
@@ -64,11 +61,18 @@ export default function UploadImageField({
   }
 
   return (
-    <div className={`flex flex-col gap-2 ${colSpan}`}>
-      <span className="text-xs font-medium text-slate-500">{label}</span>
+    <div className={`flex flex-col gap-3 ${colSpan}`}>
+      <div className="flex items-center justify-between gap-3">
+        <span className="text-[11px] font-medium uppercase tracking-[0.18em] text-slate-500">
+          {label}
+        </span>
+        <span className="text-[11px] text-slate-400">
+          {assetKind === "logo" ? "Formato cuadrado" : "Formato editorial"}
+        </span>
+      </div>
 
       {preview ? (
-        <div className="relative overflow-hidden rounded-lg border border-slate-200 bg-slate-50">
+        <div className="relative overflow-hidden rounded-[1.35rem] border border-slate-200 bg-slate-50 shadow-[0_10px_24px_rgba(15,23,42,0.04)]">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={preview}
@@ -91,9 +95,9 @@ export default function UploadImageField({
         </div>
       ) : null}
 
-      <p className="text-[11px] text-slate-500">
+      <p className="text-[11px] leading-relaxed text-slate-500">
         {assetKind === "logo"
-          ? "El logo final se comprime y se ajusta automaticamente a un formato cuadrado para mantener consistencia visual."
+          ? "El logo final se comprime y se ajusta automáticamente a un formato cuadrado para mantener consistencia visual."
           : "La imagen se comprime y se recorta en horizontal para que sirva como hero, screenshot o portada editorial."}
       </p>
 
@@ -101,8 +105,7 @@ export default function UploadImageField({
         <button
           type="button"
           onClick={() => fileRef.current?.click()}
-          className={`${INPUT_CLASSES} cursor-pointer inline-flex items-center gap-2 px-4`}
-          style={{ border: "1px solid rgba(148, 163, 184, 0.36)" }}
+          className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />

@@ -6,6 +6,7 @@ import EditorialCoverRotator, {
 } from "@/components/home/editorial-cover-rotator";
 import { fetchPublishedPostBySlug, fetchPublishedPosts } from "@/lib/supabase/server";
 import { getTrendingSurfaceData } from "@/lib/repositories/trending-repo";
+import { postContentBlocksToPlainText } from "@/lib/types/post";
 
 export const revalidate = 300;
 export const metadata = {
@@ -122,10 +123,15 @@ export default async function Home() {
   const coverPostDetailMap = new Map(coverPostDetails);
   const coverSlides: EditorialCoverSlide[] = coverPosts.map((post) => {
     const detail = coverPostDetailMap.get(post.id);
+    const structuredPreview =
+      detail?.content_json?.length ? postContentBlocksToPlainText(detail.content_json) : "";
     const preview =
+      post.subtitle ??
       post.excerpt ??
-      (detail?.content_md
-        ? truncatePreview(stripMarkdown(detail.content_md))
+      (structuredPreview
+        ? truncatePreview(structuredPreview)
+        : detail?.content_md
+          ? truncatePreview(stripMarkdown(detail.content_md))
         : "IA NEXUS reúne herramientas, criterio y contexto para entrar a leer con una idea más clara de por qué esta historia importa.");
 
     return {
@@ -290,7 +296,7 @@ export default async function Home() {
                         {post.title}
                       </h4>
                       <p className="editorial-muted mt-3 text-sm leading-6">
-                        {post.excerpt ?? "Lectura breve para profundizar en la conversación editorial."}
+                        {post.subtitle ?? post.excerpt ?? "Lectura breve para profundizar en la conversación editorial."}
                       </p>
                       <p className="mt-4 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[#6b7280]">
                         {formatDate(post.published_at)}

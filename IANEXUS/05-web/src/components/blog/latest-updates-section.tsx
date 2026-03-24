@@ -61,6 +61,12 @@ export default function LatestUpdatesSection({
                 {post.title}
               </h3>
 
+              {post.subtitle ? (
+                <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-slate-500">
+                  {post.subtitle}
+                </p>
+              ) : null}
+
               <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-slate-600">
                 {post.excerpt || "Una nota breve para entrar en contexto sin perder tiempo."}
               </p>

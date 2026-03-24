@@ -17,10 +17,11 @@ const MEDIA_BUCKET = "media";
 const COVER_WIDTH = 1440;
 const COVER_HEIGHT = 810;
 const COVER_BACKGROUND = { r: 248, g: 250, b: 252, alpha: 1 };
+const INLINE_MAX_WIDTH = 1600;
 const TOOL_LOGO_SIZE = 720;
 const TOOL_LOGO_BACKGROUND = { r: 255, g: 255, b: 255, alpha: 0 };
 
-type UploadPreset = "cover" | "logo";
+type UploadPreset = "cover" | "logo" | "inline";
 
 async function normalizeUploadImage(file: File, preset: UploadPreset) {
   const arrayBuffer = await file.arrayBuffer();
@@ -40,6 +41,15 @@ async function normalizeUploadImage(file: File, preset: UploadPreset) {
           })
           .webp({ quality: 82, alphaQuality: 88, effort: 5 })
           .toBuffer()
+      : preset === "inline"
+        ? await processor
+            .resize({
+              width: INLINE_MAX_WIDTH,
+              fit: "inside",
+              withoutEnlargement: true,
+            })
+            .webp({ quality: 82, effort: 5 })
+            .toBuffer()
       : await processor
           .resize(COVER_WIDTH, COVER_HEIGHT, {
             fit: "cover",

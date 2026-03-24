@@ -1,6 +1,11 @@
 import { createServerClient } from "@supabase/ssr";
 import { createClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
+import {
+  normalizePostContentBlocks,
+  type Post,
+  type PostDetail,
+} from "@/lib/types/post";
 
 function getRequiredSupabaseEnv() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -66,29 +71,16 @@ export function getSupabaseServiceRoleClient() {
   });
 }
 
-export type Post = {
-  id: string;
-  title: string;
-  slug: string;
-  excerpt: string | null;
-  cover_image_url: string | null;
-  ia_type: string | null;
-  post_kind: "blog" | "tool" | "guide" | "news";
-  published_at: string | null;
-};
-
-export type PostDetail = Post & {
-  content_md: string;
-  post_kind: "blog" | "tool" | "guide" | "news";
-  created_at: string;
-};
+export type { Post, PostDetail } from "@/lib/types/post";
 
 export async function fetchPublishedPosts() {
   const supabase = getSupabaseServerClient();
 
   const { data, error } = await supabase
     .from("posts")
-    .select("id, title, slug, excerpt, cover_image_url, ia_type, post_kind, published_at")
+    .select(
+      "id, title, subtitle, slug, excerpt, cover_image_url, hero_image_alt, hero_image_caption, ia_type, post_kind, published_at",
+    )
     .eq("status", "published")
     .or(`published_at.is.null,published_at.lte.${new Date().toISOString()}`)
     .order("published_at", { ascending: false, nullsFirst: false })
@@ -108,7 +100,9 @@ export async function fetchPublishedNews(limit = 6) {
 
   const { data, error } = await supabase
     .from("posts")
-    .select("id, title, slug, excerpt, cover_image_url, ia_type, post_kind, published_at")
+    .select(
+      "id, title, subtitle, slug, excerpt, cover_image_url, hero_image_alt, hero_image_caption, ia_type, post_kind, published_at",
+    )
     .eq("status", "published")
     .eq("post_kind", "news")
     .or(`published_at.is.null,published_at.lte.${new Date().toISOString()}`)
@@ -131,7 +125,7 @@ export async function fetchPublishedPostBySlug(slug: string) {
     const { data, error } = await supabase
       .from("posts")
       .select(
-        "id, title, slug, excerpt, cover_image_url, ia_type, published_at, content_md, post_kind, created_at",
+        "id, title, subtitle, slug, excerpt, cover_image_url, hero_image_alt, hero_image_caption, ia_type, published_at, content_md, content_json, post_kind, created_at, updated_at",
       )
       .eq("slug", slug)
       .eq("status", "published")
@@ -143,7 +137,14 @@ export async function fetchPublishedPostBySlug(slug: string) {
       return null;
     }
 
-    return (data as PostDetail | null) ?? null;
+    if (!data) {
+      return null;
+    }
+
+    return {
+      ...(data as PostDetail),
+      content_json: normalizePostContentBlocks((data as PostDetail).content_json ?? []),
+    };
   } catch (error) {
     console.error("Unexpected error fetching post by slug:", error);
     return null;

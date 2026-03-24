@@ -5,9 +5,12 @@ import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth/session";
 import { getSupabaseServerAuthClient } from "@/lib/supabase/server";
 import { deleteMediaFileByUrl, uploadMediaFile } from "@/lib/supabase/admin-storage";
-
-type PostKind = "blog" | "tool" | "guide" | "news";
-type PostStatus = "draft" | "scheduled" | "published" | "archived";
+import {
+  markdownToPostContentBlocks,
+  normalizePostContentBlocks,
+  type PostKind,
+  type PostStatus,
+} from "@/lib/types/post";
 
 async function ensureStaffUser() {
   const user = await getCurrentUser();
@@ -35,6 +38,19 @@ function normalizeNullableText(value: FormDataEntryValue | null) {
   return normalized.length > 0 ? normalized : null;
 }
 
+function parseStructuredContent(formData: FormData, fallbackMarkdown: string) {
+  const rawContentJson = normalizeNullableText(formData.get("content_json"));
+  if (rawContentJson) {
+    try {
+      return normalizePostContentBlocks(JSON.parse(rawContentJson));
+    } catch {
+      // Fall back to markdown parsing below.
+    }
+  }
+
+  return markdownToPostContentBlocks(fallbackMarkdown);
+}
+
 function isNextNavigationError(error: unknown): boolean {
   if (typeof error !== "object" || error === null) return false;
   const e = error as Record<string, unknown>;
@@ -50,12 +66,16 @@ export async function createPostAction(formData: FormData) {
     const title = (formData.get("title")?.toString() ?? "").trim();
     const providedSlug = (formData.get("slug")?.toString() ?? "").trim();
     const slug = slugify(providedSlug || title);
+    const subtitle = normalizeNullableText(formData.get("subtitle"));
     const excerpt = normalizeNullableText(formData.get("excerpt"));
     const content = (formData.get("content_md")?.toString() ?? "").trim();
+    const contentJson = parseStructuredContent(formData, content);
     const iaType = normalizeNullableText(formData.get("ia_type"));
     const postKind = (formData.get("post_kind")?.toString() ?? "blog") as PostKind;
     const status = (formData.get("status")?.toString() ?? "draft") as PostStatus;
     const publishedInput = normalizeNullableText(formData.get("published_at"));
+    const heroImageAlt = normalizeNullableText(formData.get("hero_image_alt"));
+    const heroImageCaption = normalizeNullableText(formData.get("hero_image_caption"));
 
     if (!title || !slug || !content) {
       redirect("/admin/posts?err=Completa%20titulo%2C%20slug%20y%20contenido");
@@ -83,9 +103,13 @@ export async function createPostAction(formData: FormData) {
     const { error } = await supabase.from("posts").insert({
       title,
       slug,
+      subtitle,
       excerpt,
       content_md: content,
+      content_json: contentJson,
       cover_image_url: coverImage,
+      hero_image_alt: heroImageAlt,
+      hero_image_caption: heroImageCaption,
       post_kind: postKind,
       ia_type: iaType,
       status,
@@ -178,12 +202,16 @@ export async function updatePostAction(formData: FormData) {
     const title = (formData.get("title")?.toString() ?? "").trim();
     const providedSlug = (formData.get("slug")?.toString() ?? "").trim();
     const slug = slugify(providedSlug || title);
+    const subtitle = normalizeNullableText(formData.get("subtitle"));
     const excerpt = normalizeNullableText(formData.get("excerpt"));
     const content = (formData.get("content_md")?.toString() ?? "").trim();
+    const contentJson = parseStructuredContent(formData, content);
     const iaType = normalizeNullableText(formData.get("ia_type"));
     const postKind = (formData.get("post_kind")?.toString() ?? "blog") as PostKind;
     const status = (formData.get("status")?.toString() ?? "draft") as PostStatus;
     const publishedInput = normalizeNullableText(formData.get("published_at"));
+    const heroImageAlt = normalizeNullableText(formData.get("hero_image_alt"));
+    const heroImageCaption = normalizeNullableText(formData.get("hero_image_caption"));
 
     if (!id || !title || !slug || !content) {
       redirect("/admin/posts?err=Faltan%20datos%20obligatorios%20para%20actualizar");
@@ -225,9 +253,13 @@ export async function updatePostAction(formData: FormData) {
       .update({
         title,
         slug,
+        subtitle,
         excerpt,
         content_md: content,
+        content_json: contentJson,
         cover_image_url: coverImage,
+        hero_image_alt: heroImageAlt,
+        hero_image_caption: heroImageCaption,
         post_kind: postKind,
         ia_type: iaType,
         status,

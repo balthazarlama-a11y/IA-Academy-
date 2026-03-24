@@ -141,9 +141,7 @@ export async function createToolAction(formData: FormData) {
     }
 
     let coverImageUrl = normalizeNullableText(formData.get("cover_image_url"));
-    let screenshotUrl = normalizeNullableText(formData.get("screenshot_url"));
     let uploadedLogoUrl: string | null = null;
-    let uploadedScreenshotUrl: string | null = null;
 
     const logoFile = formData.get("cover_image_file");
     if (logoFile instanceof File && logoFile.size > 0) {
@@ -151,14 +149,6 @@ export async function createToolAction(formData: FormData) {
       if (uploadErr) redirect(`/admin/tools?err=${encodeURIComponent("Error subiendo logo: " + uploadErr)}`);
       uploadedLogoUrl = uploadedUrl;
       coverImageUrl = uploadedUrl;
-    }
-
-    const screenshotFile = formData.get("screenshot_file");
-    if (screenshotFile instanceof File && screenshotFile.size > 0) {
-      const { url: uploadedUrl, error: uploadErr } = await uploadMediaFile(screenshotFile, "tools", "cover");
-      if (uploadErr) redirect(`/admin/tools?err=${encodeURIComponent("Error subiendo screenshot: " + uploadErr)}`);
-      uploadedScreenshotUrl = uploadedUrl;
-      screenshotUrl = uploadedUrl;
     }
 
     const { data: insertedTool, error } = await supabase
@@ -173,7 +163,6 @@ export async function createToolAction(formData: FormData) {
         demo_video_url: demoVideoUrl ? normalizeUrl(demoVideoUrl) : null,
         url,
         cover_image_url: coverImageUrl,
-        screenshot_url: screenshotUrl,
         plan,
         level,
         ia_type: iaType,
@@ -193,7 +182,6 @@ export async function createToolAction(formData: FormData) {
 
     if (error) {
       if (uploadedLogoUrl) await deleteMediaFileByUrl(uploadedLogoUrl);
-      if (uploadedScreenshotUrl) await deleteMediaFileByUrl(uploadedScreenshotUrl);
       redirect(`/admin/tools?err=${encodeURIComponent(error.message)}`);
     }
 
@@ -273,9 +261,7 @@ export async function updateToolAction(formData: FormData) {
     }
 
     let coverImageUrl = normalizeNullableText(formData.get("cover_image_url"));
-    let screenshotUrl = normalizeNullableText(formData.get("screenshot_url"));
     let uploadedLogoUrl: string | null = null;
-    let uploadedScreenshotUrl: string | null = null;
 
     const { data: existingTool, error: existingToolError } = await supabase
       .from("tools")
@@ -285,7 +271,6 @@ export async function updateToolAction(formData: FormData) {
 
     if (existingToolError) redirect(`/admin/tools?err=${encodeURIComponent(existingToolError.message)}`);
     const previousCoverImageUrl = existingTool?.cover_image_url ?? null;
-    const previousScreenshotUrl = existingTool?.screenshot_url ?? null;
 
     const logoFile = formData.get("cover_image_file");
     if (logoFile instanceof File && logoFile.size > 0) {
@@ -293,14 +278,6 @@ export async function updateToolAction(formData: FormData) {
       if (uploadErr) redirect(`/admin/tools?err=${encodeURIComponent("Error subiendo logo: " + uploadErr)}`);
       uploadedLogoUrl = uploadedUrl;
       coverImageUrl = uploadedUrl;
-    }
-
-    const screenshotFile = formData.get("screenshot_file");
-    if (screenshotFile instanceof File && screenshotFile.size > 0) {
-      const { url: uploadedUrl, error: uploadErr } = await uploadMediaFile(screenshotFile, "tools", "cover");
-      if (uploadErr) redirect(`/admin/tools?err=${encodeURIComponent("Error subiendo screenshot: " + uploadErr)}`);
-      uploadedScreenshotUrl = uploadedUrl;
-      screenshotUrl = uploadedUrl;
     }
 
     const { error } = await supabase
@@ -315,7 +292,6 @@ export async function updateToolAction(formData: FormData) {
         demo_video_url: demoVideoUrl ? normalizeUrl(demoVideoUrl) : null,
         url,
         cover_image_url: coverImageUrl,
-        screenshot_url: screenshotUrl,
         plan,
         level,
         ia_type: iaType,
@@ -334,17 +310,12 @@ export async function updateToolAction(formData: FormData) {
 
     if (error) {
       if (uploadedLogoUrl) await deleteMediaFileByUrl(uploadedLogoUrl);
-      if (uploadedScreenshotUrl) await deleteMediaFileByUrl(uploadedScreenshotUrl);
       redirect(`/admin/tools?err=${encodeURIComponent(error.message)}`);
     }
 
     if (previousCoverImageUrl && previousCoverImageUrl !== coverImageUrl) {
       await deleteMediaFileByUrl(previousCoverImageUrl);
     }
-    if (previousScreenshotUrl && previousScreenshotUrl !== screenshotUrl) {
-      await deleteMediaFileByUrl(previousScreenshotUrl);
-    }
-
     await syncToolAreas(supabase, id, areaIds);
     await syncToolUseCases(supabase, id, useCaseIds);
     revalidateToolSurfaces();

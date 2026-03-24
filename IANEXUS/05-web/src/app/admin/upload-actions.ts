@@ -24,6 +24,8 @@ export async function uploadImageAction(
 
   const folderRaw = formData.get("folder")?.toString() ?? "posts";
   const folder = (folderRaw === "tools" ? "tools" : "posts") as "posts" | "tools";
+  const presetRaw = formData.get("preset")?.toString() ?? "";
+  const preset = presetRaw === "logo" || presetRaw === "inline" ? presetRaw : undefined;
 
-  return uploadMediaFile(file, folder);
+  return uploadMediaFile(file, folder, preset);
 }

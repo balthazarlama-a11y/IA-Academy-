@@ -2,6 +2,7 @@
 
 import { Wrench } from "lucide-react";
 import { useTransition, useState } from "react";
+import { useFormStatus } from "react-dom";
 import UploadImageField from "./upload-image-field";
 
 type ToolTaxonomy = { id: string; name: string; slug: string };
@@ -17,7 +18,6 @@ type Tool = {
   company_name: string | null;
   url: string;
   cover_image_url: string | null;
-  screenshot_url: string | null;
   demo_video_url: string | null;
   platform_tags: string[] | null;
   language_codes: string[] | null;
@@ -57,6 +57,27 @@ function getSelections<T extends ToolTaxonomy, K extends string>(
     .filter((value): value is T => Boolean(value));
 }
 
+function SubmitButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <button
+      type="submit"
+      disabled={pending}
+      className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-900 transition hover:bg-slate-100 disabled:opacity-50"
+    >
+      {pending ? (
+        <>
+          <span className="h-4 w-4 animate-spin rounded-full border-2 border-slate-400 border-t-transparent" />
+          Guardando...
+        </>
+      ) : (
+        "Guardar cambios"
+      )}
+    </button>
+  );
+}
+
 export function ToolEditorItem({ tool, areas, useCases, updateAction, deleteAction, defaultOpen = false }: { tool: Tool; areas: ToolTaxonomy[]; useCases: ToolTaxonomy[]; updateAction: ActionFn; deleteAction: ActionFn; defaultOpen?: boolean }) {
   const [isPending, startTransition] = useTransition();
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
@@ -64,10 +85,6 @@ export function ToolEditorItem({ tool, areas, useCases, updateAction, deleteActi
   const selectedUseCases = getSelections(tool.tool_use_cases, "use_cases");
   const selectedAreaIds = new Set(selectedAreas.map((item) => item.id));
   const selectedUseCaseIds = new Set(selectedUseCases.map((item) => item.id));
-
-  const handleSubmit = (formData: FormData) => {
-    startTransition(() => updateAction(formData));
-  };
 
   const handleDelete = () => {
     if (!showConfirmDelete) {
@@ -92,7 +109,7 @@ export function ToolEditorItem({ tool, areas, useCases, updateAction, deleteActi
       </summary>
 
       <div className="border-t border-slate-200 p-4">
-        <form action={handleSubmit} className="grid grid-cols-1 gap-3 md:grid-cols-2">
+        <form action={updateAction} className="grid grid-cols-1 gap-3 md:grid-cols-2">
           <input type="hidden" name="id" value={tool.id} />
           <input name="name" required defaultValue={tool.name} disabled={isPending} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50" />
           <input name="slug" required defaultValue={tool.slug} disabled={isPending} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50" />
@@ -102,8 +119,7 @@ export function ToolEditorItem({ tool, areas, useCases, updateAction, deleteActi
           <input name="demo_video_url" defaultValue={tool.demo_video_url ?? ""} disabled={isPending} placeholder="URL demo YouTube (opcional)" className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50 md:col-span-2" />
           <input name="url" required defaultValue={tool.url} disabled={isPending} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50 md:col-span-2" />
           <textarea name="description" rows={3} defaultValue={tool.description ?? ""} disabled={isPending} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50 md:col-span-2" />
-          <UploadImageField fileInputName="cover_image_file" urlInputName="cover_image_url" existingUrl={tool.cover_image_url} label="Logo / imagen principal" colSpan="md:col-span-1" assetKind="logo" />
-          <UploadImageField fileInputName="screenshot_file" urlInputName="screenshot_url" existingUrl={tool.screenshot_url} label="Screenshot / hero" colSpan="md:col-span-1" assetKind="cover" />
+          <UploadImageField fileInputName="cover_image_file" urlInputName="cover_image_url" existingUrl={tool.cover_image_url} label="Imagen principal" colSpan="md:col-span-2" assetKind="cover" />
 
           <fieldset className="rounded-lg border border-slate-200 bg-white px-3 py-3 text-sm text-slate-900">
             <legend className="px-1 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Áreas</legend>
@@ -173,7 +189,7 @@ export function ToolEditorItem({ tool, areas, useCases, updateAction, deleteActi
               )}
             </div>
 
-            <button type="submit" disabled={isPending} className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-900 transition hover:bg-slate-100 disabled:opacity-50">{isPending ? <><span className="h-4 w-4 animate-spin rounded-full border-2 border-slate-400 border-t-transparent" />Guardando...</> : "Guardar cambios"}</button>
+            <SubmitButton />
           </div>
         </form>
       </div>

@@ -1,20 +1,14 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useMemo, useState } from "react";
 import { PaginationControls } from "./pagination-controls";
 import { PostEditorItem } from "./post-editor-item";
+import type { PostDetail, PostStatus, PostSummary } from "@/lib/types/post";
 
-type Post = {
-  id: string;
-  title: string;
-  slug: string;
-  excerpt: string | null;
+type Post = PostSummary & {
   content_md: string;
-  cover_image_url: string | null;
-  post_kind: "blog" | "tool" | "guide" | "news";
-  ia_type: string | null;
-  status: "draft" | "scheduled" | "published" | "archived";
-  published_at: string | null;
+  content_json: PostDetail["content_json"];
+  status: PostStatus;
   updated_at: string;
 };
 
@@ -27,6 +21,7 @@ interface PaginatedPostsListProps {
   updateAction: ActionFn;
   deleteAction: ActionFn;
   openSlug?: string;
+  emptyMessage?: string;
 }
 
 export function PaginatedPostsList({
@@ -34,6 +29,7 @@ export function PaginatedPostsList({
   updateAction,
   deleteAction,
   openSlug = "",
+  emptyMessage = "No hay posts todavía.",
 }: PaginatedPostsListProps) {
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -47,7 +43,7 @@ export function PaginatedPostsList({
   if (posts.length === 0) {
     return (
       <div className="rounded-xl border border-slate-200 bg-white p-8 text-center text-sm text-slate-500">
-        No hay posts todavía.
+        {emptyMessage}
       </div>
     );
   }
