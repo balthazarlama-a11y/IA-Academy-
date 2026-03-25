@@ -22,13 +22,14 @@ export default function UploadImageField({
   const [preview, setPreview] = useState<string | null>(existingUrl ?? null);
   const [fileName, setFileName] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [wasCleared, setWasCleared] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
   function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
     setError(null);
     const file = e.target.files?.[0];
     if (!file) {
-      setPreview(existingUrl ?? null);
+      setPreview(wasCleared ? null : (existingUrl ?? null));
       setFileName(null);
       return;
     }
@@ -48,15 +49,17 @@ export default function UploadImageField({
     }
 
     setFileName(file.name);
+    setWasCleared(false);
     const reader = new FileReader();
     reader.onload = (ev) => setPreview(ev.target?.result as string);
     reader.readAsDataURL(file);
   }
 
   function handleClear() {
-    setPreview(existingUrl ?? null);
+    setPreview(null);
     setFileName(null);
     setError(null);
+    setWasCleared(true);
     if (fileRef.current) fileRef.current.value = "";
   }
 
@@ -80,7 +83,7 @@ export default function UploadImageField({
             className={
               assetKind === "logo"
                 ? "aspect-square h-auto w-full object-contain p-4"
-                : "aspect-video h-auto w-full object-cover"
+                : "aspect-video h-auto w-full object-contain bg-slate-100"
             }
             aria-hidden="true"
           />
@@ -133,7 +136,13 @@ export default function UploadImageField({
       <input
         type="hidden"
         name={urlInputName}
-        value={preview && !fileName ? (preview.startsWith("data:") ? "" : preview) : ""}
+        value={
+          wasCleared
+            ? ""
+            : preview && !fileName
+              ? (preview.startsWith("data:") ? "" : preview)
+              : ""
+        }
         readOnly
       />
     </div>

@@ -6,6 +6,7 @@ import { getCurrentUser } from "@/lib/auth/session";
 import { getSupabaseServerAuthClient } from "@/lib/supabase/server";
 import { deleteMediaFileByUrl, uploadMediaFile } from "@/lib/supabase/admin-storage";
 import {
+  collectPostContentImageUrls,
   markdownToPostContentBlocks,
   normalizePostContentBlocks,
   type PostKind,
@@ -70,6 +71,7 @@ export async function createPostAction(formData: FormData) {
     const excerpt = normalizeNullableText(formData.get("excerpt"));
     const content = (formData.get("content_md")?.toString() ?? "").trim();
     const contentJson = parseStructuredContent(formData, content);
+    const hasStructuredContent = contentJson.length > 0;
     const iaType = normalizeNullableText(formData.get("ia_type"));
     const postKind = (formData.get("post_kind")?.toString() ?? "blog") as PostKind;
     const status = (formData.get("status")?.toString() ?? "draft") as PostStatus;
@@ -77,8 +79,8 @@ export async function createPostAction(formData: FormData) {
     const heroImageAlt = normalizeNullableText(formData.get("hero_image_alt"));
     const heroImageCaption = normalizeNullableText(formData.get("hero_image_caption"));
 
-    if (!title || !slug || !content) {
-      redirect("/admin/posts?err=Completa%20titulo%2C%20slug%20y%20contenido");
+    if (!title || !slug || !postKind || !status || !publishedInput || !hasStructuredContent) {
+      redirect("/admin/posts/new?err=Completa%20titulo%2C%20slug%2C%20tipo%20de%20post%2C%20estado%2C%20fecha%20y%20contenido");
     }
 
     let coverImage = normalizeNullableText(formData.get("cover_image_url"));
@@ -87,7 +89,7 @@ export async function createPostAction(formData: FormData) {
     if (fileInput instanceof File && fileInput.size > 0) {
       const { url: uploadedUrl, error: uploadErr } = await uploadMediaFile(fileInput, "posts");
       if (uploadErr) {
-        redirect(`/admin/posts?err=${encodeURIComponent("Error subiendo imagen: " + uploadErr)}`);
+        redirect(`/admin/posts/new?err=${encodeURIComponent("Error subiendo imagen: " + uploadErr)}`);
       }
       uploadedReplacementUrl = uploadedUrl;
       coverImage = uploadedUrl;
@@ -100,36 +102,40 @@ export async function createPostAction(formData: FormData) {
           ? new Date(publishedInput).toISOString()
           : null;
 
-    const { error } = await supabase.from("posts").insert({
-      title,
-      slug,
-      subtitle,
-      excerpt,
-      content_md: content,
-      content_json: contentJson,
-      cover_image_url: coverImage,
-      hero_image_alt: heroImageAlt,
-      hero_image_caption: heroImageCaption,
-      post_kind: postKind,
-      ia_type: iaType,
-      status,
-      published_at: publishedAt,
-      author_id: user.id,
-    });
+    const { data: insertedPost, error } = await supabase
+      .from("posts")
+      .insert({
+        title,
+        slug,
+        subtitle,
+        excerpt,
+        content_md: content,
+        content_json: contentJson,
+        cover_image_url: coverImage,
+        hero_image_alt: heroImageAlt,
+        hero_image_caption: heroImageCaption,
+        post_kind: postKind,
+        ia_type: iaType,
+        status,
+        published_at: publishedAt,
+        author_id: user.id,
+      })
+      .select("id")
+      .single();
 
     if (error) {
       if (uploadedReplacementUrl) {
         await deleteMediaFileByUrl(uploadedReplacementUrl);
       }
-      redirect(`/admin/posts?err=${encodeURIComponent(error.message)}`);
+      redirect(`/admin/posts/new?err=${encodeURIComponent(error.message)}`);
     }
 
     revalidatePath("/blog");
     revalidatePath("/admin/posts");
-    redirect("/admin/posts?ok=Post%20creado%20correctamente");
+    redirect(`/admin/posts/${insertedPost.id}/edit?ok=Post%20creado%20correctamente`);
   } catch (err: unknown) {
     if (isNextNavigationError(err)) throw err;
-    redirect("/admin/posts?err=No%20fue%20posible%20crear%20el%20post");
+    redirect("/admin/posts/new?err=No%20fue%20posible%20crear%20el%20post");
   }
 }
 
@@ -146,7 +152,7 @@ export async function deletePostAction(formData: FormData) {
 
     const { data: existingPost, error: existingPostError } = await supabase
       .from("posts")
-      .select("cover_image_url")
+      .select("cover_image_url, content_json")
       .eq("id", id)
       .maybeSingle();
 
@@ -182,6 +188,20 @@ export async function deletePostAction(formData: FormData) {
       });
     }
 
+    const existingContentImages = collectPostContentImageUrls(
+      normalizePostContentBlocks(existingPost?.content_json ?? []),
+    );
+    for (const imageUrl of existingContentImages) {
+      const { error: inlineDeleteError } = await deleteMediaFileByUrl(imageUrl);
+      if (inlineDeleteError) {
+        console.error("Failed to delete post inline media after record deletion", {
+          postId: id,
+          imageUrl,
+          inlineDeleteError,
+        });
+      }
+    }
+
     revalidatePath("/blog");
     revalidatePath("/blog/[slug]");
     revalidatePath("/admin/posts");
@@ -206,6 +226,7 @@ export async function updatePostAction(formData: FormData) {
     const excerpt = normalizeNullableText(formData.get("excerpt"));
     const content = (formData.get("content_md")?.toString() ?? "").trim();
     const contentJson = parseStructuredContent(formData, content);
+    const hasStructuredContent = contentJson.length > 0;
     const iaType = normalizeNullableText(formData.get("ia_type"));
     const postKind = (formData.get("post_kind")?.toString() ?? "blog") as PostKind;
     const status = (formData.get("status")?.toString() ?? "draft") as PostStatus;
@@ -213,8 +234,8 @@ export async function updatePostAction(formData: FormData) {
     const heroImageAlt = normalizeNullableText(formData.get("hero_image_alt"));
     const heroImageCaption = normalizeNullableText(formData.get("hero_image_caption"));
 
-    if (!id || !title || !slug || !content) {
-      redirect("/admin/posts?err=Faltan%20datos%20obligatorios%20para%20actualizar");
+    if (!id || !title || !slug || !postKind || !status || !publishedInput || !hasStructuredContent) {
+      redirect(`/admin/posts/${id}/edit?err=Faltan%20titulo%2C%20slug%2C%20tipo%20de%20post%2C%20estado%2C%20fecha%20o%20contenido`);
     }
 
     let coverImage = normalizeNullableText(formData.get("cover_image_url"));
@@ -223,19 +244,18 @@ export async function updatePostAction(formData: FormData) {
 
     const { data: existingPost, error: existingPostError } = await supabase
       .from("posts")
-      .select("cover_image_url")
+      .select("cover_image_url, content_json")
       .eq("id", id)
       .maybeSingle();
 
     if (existingPostError) {
-      redirect(`/admin/posts?err=${encodeURIComponent(existingPostError.message)}`);
+      redirect(`/admin/posts/${id}/edit?err=${encodeURIComponent(existingPostError.message)}`);
     }
 
-    const previousCoverImageUrl = existingPost?.cover_image_url ?? null;
     if (fileInput instanceof File && fileInput.size > 0) {
       const { url: uploadedUrl, error: uploadErr } = await uploadMediaFile(fileInput, "posts");
       if (uploadErr) {
-        redirect(`/admin/posts?err=${encodeURIComponent("Error subiendo imagen: " + uploadErr)}`);
+        redirect(`/admin/posts/${id}/edit?err=${encodeURIComponent("Error subiendo imagen: " + uploadErr)}`);
       }
       uploadedReplacementUrl = uploadedUrl;
       coverImage = uploadedUrl;
@@ -271,17 +291,22 @@ export async function updatePostAction(formData: FormData) {
       if (uploadedReplacementUrl) {
         await deleteMediaFileByUrl(uploadedReplacementUrl);
       }
-      redirect(`/admin/posts?err=${encodeURIComponent(error.message)}`);
+      redirect(`/admin/posts/${id}/edit?err=${encodeURIComponent(error.message)}`);
     }
 
-    const coverChanged = previousCoverImageUrl && previousCoverImageUrl !== coverImage;
-    if (coverChanged) {
-      const { error: deleteMediaError } = await deleteMediaFileByUrl(previousCoverImageUrl);
-      if (deleteMediaError) {
-        console.error("Failed to delete replaced post media", {
+    const previousImageUrls = new Set(
+      collectPostContentImageUrls(normalizePostContentBlocks(existingPost?.content_json ?? [])),
+    );
+    const currentImageUrls = new Set(collectPostContentImageUrls(contentJson));
+
+    for (const previousUrl of previousImageUrls) {
+      if (currentImageUrls.has(previousUrl)) continue;
+      const { error: deleteInlineError } = await deleteMediaFileByUrl(previousUrl);
+      if (deleteInlineError) {
+        console.error("Failed to delete removed inline image", {
           postId: id,
-          previousCoverImageUrl,
-          deleteMediaError,
+          previousUrl,
+          deleteInlineError,
         });
       }
     }
@@ -289,9 +314,9 @@ export async function updatePostAction(formData: FormData) {
     revalidatePath("/blog");
     revalidatePath("/blog/[slug]");
     revalidatePath("/admin/posts");
-    redirect("/admin/posts?ok=Post%20actualizado%20correctamente");
+    redirect(`/admin/posts/${id}/edit?ok=Post%20actualizado%20correctamente`);
   } catch (err: unknown) {
     if (isNextNavigationError(err)) throw err;
-    redirect("/admin/posts?err=No%20fue%20posible%20actualizar%20el%20post");
+    redirect(`/admin/posts/${(formData.get("id")?.toString() ?? "").trim()}/edit?err=No%20fue%20posible%20actualizar%20el%20post`);
   }
 }

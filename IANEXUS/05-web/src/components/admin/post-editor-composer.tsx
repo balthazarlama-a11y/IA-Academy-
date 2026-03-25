@@ -231,8 +231,8 @@ function BlockEditor({
   canMoveDown: boolean;
 }) {
   return (
-    <article className="overflow-hidden rounded-[1.35rem] border border-slate-200 bg-white shadow-[0_8px_20px_rgba(15,23,42,0.03)]">
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-[linear-gradient(180deg,rgba(248,250,252,0.96),rgba(255,255,255,1))] px-4 py-2.5">
+    <article className="overflow-hidden rounded-[1.35rem] border border-slate-200/80 bg-white/96 shadow-[0_8px_18px_rgba(15,23,42,0.025)]">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200/80 bg-slate-50/70 px-4 py-2.5">
         <div className="flex items-center gap-2">
           <span className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-slate-200 bg-white text-[11px] text-slate-500">
             {blockIcon(block.type)}
@@ -283,14 +283,14 @@ function BlockEditor({
         </div>
       </div>
 
-      <div className="p-4">
+      <div className="p-4 md:p-5">
         {block.type === "paragraph" ? (
           <textarea
             value={block.text}
             onChange={(event) => onChange({ ...block, text: event.target.value })}
             rows={7}
             placeholder="Escribe el párrafo editorial..."
-            className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm leading-7 text-slate-900 outline-none transition focus:border-slate-400"
+            className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-4 text-[15px] leading-8 text-slate-900 outline-none transition focus:border-slate-400"
           />
         ) : null}
 
@@ -330,7 +330,7 @@ function BlockEditor({
                 <img
                   src={block.src}
                   alt={block.alt || "Vista previa del bloque"}
-                  className="block h-auto max-h-[420px] w-full rounded-xl object-contain"
+                  className="block h-auto max-h-[520px] w-full rounded-xl object-contain"
                 />
               ) : (
                 <div className="flex min-h-[320px] items-center justify-center rounded-xl bg-slate-50 text-sm text-slate-400">
@@ -512,6 +512,8 @@ export function PostEditorComposer({
   }, [initialContentJson, initialContentMd]);
 
   const [blocks, setBlocks] = useState<EditorBlock[]>(() => toEditorBlocks(parsedInitialBlocks));
+  const [showPreview, setShowPreview] = useState(false);
+  const [showBlockLibrary, setShowBlockLibrary] = useState(false);
 
   const structuredBlocks = useMemo(() => stripEditorIds(blocks), [blocks]);
   const contentJsonValue = useMemo(() => JSON.stringify(structuredBlocks), [structuredBlocks]);
@@ -572,59 +574,59 @@ export function PostEditorComposer({
   }
 
   return (
-    <section className="overflow-hidden rounded-[1.9rem] border border-slate-200 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(248,250,252,0.96))] shadow-[0_22px_54px_rgba(15,23,42,0.05)]">
-      <div className="flex flex-col gap-5 border-b border-slate-200 px-6 py-6 md:flex-row md:items-end md:justify-between">
+    <section className="space-y-5">
+      <div className="sticky top-[74px] z-10 rounded-[1.8rem] border border-slate-200/80 bg-white/92 px-4 py-4 shadow-[0_12px_28px_rgba(15,23,42,0.05)] backdrop-blur">
+        <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
         <div className="max-w-2xl">
           <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-[#3351c8]">
-            Content studio
+            Writing canvas
           </p>
           <h3 className="mt-2 text-xl font-semibold tracking-tight text-slate-950 md:text-[1.65rem]">
-            Construye el artículo por bloques
+            Construye el documento por bloques
           </h3>
           <p className="mt-2 text-sm leading-relaxed text-slate-600">
-            Combina párrafos, subtítulos, imágenes, notas, citas y embeds de tools sin pelearte
-            con markdown. El editor genera el JSON estructurado y mantiene un fallback textual.
+            El cuerpo se edita como una hoja continua. Los bloques siguen existiendo, pero la interfaz ya no los presenta como un dashboard.
           </p>
         </div>
 
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <div className="rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-medium uppercase tracking-[0.18em] text-slate-500">
             {blocks.length} bloques
           </div>
           <div className="rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-medium uppercase tracking-[0.18em] text-slate-500">
             {estimatedReadTime} min aprox
           </div>
-          <div className="rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-medium uppercase tracking-[0.18em] text-slate-500">
-            JSON + fallback
-          </div>
+          <button
+            type="button"
+            onClick={() => setShowPreview(true)}
+            className="inline-flex items-center gap-2 rounded-full border border-[#3351c8]/20 bg-[linear-gradient(135deg,rgba(51,81,200,0.12),rgba(129,140,248,0.18))] px-6 py-3 text-sm font-semibold uppercase tracking-[0.18em] text-[#2842ac] shadow-[0_12px_24px_rgba(51,81,200,0.12)] transition hover:translate-y-[-1px] hover:shadow-[0_16px_28px_rgba(51,81,200,0.16)]"
+          >
+            <span className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-[#3351c8]/15 bg-white/80 text-[11px] font-bold text-[#3351c8]">
+              P
+            </span>
+            Ver preview
+          </button>
         </div>
       </div>
-
-      <div className="border-b border-slate-200 px-6 py-4">
-        <div className="flex flex-col gap-3">
-          <div>
-            <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-slate-500">
-              Insertar bloque
-            </p>
-            <p className="mt-1 text-sm text-slate-500">
-              Elige un bloque, ordénalo y deja el preview listo para publicación.
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            <BlockTypeButton type="paragraph" onClick={() => addBlock("paragraph")} />
-            <BlockTypeButton type="heading" onClick={() => addBlock("heading")} />
-            <BlockTypeButton type="image" onClick={() => addBlock("image")} />
-            <BlockTypeButton type="quote" onClick={() => addBlock("quote")} />
-            <BlockTypeButton type="callout" onClick={() => addBlock("callout")} />
-            <BlockTypeButton type="list" onClick={() => addBlock("list")} />
-            <BlockTypeButton type="tool_embed" onClick={() => addBlock("tool_embed")} />
-            <BlockTypeButton type="divider" onClick={() => addBlock("divider")} />
-          </div>
-        </div>
       </div>
 
-      <div className="grid gap-0 2xl:grid-cols-[minmax(0,1.45fr)_minmax(340px,0.55fr)]">
-        <div className="space-y-4 p-6">
+      <div className="rounded-[2.4rem] border border-slate-200/90 bg-[#fcfcfd] px-4 py-4 shadow-[0_28px_58px_rgba(15,23,42,0.06)] md:px-6 md:py-6">
+        <div className="mx-auto max-w-[1080px] rounded-[1.8rem] border border-[#e5e7eb] bg-white px-5 py-6 shadow-[0_30px_50px_rgba(15,23,42,0.05)] md:px-10 md:py-9">
+          <div className="mb-8 flex items-center justify-between gap-3 border-b border-slate-200 pb-4">
+            <div>
+              <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-slate-500">
+                Documento en edición
+              </p>
+              <p className="mt-1 text-sm text-slate-500">
+                Superficie principal para escribir, insertar media y ordenar la lectura.
+              </p>
+            </div>
+            <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.16em] text-slate-500">
+              JSON + fallback
+            </span>
+          </div>
+
+          <div className="space-y-5">
           {blocks.map((block, index) => (
             <BlockEditor
               key={block._id}
@@ -639,42 +641,61 @@ export function PostEditorComposer({
             />
           ))}
         </div>
+        </div>
+      </div>
 
-        <aside className="border-t border-slate-200 bg-[linear-gradient(180deg,rgba(248,250,252,0.94),rgba(255,255,255,1))] p-6 2xl:border-l 2xl:border-t-0">
-          <div className="space-y-4 2xl:sticky 2xl:top-6">
-            <div className="rounded-[1.6rem] border border-[#dbe2f4] bg-white p-4 shadow-[0_18px_40px_rgba(15,23,42,0.04)]">
-              <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-slate-500">
-                Vista editorial
-              </p>
-              <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                La composición editorial se verá así en el frontend. El preview no es una copia
-                exacta del layout final, pero sí valida jerarquía, ritmo y legibilidad.
-              </p>
-              <div className="mt-4 flex flex-wrap gap-2">
-                <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.16em] text-slate-500">
-                  {blocks.length} bloques
-                </span>
-                <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.16em] text-slate-500">
-                  ~{estimatedReadTime} min
-                </span>
+      <button
+        type="button"
+        onClick={() => setShowBlockLibrary(true)}
+        className="fixed bottom-24 right-6 z-30 inline-flex items-center gap-3 rounded-full border border-slate-200 bg-[linear-gradient(135deg,rgba(255,255,255,0.98),rgba(244,247,255,0.98))] px-6 py-4 text-base font-semibold text-slate-800 shadow-[0_20px_40px_rgba(15,23,42,0.14)] backdrop-blur transition hover:translate-y-[-1px] hover:shadow-[0_24px_44px_rgba(15,23,42,0.16)] md:right-8"
+      >
+        <span className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[#3351c8]/15 bg-[#3351c8]/8 text-sm font-bold uppercase tracking-[0.12em] text-[#3351c8]">
+          +
+        </span>
+        Insertar bloque
+      </button>
+
+      {showPreview ? (
+        <div className="fixed inset-0 z-[100]">
+          <button
+            type="button"
+            aria-label="Cerrar preview"
+            onClick={() => setShowPreview(false)}
+            className="absolute inset-0 bg-slate-950/20 backdrop-blur-[1px]"
+          />
+
+          <aside className="absolute right-0 top-0 h-full w-full max-w-[560px] overflow-auto border-l border-slate-200 bg-[linear-gradient(180deg,rgba(255,255,255,0.99),rgba(247,249,252,0.98))] px-5 py-5 shadow-[-18px_0_42px_rgba(15,23,42,0.10)]">
+            <div className="flex items-center justify-between gap-3 border-b border-slate-200 pb-4">
+              <div>
+                <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-[#3351c8]">
+                  Lectura publica
+                </p>
+                <h3 className="mt-2 text-xl font-semibold tracking-tight text-slate-950">
+                  Preview editorial
+                </h3>
+                <p className="mt-2 text-sm leading-7 text-slate-600">
+                  Validacion de ritmo, jerarquia y legibilidad antes de publicar.
+                </p>
               </div>
+              <button
+                type="button"
+                onClick={() => setShowPreview(false)}
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 transition hover:bg-slate-50"
+              >
+                ×
+              </button>
             </div>
 
-            <article className="rounded-[1.6rem] border border-slate-200 bg-white p-5 shadow-[0_18px_40px_rgba(15,23,42,0.04)]">
-              <div className="mb-4 flex items-center justify-between gap-3 border-b border-slate-200 pb-3">
-                <div>
-                  <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-slate-500">
-                    Lectura pública
-                  </p>
-                  <p className="mt-1 text-sm text-slate-500">
-                    El mismo contenido, ya con el ritmo del artículo final.
-                  </p>
-                </div>
-                <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.16em] text-slate-500">
-                  Preview
-                </span>
-              </div>
+            <div className="mt-5 flex flex-wrap gap-2">
+              <span className="rounded-full border border-slate-200 bg-white px-3 py-1 text-[11px] font-medium uppercase tracking-[0.16em] text-slate-500">
+                {blocks.length} bloques
+              </span>
+              <span className="rounded-full border border-slate-200 bg-white px-3 py-1 text-[11px] font-medium uppercase tracking-[0.16em] text-slate-500">
+                ~{estimatedReadTime} min
+              </span>
+            </div>
 
+            <article className="mt-5 rounded-[1.8rem] border border-slate-200 bg-white p-6 shadow-[0_18px_40px_rgba(15,23,42,0.04)]">
               <div className="space-y-0">
                 {structuredBlocks.length > 0 ? (
                   structuredBlocks.map((block, index) => (
@@ -684,14 +705,59 @@ export function PostEditorComposer({
                   ))
                 ) : (
                   <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 px-4 py-5 text-sm text-slate-500">
-                    Todavía no hay bloques para previsualizar.
+                    Todavia no hay bloques para previsualizar.
                   </div>
                 )}
               </div>
             </article>
-          </div>
-        </aside>
-      </div>
+          </aside>
+        </div>
+      ) : null}
+
+      {showBlockLibrary ? (
+        <div className="fixed inset-0 z-[95]">
+          <button
+            type="button"
+            aria-label="Cerrar biblioteca de bloques"
+            onClick={() => setShowBlockLibrary(false)}
+            className="absolute inset-0 bg-slate-950/16 backdrop-blur-[1px]"
+          />
+
+          <aside className="absolute right-0 top-0 h-full w-full max-w-[420px] overflow-auto border-l border-slate-200 bg-[linear-gradient(180deg,rgba(255,255,255,0.99),rgba(247,249,252,0.98))] px-5 py-5 shadow-[-18px_0_42px_rgba(15,23,42,0.10)]">
+            <div className="flex items-center justify-between gap-3 border-b border-slate-200 pb-4">
+              <div>
+                <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-[#3351c8]">
+                  Block library
+                </p>
+                <h3 className="mt-2 text-xl font-semibold tracking-tight text-slate-950">
+                  Insertar bloque
+                </h3>
+                <p className="mt-2 text-sm leading-7 text-slate-600">
+                  Agrega una pieza nueva sin quitarle espacio al documento principal.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowBlockLibrary(false)}
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 transition hover:bg-slate-50"
+              >
+                ×
+              </button>
+            </div>
+
+            <div className="mt-5 grid gap-3">
+              <BlockTypeButton type="paragraph" onClick={() => { addBlock("paragraph"); setShowBlockLibrary(false); }} />
+              <BlockTypeButton type="heading" onClick={() => { addBlock("heading"); setShowBlockLibrary(false); }} />
+              <BlockTypeButton type="image" onClick={() => { addBlock("image"); setShowBlockLibrary(false); }} />
+              <BlockTypeButton type="quote" onClick={() => { addBlock("quote"); setShowBlockLibrary(false); }} />
+              <BlockTypeButton type="callout" onClick={() => { addBlock("callout"); setShowBlockLibrary(false); }} />
+              <BlockTypeButton type="list" onClick={() => { addBlock("list"); setShowBlockLibrary(false); }} />
+              <BlockTypeButton type="tool_embed" onClick={() => { addBlock("tool_embed"); setShowBlockLibrary(false); }} />
+              <BlockTypeButton type="divider" onClick={() => { addBlock("divider"); setShowBlockLibrary(false); }} />
+            </div>
+          </aside>
+        </div>
+      ) : null}
 
       <textarea name={contentJsonFieldName} value={contentJsonValue} readOnly className="sr-only" />
       <textarea name={contentMdFieldName} value={contentMarkdownValue} readOnly className="sr-only" />
