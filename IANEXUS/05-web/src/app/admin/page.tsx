@@ -176,7 +176,14 @@ export default async function AdminDashboardPage() {
                 className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-950 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-slate-800"
               >
                 <FileText className="h-4 w-4" />
-                Editar posts
+                Ir al archivo
+              </Link>
+              <Link
+                href="/admin/posts/new"
+                className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-2.5 text-sm font-medium text-slate-800 transition hover:bg-slate-50"
+              >
+                <PenSquare className="h-4 w-4" />
+                Nuevo post
               </Link>
               <Link
                 href="/admin/tools"
@@ -271,10 +278,10 @@ export default async function AdminDashboardPage() {
                   Editorial
                 </div>
                 <h4 className="mt-4 text-xl font-semibold tracking-tight text-slate-950">
-                  Gestionar Posts
+                  Archivo y workspace de posts
                 </h4>
                 <p className="mt-2 max-w-md text-sm leading-relaxed text-slate-600">
-                  Crear, editar y ordenar piezas editoriales con composición por bloques.
+                  El archivo vive en `/admin/posts` y la escritura se abre en una página dedicada tipo documento.
                 </p>
               </div>
               <div className="rounded-2xl border border-slate-200 bg-white p-3 text-slate-400 transition group-hover:text-slate-700">

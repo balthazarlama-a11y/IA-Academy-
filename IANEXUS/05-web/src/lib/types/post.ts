@@ -382,3 +382,16 @@ export function postContentBlocksToPlainText(blocks: PostContentBlock[]): string
     .replace(/\s+/g, " ")
     .trim();
 }
+
+export function collectPostContentImageUrls(blocks: PostContentBlock[]): string[] {
+  const urls = new Set<string>();
+
+  for (const block of blocks) {
+    if (block.type !== "image") continue;
+    const src = block.src.trim();
+    if (!src) continue;
+    urls.add(src);
+  }
+
+  return Array.from(urls);
+}

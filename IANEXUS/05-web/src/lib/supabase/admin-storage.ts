@@ -52,8 +52,8 @@ async function normalizeUploadImage(file: File, preset: UploadPreset) {
             .toBuffer()
       : await processor
           .resize(COVER_WIDTH, COVER_HEIGHT, {
-            fit: "cover",
-            position: "attention",
+            fit: "contain",
+            position: "center",
             background: COVER_BACKGROUND,
             withoutEnlargement: true,
           })

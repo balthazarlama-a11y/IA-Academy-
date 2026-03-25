@@ -1,8 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import { PaginationControls } from "./pagination-controls";
-import { PostEditorItem } from "./post-editor-item";
 import type { PostDetail, PostStatus, PostSummary } from "@/lib/types/post";
 
 type Post = PostSummary & {
@@ -12,23 +12,15 @@ type Post = PostSummary & {
   updated_at: string;
 };
 
-type ActionFn = (formData: FormData) => Promise<void>;
-
 const ITEMS_PER_PAGE = 25;
 
 interface PaginatedPostsListProps {
   posts: Post[];
-  updateAction: ActionFn;
-  deleteAction: ActionFn;
-  openSlug?: string;
   emptyMessage?: string;
 }
 
 export function PaginatedPostsList({
   posts,
-  updateAction,
-  deleteAction,
-  openSlug = "",
   emptyMessage = "No hay posts todavía.",
 }: PaginatedPostsListProps) {
   const [currentPage, setCurrentPage] = useState(1);
@@ -58,15 +50,58 @@ export function PaginatedPostsList({
         onPageChange={setCurrentPage}
       />
 
-      <div className="space-y-3">
+      <div className="grid gap-3">
         {paginatedPosts.map((post) => (
-          <PostEditorItem
+          <article
             key={post.id}
-            post={post}
-            updateAction={updateAction}
-            deleteAction={deleteAction}
-            defaultOpen={openSlug ? post.slug === openSlug || post.title.toLowerCase() === openSlug : false}
-          />
+            className="rounded-[1.6rem] border border-slate-200 bg-white px-5 py-4 shadow-[0_16px_36px_rgba(15,23,42,0.04)]"
+          >
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+              <div className="min-w-0 flex-1 space-y-2">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="inline-flex rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                    {post.post_kind}
+                  </span>
+                  <span className="inline-flex rounded-full border border-slate-200 bg-white px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                    {post.status}
+                  </span>
+                </div>
+                <div className="space-y-1">
+                  <h4 className="text-lg font-semibold tracking-tight text-slate-950">{post.title}</h4>
+                  {post.subtitle ? (
+                    <p className="text-sm text-slate-600">{post.subtitle}</p>
+                  ) : null}
+                </div>
+                {post.excerpt ? (
+                  <p className="line-clamp-2 max-w-3xl text-sm leading-7 text-slate-500">{post.excerpt}</p>
+                ) : null}
+                <p className="text-xs uppercase tracking-[0.18em] text-slate-400">
+                  /{post.slug} · actualizado {new Intl.DateTimeFormat("es-CL", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  }).format(new Date(post.updated_at))}
+                </p>
+              </div>
+
+              <div className="flex shrink-0 flex-wrap gap-2">
+                <Link
+                  href={`/admin/posts/${post.id}/edit`}
+                  className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-slate-950 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-800"
+                >
+                  Abrir editor
+                </Link>
+                <Link
+                  href={`/blog/${post.slug}`}
+                  className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+                >
+                  Ver público
+                </Link>
+              </div>
+            </div>
+          </article>
         ))}
       </div>
 
