@@ -203,7 +203,7 @@ export async function deletePostAction(formData: FormData) {
     }
 
     revalidatePath("/blog");
-    revalidatePath("/blog/[slug]");
+    revalidatePath("/blog/[slug]", "page");
     revalidatePath("/admin/posts");
     revalidatePath("/admin/relations");
     redirect("/admin/posts?ok=Post%20eliminado%20correctamente");
@@ -312,7 +312,7 @@ export async function updatePostAction(formData: FormData) {
     }
 
     revalidatePath("/blog");
-    revalidatePath("/blog/[slug]");
+    revalidatePath("/blog/[slug]", "page");
     revalidatePath("/admin/posts");
     redirect(`/admin/posts/${id}/edit?ok=Post%20actualizado%20correctamente`);
   } catch (err: unknown) {
