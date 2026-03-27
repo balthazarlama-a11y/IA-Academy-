@@ -13,7 +13,7 @@ import {
 } from "@/lib/repositories/post-tools-repo";
 
 export const metadata = {
-  title: "Relaciones - Admin IA NEXUS",
+  title: "Relaciones - Admin YourAI",
 };
 
 async function ensureStaffUser() {

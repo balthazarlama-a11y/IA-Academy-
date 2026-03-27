@@ -1,4 +1,4 @@
--- IA NEXUS - Seed Fase 2: Tool Categories + Tools para estudiantes
+-- YourAI - Seed Fase 2: Tool Categories + Tools para estudiantes
 -- Requiere: 20260303_init_blog.sql + 20260304_tools_schema.sql ejecutados previamente
 -- Idempotente: usa INSERT ... ON CONFLICT DO NOTHING
 

@@ -6,7 +6,7 @@ import { PostEditorItem } from "@/components/admin/post-editor-item";
 import { deletePostAction, updatePostAction } from "../../actions";
 
 export const metadata = {
-  title: "Editar post - Admin IA NEXUS",
+  title: "Editar post - Admin YourAI",
 };
 
 type AdminPostRow = PostSummary & {

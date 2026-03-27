@@ -62,8 +62,8 @@ function inferNarrativeSections(tool: Tool) {
   const whatIs = shortSentence(
     tool.editorial_summary?.trim() ||
       tool.description?.trim() ||
-      "Herramienta incluida en IA NEXUS para resolver un caso de uso concreto con IA.",
-    "Herramienta incluida en IA NEXUS para resolver un caso de uso concreto con IA.",
+      "Herramienta incluida en YourAI para resolver un caso de uso concreto con IA.",
+    "Herramienta incluida en YourAI para resolver un caso de uso concreto con IA.",
   );
 
   const whoIsFor =
@@ -242,7 +242,7 @@ export default function ToolDetail({ tool, relatedPosts }: { tool: Tool; related
             <div className="flex items-center justify-between gap-4">
               <div>
                 <h2 className="text-2xl font-semibold text-slate-950">Guías relacionadas</h2>
-                <p className="mt-2 text-sm text-slate-600">Artículos publicados de IA NEXUS donde aparece esta herramienta.</p>
+                <p className="mt-2 text-sm text-slate-600">Artículos publicados de YourAI donde aparece esta herramienta.</p>
               </div>
               <div className="hidden text-xs font-medium uppercase tracking-[0.16em] text-slate-400 md:block">
                 Archivo editorial

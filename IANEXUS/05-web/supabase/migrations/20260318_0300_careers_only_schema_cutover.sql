@@ -1,4 +1,4 @@
--- IA NEXUS - careers-only schema cutover
+-- YourAI - careers-only schema cutover
 --
 -- Target canonical schema:
 -- - public.profiles
@@ -62,7 +62,7 @@ alter table public.tools
 drop table if exists public.tool_categories;
 
 comment on table public.tools is
-  'Canonical tools catalog for IA NEXUS. Career taxonomy is modeled through public.tool_careers.';
+  'Canonical tools catalog for YourAI. Career taxonomy is modeled through public.tool_careers.';
 
 comment on table public.career_paths is
   'Canonical careers taxonomy used by the public catalog, admin, and discovery surfaces.';

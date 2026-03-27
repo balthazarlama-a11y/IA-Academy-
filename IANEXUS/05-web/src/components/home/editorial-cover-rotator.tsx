@@ -82,7 +82,7 @@ export default function EditorialCoverRotator({
         <div className="relative overflow-hidden rounded-[1.75rem] border-2 border-[#1f2740]/8 bg-[linear-gradient(135deg,rgba(255,255,255,0.88),rgba(233,239,255,0.58)_52%,rgba(242,237,255,0.56)_100%)] px-6 py-6 shadow-[0_22px_48px_rgba(15,23,42,0.06)] md:px-7 md:py-7">
           <p className="editorial-kicker text-[#3351c8]">Portada</p>
           <h2 className="editorial-display mt-3 max-w-3xl text-[2.35rem] leading-[0.95] font-semibold tracking-[-0.05em] text-[#111827] md:text-[3.5rem]">
-            La lectura principal de IA NEXUS aparecerá aquí
+            La lectura principal de YourAI aparecerá aquí
           </h2>
           <p className="mt-4 max-w-3xl text-[1rem] leading-7 text-[#4b5568] md:text-[1.04rem]">
             Cuando existan publicaciones recientes, esta portada rotará automáticamente entre las historias más importantes.

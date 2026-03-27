@@ -50,7 +50,7 @@ export function AdminSidebar({ userRole }: AdminSidebarProps) {
           </div>
           <div className="min-w-0">
             <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-slate-500">
-              IA NEXUS
+              YourAI
             </p>
             <h2 className="mt-1 truncate text-lg font-semibold tracking-tight text-slate-950">
               Editorial desk

@@ -6,7 +6,7 @@
 import { Settings, Shield } from "lucide-react";
 
 export const metadata = {
-  title: "Configuración — Admin IA NEXUS",
+  title: "Configuración — Admin YourAI",
 };
 
 export default function AdminSettingsPage() {

@@ -1,4 +1,4 @@
--- IA NEXUS - Initial database schema for auth roles + blog/posts
+-- YourAI - Initial database schema for auth roles + blog/posts
 -- Run this in Supabase SQL Editor.
 
 create extension if not exists pgcrypto;

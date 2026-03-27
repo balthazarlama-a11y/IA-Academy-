@@ -3,7 +3,7 @@ import { CreatePostForm } from "@/components/admin/create-post-form";
 import { createPostAction } from "../actions";
 
 export const metadata = {
-  title: "Nuevo post - Admin IA NEXUS",
+  title: "Nuevo post - Admin YourAI",
 };
 
 export default async function NewAdminPostPage() {

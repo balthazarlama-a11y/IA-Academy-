@@ -10,7 +10,7 @@ import { postContentBlocksToPlainText } from "@/lib/types/post";
 
 export const revalidate = 300;
 export const metadata = {
-  title: "IA NEXUS | Portada editorial de inteligencia artificial",
+  title: "YourAI | Portada editorial de inteligencia artificial",
   description:
     "Descubre herramientas, guías y novedades de inteligencia artificial curadas por area y necesidad, con foco en utilidad real para estudiantes y profesionales.",
 };
@@ -132,7 +132,7 @@ export default async function Home() {
         ? truncatePreview(structuredPreview)
         : detail?.content_md
           ? truncatePreview(stripMarkdown(detail.content_md))
-        : "IA NEXUS reúne herramientas, criterio y contexto para entrar a leer con una idea más clara de por qué esta historia importa.");
+        : "YourAI reúne herramientas, criterio y contexto para entrar a leer con una idea más clara de por qué esta historia importa.");
 
     return {
       id: post.id,

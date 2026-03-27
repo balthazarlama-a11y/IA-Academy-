@@ -9,7 +9,7 @@ import { getSupabaseServerAuthClient } from "@/lib/supabase/server";
 import { AnalyticsKpiSection } from "@/components/admin/analytics-kpi-section";
 
 export const metadata = {
-  title: "Dashboard — Admin IA NEXUS",
+  title: "Dashboard — Admin YourAI",
 };
 
 async function fetchDashboardStats() {

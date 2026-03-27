@@ -1,4 +1,4 @@
--- IA NEXUS - Tools taxonomy reset v1
+-- YourAI - Tools taxonomy reset v1
 -- Replaces career-based taxonomy with explicit areas + use_cases.
 -- Destructive by design: clears existing tools/post_tools data and drops legacy taxonomy tables.
 

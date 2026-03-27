@@ -1,4 +1,4 @@
--- IA NEXUS - Analytics Events
+-- YourAI - Analytics Events
 -- Tabla para instrumentación del funnel (WhatsApp CTAs, tool views, etc.)
 
 create table if not exists public.analytics_events (

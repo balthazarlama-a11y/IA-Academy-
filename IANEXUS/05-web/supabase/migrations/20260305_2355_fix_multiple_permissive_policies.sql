@@ -1,4 +1,4 @@
--- IA NEXUS - Fix multiple_permissive_policies warnings
+-- YourAI - Fix multiple_permissive_policies warnings
 -- Objetivo:
 -- 1) Evitar solapamiento SELECT entre *_select_unified y *_staff_modify
 -- 2) Evitar solapamiento UPDATE en profiles (own + staff)

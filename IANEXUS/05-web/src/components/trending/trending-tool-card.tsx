@@ -58,7 +58,7 @@ export function TrendingToolCard({ tool, rank, compact = false }: TrendingToolCa
           </div>
 
           <p className={cn("mt-2 leading-6 text-slate-600", compact ? "text-[0.88rem]" : "text-[0.92rem]")}>
-            {tool.description ?? "Seleccion editorial de IA NEXUS para revisar ahora con contexto y sin ruido."}
+            {tool.description ?? "Seleccion editorial de YourAI para revisar ahora con contexto y sin ruido."}
           </p>
 
           <div className="mt-4 flex flex-wrap gap-2">

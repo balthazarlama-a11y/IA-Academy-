@@ -1,4 +1,4 @@
-# IA NEXUS — Start Here
+# YourAI — Start Here
 
 ## Estado actual (limpio)
 - Landing **glassmorphism colorida** con fondo neural animado.

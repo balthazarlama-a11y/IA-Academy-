@@ -9,7 +9,7 @@ import { getTools } from "@/lib/repositories/tools-repo";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Áreas y casos de uso | IA NEXUS",
+  title: "Áreas y casos de uso | YourAI",
   description: "Explora herramientas de IA por área principal y caso de uso con una taxonomía simple y utilizable.",
 };
 

@@ -7,7 +7,7 @@ import { getSearchPageData } from "@/lib/repositories/search-repo";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Buscar herramientas | IA NEXUS",
+  title: "Buscar herramientas | YourAI",
   description:
     "Encuentra herramientas de IA por necesidad, carrera o plan con una búsqueda directa y editorial.",
 };

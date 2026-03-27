@@ -1,4 +1,4 @@
--- IA NEXUS - Careers taxonomy for areas by career
+-- YourAI - Careers taxonomy for areas by career
 -- Additive migration: keeps tool_categories intact and adds career_paths + tool_careers
 
 -- -----------------------------------------------------------------------------

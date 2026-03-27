@@ -1,20 +1,20 @@
 # Plan De Implementación Basado En Benchmark De herramientasia.ai
 
 ## Objetivo
-Usar lo mejor de `herramientasia.ai` para fortalecer `IA NEXUS` sin convertirla en un clon de directorio genérico.
+Usar lo mejor de `herramientasia.ai` para fortalecer `YourAI` sin convertirla en un clon de directorio genérico.
 
 La dirección correcta es:
-- mantener la identidad editorial de IA NEXUS
+- mantener la identidad editorial de YourAI
 - mantener el foco en estudiantes, carreras y criterio
 - incorporar capas de producto que mejoren descubrimiento, retención y profundidad de uso
 
 ## Tesis Del Plan
 `herramientasia.ai` gana por sistema de producto.
 
-`IA NEXUS` gana por identidad editorial.
+`YourAI` gana por identidad editorial.
 
 La implementación debe combinar ambas cosas:
-- `IA NEXUS` sigue siendo una plataforma editorial curada
+- `YourAI` sigue siendo una plataforma editorial curada
 - pero añade capas de descubrimiento reales:
   - búsqueda
   - guardados
@@ -39,7 +39,7 @@ La implementación debe combinar ambas cosas:
 4. cards excesivamente saturadas de métricas
 5. promesa de valor basada solo en cantidad
 
-## Estado Actual De IA NEXUS
+## Estado Actual De YourAI
 
 ### Fortalezas actuales
 - identidad editorial clara
@@ -134,7 +134,7 @@ Parte de esta base ya existe en el producto. La Fase 1 deja el suelo levantado; 
 Objetivo:
 Cerrar la capa de busqueda y filtros antes de seguir abriendo fases mas profundas.
 
-IA NEXUS gana por criterio editorial, pero ese criterio solo sirve si la busqueda responde a la intencion del usuario de forma limpia y confiable. Esta fase no agrega una capa nueva de producto; termina de madurar una capa que ya existe.
+YourAI gana por criterio editorial, pero ese criterio solo sirve si la busqueda responde a la intencion del usuario de forma limpia y confiable. Esta fase no agrega una capa nueva de producto; termina de madurar una capa que ya existe.
 
 #### Entregables
 1. search UX mas clara y consistente
@@ -268,7 +268,7 @@ Crear un loop real de retorno al producto.
 
 #### Criterio de éxito
 - el usuario tiene una razón clara para volver
-- `IA NEXUS` deja de ser solo lectura y pasa a ser herramienta de trabajo personal
+- `YourAI` deja de ser solo lectura y pasa a ser herramienta de trabajo personal
 
 ## Fase 4: Trends / Ranking Layer
 Objetivo:
@@ -456,7 +456,7 @@ Unificar búsqueda, tendencias, guardados, carreras y casos de uso en una experi
 2. no meter métricas irrelevantes
 3. no abrir taxonomías gigantes sin curación
 4. no inflar textos por SEO
-5. no perder la identidad editorial de IA NEXUS
+5. no perder la identidad editorial de YourAI
 6. cada feature nueva debe responder:
    - ¿mejora discovery?
    - ¿mejora retención?
@@ -464,7 +464,7 @@ Unificar búsqueda, tendencias, guardados, carreras y casos de uso en una experi
 
 ## Definición De Éxito Del Benchmark
 Este benchmark estará bien implementado cuando:
-- IA NEXUS siga sintiéndose editorial
+- YourAI siga sintiéndose editorial
 - pero tenga mejores loops de producto
 - y un usuario pueda:
   - descubrir

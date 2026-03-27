@@ -1,4 +1,4 @@
-# IA NEXUS Editorial Content Architecture Plan
+# YourAI Editorial Content Architecture Plan
 
 **Date:** 2026-03-23  
 **Scope:** database simplification, `posts` redesign, and editorial authoring architecture  
@@ -177,7 +177,7 @@ Instead:
 
 ### Why this is the right choice
 
-Because IA NEXUS is not dealing with fundamentally different persistence models for blog/news/guides. It is dealing with different editorial presentations of the same base entity: an article-like piece of content.
+Because YourAI is not dealing with fundamentally different persistence models for blog/news/guides. It is dealing with different editorial presentations of the same base entity: an article-like piece of content.
 
 ---
 
@@ -332,7 +332,7 @@ Because it gives a good balance of:
 
 ### Why not stay on markdown
 
-Markdown is fine for technical writing, but it is not a good primary authoring experience for the kind of editorial product IA NEXUS wants to become.
+Markdown is fine for technical writing, but it is not a good primary authoring experience for the kind of editorial product YourAI wants to become.
 
 ### Why not create `post_blocks` table now
 
@@ -619,7 +619,7 @@ The correct next move is:
 5. keep `post_tools` as the bridge between editorial and tools
 6. simplify `post_kind` only after the new model is in place
 
-This gives IA NEXUS:
+This gives YourAI:
 
 - a cleaner base model
 - a more serious editorial workflow

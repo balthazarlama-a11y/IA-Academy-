@@ -4,7 +4,7 @@ import type { PostDetail, PostStatus, PostSummary } from "@/lib/types/post";
 import { PaginatedPostsList } from "@/components/admin/paginated-posts-list";
 
 export const metadata = {
-  title: "Posts - Admin IA NEXUS",
+  title: "Posts - Admin YourAI",
 };
 
 type AdminPostRow = PostSummary & {

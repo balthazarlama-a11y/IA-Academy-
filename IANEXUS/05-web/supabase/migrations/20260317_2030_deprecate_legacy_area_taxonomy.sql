@@ -1,4 +1,4 @@
--- IA NEXUS - Deprecate legacy area taxonomy in favor of careers
+-- YourAI - Deprecate legacy area taxonomy in favor of careers
 --
 -- Canonical model:
 -- - public.career_paths

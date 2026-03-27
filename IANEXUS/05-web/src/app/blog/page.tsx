@@ -12,9 +12,9 @@ import { fetchPublishedPosts } from "@/lib/supabase/server";
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "Blog de IA | IA NEXUS",
+  title: "Blog de IA | YourAI",
   description:
-    "Archivo editorial de IA NEXUS con guias, notas y actualizaciones para seguir herramientas y cambios relevantes sin ruido.",
+    "Archivo editorial de YourAI con guias, notas y actualizaciones para seguir herramientas y cambios relevantes sin ruido.",
 };
 
 export default async function BlogPage() {

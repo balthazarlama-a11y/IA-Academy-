@@ -4,8 +4,8 @@ import Footer from "@/components/layout/footer";
 import LoginForm from "@/components/auth/login-form";
 
 export const metadata = {
-  title: "Login - IA NEXUS",
-  description: "Acceso a contenido y panel de IA NEXUS.",
+  title: "Login - YourAI",
+  description: "Acceso a contenido y panel de YourAI.",
 };
 
 export default async function LoginPage({
@@ -23,7 +23,7 @@ export default async function LoginPage({
 
       <section className="flex-1 flex items-center justify-center px-6 py-10">
         <div className="w-full max-w-md rounded-3xl border border-slate-200 bg-white backdrop-blur-xl p-7">
-          <h1 className="text-2xl font-semibold text-slate-900">Accede a IA NEXUS</h1>
+          <h1 className="text-2xl font-semibold text-slate-900">Accede a YourAI</h1>
           <p className="mt-2 text-slate-600 text-sm">
             Inicia sesión o crea tu cuenta para ver contenido completo, herramientas y más!
           </p>

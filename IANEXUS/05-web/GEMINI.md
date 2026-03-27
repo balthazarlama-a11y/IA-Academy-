@@ -1,9 +1,9 @@
-# GEMINI.md — Contexto de IA NEXUS
+# GEMINI.md — Contexto de YourAI
 
-Este archivo proporciona el contexto técnico, arquitectónico y las convenciones del proyecto **IA NEXUS** para optimizar las interacciones con Gemini CLI.
+Este archivo proporciona el contexto técnico, arquitectónico y las convenciones del proyecto **YourAI** para optimizar las interacciones con Gemini CLI.
 
 ## 🚀 Descripción del Proyecto
-**IA NEXUS** es una plataforma comunitaria y un directorio de herramientas de Inteligencia Artificial verificadas para estudiantes. Incluye prompts para Gemini, noticias de IA del "día a día" y comunidades divididas por áreas académicas/profesionales.
+**YourAI** es una plataforma comunitaria y un directorio de herramientas de Inteligencia Artificial verificadas para estudiantes. Incluye prompts para Gemini, noticias de IA del "día a día" y comunidades divididas por áreas académicas/profesionales.
 
 ### Tecnologías Clave
 - **Framework:** [Next.js 16+](https://nextjs.org) (App Router).

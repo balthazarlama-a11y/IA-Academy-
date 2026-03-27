@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
   return buildPageMetadata({
     title: `${tool.name} | Herramienta IA`,
-    description: normalizeDescription(tool.description, `${tool.name} en IA NEXUS: descubre para qué sirve, en qué áreas encaja y cuándo conviene usarla.`),
+    description: normalizeDescription(tool.description, `${tool.name} en YourAI: descubre para qué sirve, en qué áreas encaja y cuándo conviene usarla.`),
     path: `/herramientas/${tool.slug}`,
     image: tool.screenshot_url ?? tool.cover_image_url,
     type: "website",

@@ -1,4 +1,4 @@
--- IA NEXUS - Sanity Check: Tools Schema (Fase 2)
+-- YourAI - Sanity Check: Tools Schema (Fase 2)
 -- Ejecutar en Supabase SQL Editor para verificar integridad del schema y seed.
 -- Esperado: todas las queries retornan datos correctos sin errores.
 

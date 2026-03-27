@@ -28,7 +28,7 @@ type CachedHeaderSession = {
   value: HeaderSession | null;
 };
 
-const HEADER_SESSION_CACHE_KEY = "ianexus:header-session:v1";
+const HEADER_SESSION_CACHE_KEY = "yourai:header-session:v1";
 const HEADER_CACHE_TTL_MS = 120_000;
 const NAV_LINKS = [
   { href: "/", label: "Inicio" },
@@ -223,9 +223,9 @@ export default function Header() {
               <BookOpen className="h-[18px] w-[18px]" />
             </div>
             <div className="min-w-0">
-              <p className="editorial-kicker editorial-muted">IA NEXUS editorial desk</p>
+              <p className="editorial-kicker editorial-muted">YourAI editorial desk</p>
               <div className="editorial-display mt-1 text-[2.05rem] leading-none font-semibold tracking-[-0.05em] text-[#111827] md:text-[2.7rem]">
-                IA NEXUS
+                YourAI
               </div>
             </div>
           </div>

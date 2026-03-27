@@ -6,7 +6,7 @@
 import { Users, UserPlus } from "lucide-react";
 
 export const metadata = {
-  title: "Usuarios — Admin IA NEXUS",
+  title: "Usuarios — Admin YourAI",
 };
 
 export default function AdminUsersPage() {

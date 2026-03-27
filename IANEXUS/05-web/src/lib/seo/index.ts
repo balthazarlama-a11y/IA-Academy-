@@ -10,7 +10,7 @@ type BuildPageMetadataArgs = {
   keywords?: string[];
 };
 
-const DEFAULT_TITLE = "IA NEXUS | Portada editorial de inteligencia artificial";
+const DEFAULT_TITLE = "YourAI | Portada editorial de inteligencia artificial";
 const DEFAULT_DESCRIPTION =
   "Herramientas, guias y novedades de inteligencia artificial curadas por carrera y necesidad, con foco en utilidad real.";
 const DEFAULT_KEYWORDS = [
@@ -80,7 +80,7 @@ export function buildPageMetadata({
       description: resolvedDescription,
       url: canonical,
       type,
-      siteName: "IA NEXUS",
+      siteName: "YourAI",
       locale: "es_CL",
       images,
     },

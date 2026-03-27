@@ -10,9 +10,9 @@ import { getTrendingSurfaceData } from "@/lib/repositories/trending-repo";
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "Tendencias | IA NEXUS",
+  title: "Tendencias | YourAI",
   description:
-    "Una primera superficie editorial para revisar las herramientas de IA que hoy merecen mas atencion en IA NEXUS.",
+    "Una primera superficie editorial para revisar las herramientas de IA que hoy merecen mas atencion en YourAI.",
 };
 
 export default async function TendenciasPage() {

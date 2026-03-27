@@ -11,7 +11,7 @@ import { fetchFundamentalsFeed } from "@/lib/repositories/fundamentals-repo";
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "Fundamentals | IA NEXUS",
+  title: "Fundamentals | YourAI",
   description:
     "Selección compacta de lecturas y herramientas para revisar lo esencial de IA sin ruido ni exceso visual.",
 };

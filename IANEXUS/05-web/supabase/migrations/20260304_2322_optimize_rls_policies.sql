@@ -1,4 +1,4 @@
--- IA NEXUS - Optimización de políticas RLS
+-- YourAI - Optimización de políticas RLS
 -- Fecha: 2026-03-04
 -- Objetivo: Resolver warnings de linter de Supabase (auth_rls_initplan, multiple_permissive_policies)
 -- sin cambiar la lógica de seguridad funcional

@@ -84,7 +84,7 @@ export default function AccessDeniedPage() {
 
       {/* Footer */}
       <p className="mt-8 text-sm text-slate-400">
-        IA NEXUS — Panel de Administración
+        YourAI — Panel de Administración
       </p>
     </div>
   );

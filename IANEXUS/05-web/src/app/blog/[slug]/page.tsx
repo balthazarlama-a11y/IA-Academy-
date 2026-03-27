@@ -62,7 +62,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const typeLabel = post.post_kind === "news" ? "Novedad" : "Guia";
   return buildPageMetadata({
     title: `${post.title} | ${typeLabel}`,
-    description: normalizeDescription(post.subtitle ?? post.excerpt, `Lee ${post.title} en IA NEXUS.`),
+    description: normalizeDescription(post.subtitle ?? post.excerpt, `Lee ${post.title} en YourAI.`),
     path: `/blog/${post.slug}`,
     image: post.cover_image_url,
     type: "article",

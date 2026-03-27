@@ -1,5 +1,5 @@
 /**
- * Sistema de roles para IA NEXUS Admin
+ * Sistema de roles para YourAI Admin
  * Basado en el enum app_role de Supabase: master | admin | user
  */
 

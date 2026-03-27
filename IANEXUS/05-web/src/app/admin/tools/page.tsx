@@ -6,7 +6,7 @@ import { ToolEditorItem } from "@/components/admin/tool-editor-item";
 import { createToolAction, updateToolAction, deleteToolAction } from "./actions";
 
 export const metadata = {
-  title: "Tools - Admin IA NEXUS",
+  title: "Tools - Admin YourAI",
 };
 
 type AdminTaxonomy = {

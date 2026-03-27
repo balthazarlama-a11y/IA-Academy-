@@ -1,4 +1,4 @@
--- IA NEXUS - Security Fixes
+-- YourAI - Security Fixes
 -- Fecha: 2026-03-04
 -- Objetivo: Resolver warnings de seguridad del linter de Supabase
 -- - function_search_path_mutable

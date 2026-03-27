@@ -5,8 +5,8 @@ import { getCurrentUser } from "@/lib/auth/session";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Admin - IA NEXUS",
-  description: "Panel de administracion de IA NEXUS",
+  title: "Admin - YourAI",
+  description: "Panel de administracion de YourAI",
 };
 
 export default async function AdminLayout({

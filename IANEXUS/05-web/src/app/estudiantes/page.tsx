@@ -8,7 +8,7 @@ import { getToolsPage } from "@/lib/repositories/tools-repo";
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "Estudiantes | IA NEXUS",
+  title: "Estudiantes | YourAI",
   description:
     "Descubre herramientas de IA con acceso gratis, institucional o freemium para estudiar, investigar y avanzar mas rapido.",
 };

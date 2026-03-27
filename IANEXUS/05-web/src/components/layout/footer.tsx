@@ -44,7 +44,7 @@ export default function Footer() {
               </div>
               <div className="flex flex-col leading-tight">
                 <span className="text-sm font-semibold tracking-tight text-slate-900">
-                  IA NEXUS
+                  YourAI
                 </span>
                 <span className="text-xs text-slate-500">
                   Portada editorial para descubrir IA por area

@@ -1,4 +1,4 @@
--- IA NEXUS - Fase 2: Tools Schema
+-- YourAI - Fase 2: Tools Schema
 -- Tablas: tool_categories, tools, post_tools
 -- Run AFTER 20260303_init_blog.sql
 

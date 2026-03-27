@@ -4,7 +4,7 @@ export default function WhatsAppStickyButton() {
   return (
     <TrackedWhatsAppLink
       location="sticky"
-      aria-label="Abrir grupo de WhatsApp de IA NEXUS"
+      aria-label="Abrir grupo de WhatsApp de YourAI"
       className="fixed bottom-3 right-3 z-40 inline-flex h-11 w-11 items-center justify-center rounded-full text-white shadow-md transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 md:bottom-5 md:right-5 md:h-12 md:w-12"
       style={{
         background: "linear-gradient(135deg, #22c55e, #16a34a)",

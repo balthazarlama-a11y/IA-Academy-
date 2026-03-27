@@ -27,7 +27,7 @@ export default function SearchToolCard({ tool }: { tool: Tool }) {
   const accent = tool.primaryArea?.color_accent ?? "#475569";
   const areaLabel = tool.primaryArea?.name ?? "Área general";
   const useCaseLabel = tool.useCases[0]?.name ?? null;
-  const description = tool.tagline ?? tool.description ?? "Herramienta curada por IA NEXUS para uso académico y profesional.";
+  const description = tool.tagline ?? tool.description ?? "Herramienta curada por YourAI para uso académico y profesional.";
 
   return (
     <article className="group overflow-hidden rounded-[1.4rem] border border-slate-200 bg-white shadow-[0_10px_24px_rgba(15,23,42,0.05)] transition hover:border-slate-300 hover:shadow-[0_14px_30px_rgba(15,23,42,0.08)]">

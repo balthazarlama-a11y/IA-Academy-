@@ -10,9 +10,9 @@ import { getToolsPage } from "@/lib/repositories/tools-repo";
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "Día a Día | IA NEXUS",
+  title: "Día a Día | YourAI",
   description:
-    "Feed editorial diario de IA NEXUS con lecturas y herramientas para decidir qué vale la pena abrir hoy.",
+    "Feed editorial diario de YourAI con lecturas y herramientas para decidir qué vale la pena abrir hoy.",
 };
 
 export default async function DiaADiaPage() {

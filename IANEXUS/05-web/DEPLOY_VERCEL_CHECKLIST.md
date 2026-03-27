@@ -1,4 +1,4 @@
-# 🚀 Checklist de Deploy en Vercel - IA NEXUS
+# 🚀 Checklist de Deploy en Vercel - YourAI
 
 ## ✅ Cambios Realizados
 
