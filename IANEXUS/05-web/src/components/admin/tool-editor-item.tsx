@@ -3,6 +3,9 @@
 import { Wrench } from "lucide-react";
 import { useTransition, useState } from "react";
 import { useFormStatus } from "react-dom";
+import ToolChoiceGroup from "./tool-choice-group";
+import ToolFaqField from "./tool-faq-field";
+import ToolListField from "./tool-list-field";
 import UploadImageField from "./upload-image-field";
 
 type ToolTaxonomy = { id: string; name: string; slug: string };
@@ -36,6 +39,27 @@ type Tool = {
   tool_areas?: { sort_order: number; areas: ToolTaxonomy | ToolTaxonomy[] | null }[] | null;
   tool_use_cases?: { sort_order: number; use_cases: ToolTaxonomy | ToolTaxonomy[] | null }[] | null;
 };
+
+const PLAN_OPTIONS = [
+  { value: "free", label: "Free" },
+  { value: "edu_free", label: "Beneficio estudiantil" },
+  { value: "freemium", label: "Freemium" },
+  { value: "paid", label: "Paid" },
+];
+
+const LEVEL_OPTIONS = [
+  { value: "all", label: "All" },
+  { value: "beginner", label: "Beginner" },
+  { value: "intermediate", label: "Intermediate" },
+  { value: "advanced", label: "Advanced" },
+];
+
+const STATUS_OPTIONS = [
+  { value: "draft", label: "Draft" },
+  { value: "scheduled", label: "Scheduled" },
+  { value: "published", label: "Published" },
+  { value: "archived", label: "Archived" },
+];
 
 function formatDate(value: string) {
   return new Intl.DateTimeFormat("es-CL", {
@@ -111,14 +135,20 @@ export function ToolEditorItem({ tool, areas, useCases, updateAction, deleteActi
       <div className="border-t border-slate-200 p-4">
         <form action={updateAction} className="grid grid-cols-1 gap-3 md:grid-cols-2">
           <input type="hidden" name="id" value={tool.id} />
-          <input name="name" required defaultValue={tool.name} disabled={isPending} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50" />
-          <input name="slug" required defaultValue={tool.slug} disabled={isPending} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50" />
-          <input name="company_name" defaultValue={tool.company_name ?? ""} disabled={isPending} placeholder="Empresa / equipo creador" className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50" />
-          <input name="tagline" defaultValue={tool.tagline ?? ""} disabled={isPending} placeholder="Tagline breve" className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50" />
-          <textarea name="editorial_summary" rows={5} defaultValue={tool.editorial_summary ?? ""} disabled={isPending} placeholder="Resumen editorial largo: qué es, para quién sirve, cuándo conviene usarla y sus límites." className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm leading-6 text-slate-900 outline-none disabled:opacity-50 md:col-span-2" />
-          <input name="demo_video_url" defaultValue={tool.demo_video_url ?? ""} disabled={isPending} placeholder="URL demo YouTube (opcional)" className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50 md:col-span-2" />
-          <input name="url" required defaultValue={tool.url} disabled={isPending} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50 md:col-span-2" />
-          <textarea name="description" rows={3} defaultValue={tool.description ?? ""} disabled={isPending} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50 md:col-span-2" />
+          <div className="rounded-lg border border-slate-200 bg-white p-4 md:col-span-2">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Información base</p>
+            <p className="mt-1 text-sm text-slate-500">Edita la identidad pública de la tool y su resumen editorial.</p>
+            <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2">
+              <input name="name" required defaultValue={tool.name} disabled={isPending} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50" />
+              <input name="slug" required defaultValue={tool.slug} disabled={isPending} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50" />
+              <input name="company_name" defaultValue={tool.company_name ?? ""} disabled={isPending} placeholder="Empresa / equipo creador" className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50" />
+              <input name="tagline" defaultValue={tool.tagline ?? ""} disabled={isPending} placeholder="Tagline breve" className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50" />
+              <input name="url" required defaultValue={tool.url} disabled={isPending} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50 md:col-span-2" />
+              <textarea name="description" rows={3} defaultValue={tool.description ?? ""} disabled={isPending} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50 md:col-span-2" />
+              <textarea name="editorial_summary" rows={5} defaultValue={tool.editorial_summary ?? ""} disabled={isPending} placeholder="Resumen editorial largo: qué es, para quién sirve, cuándo conviene usarla y sus límites." className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm leading-6 text-slate-900 outline-none disabled:opacity-50 md:col-span-2" />
+              <input name="demo_video_url" defaultValue={tool.demo_video_url ?? ""} disabled={isPending} placeholder="URL demo YouTube (opcional)" className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50 md:col-span-2" />
+            </div>
+          </div>
           <UploadImageField fileInputName="cover_image_file" urlInputName="cover_image_url" existingUrl={tool.cover_image_url} label="Imagen principal" colSpan="md:col-span-2" assetKind="cover" />
 
           <fieldset className="rounded-lg border border-slate-200 bg-white px-3 py-3 text-sm text-slate-900">
@@ -145,36 +175,40 @@ export function ToolEditorItem({ tool, areas, useCases, updateAction, deleteActi
             </div>
           </fieldset>
 
-          <input name="ia_type" defaultValue={tool.ia_type ?? ""} disabled={isPending} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50" />
-          <textarea name="platform_tags" rows={2} defaultValue={(tool.platform_tags ?? []).join("\n")} disabled={isPending} placeholder="Plataformas, una por línea" className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50" />
-          <textarea name="language_codes" rows={2} defaultValue={(tool.language_codes ?? []).join("\n")} disabled={isPending} placeholder="Idiomas, uno por línea" className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50" />
-          <textarea name="feature_bullets" rows={4} defaultValue={(tool.feature_bullets ?? []).join("\n")} disabled={isPending} placeholder="Features clave, una por línea" className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50 md:col-span-2" />
-          <textarea name="faq_items" rows={4} defaultValue={(tool.faq_items ?? []).map((item) => `${item.question} | ${item.answer}`).join("\n")} disabled={isPending} placeholder="FAQ: una por línea con formato Pregunta | Respuesta" className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50 md:col-span-2" />
+          <div className="rounded-lg border border-slate-200 bg-white p-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Metadatos</p>
+            <p className="mt-1 text-sm text-slate-500">Datos de clasificación visibles en la ficha pública.</p>
+            <div className="mt-4 grid gap-3">
+              <input name="ia_type" defaultValue={tool.ia_type ?? ""} disabled={isPending} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50" />
+              <textarea name="platform_tags" rows={2} defaultValue={(tool.platform_tags ?? []).join("\n")} disabled={isPending} placeholder="Plataformas, una por línea" className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50" />
+              <textarea name="language_codes" rows={2} defaultValue={(tool.language_codes ?? []).join("\n")} disabled={isPending} placeholder="Idiomas, uno por línea" className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50" />
+            </div>
+          </div>
 
-          <select name="plan" defaultValue={tool.plan} disabled={isPending} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50">
-            <option value="free">Free</option>
-            <option value="edu_free">Beneficio estudiantil</option>
-            <option value="freemium">Freemium</option>
-            <option value="paid">Paid</option>
-          </select>
-          <select name="level" defaultValue={tool.level} disabled={isPending} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50">
-            <option value="all">All</option>
-            <option value="beginner">Beginner</option>
-            <option value="intermediate">Intermediate</option>
-            <option value="advanced">Advanced</option>
-          </select>
-          <select name="status" defaultValue={tool.status} disabled={isPending} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50">
-            <option value="draft">Draft</option>
-            <option value="scheduled">Scheduled</option>
-            <option value="published">Published</option>
-            <option value="archived">Archived</option>
-          </select>
-          <input name="sort_order" type="number" min={0} defaultValue={tool.sort_order} disabled={isPending} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50" />
+          <div className="rounded-lg border border-slate-200 bg-white p-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Publicación</p>
+            <p className="mt-1 text-sm text-slate-500">Plan, estado y visibilidad general.</p>
+            <div className="mt-4 grid gap-3">
+              <ToolChoiceGroup label="Plan" name="plan" options={PLAN_OPTIONS} defaultValue={tool.plan} disabled={isPending} />
+              <ToolChoiceGroup label="Nivel" name="level" options={LEVEL_OPTIONS} defaultValue={tool.level} disabled={isPending} />
+              <ToolChoiceGroup label="Estado" name="status" options={STATUS_OPTIONS} defaultValue={tool.status} disabled={isPending} />
+              <input name="sort_order" type="number" min={0} defaultValue={tool.sort_order} disabled={isPending} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50" />
+              <label className="inline-flex items-center gap-2 text-sm text-slate-700"><input name="verified" type="checkbox" defaultChecked={tool.verified} disabled={isPending} /> Verificada</label>
+              <label className="inline-flex items-center gap-2 text-sm text-slate-700"><input name="edu_verified" type="checkbox" defaultChecked={tool.edu_verified} disabled={isPending} /> Verificación académica</label>
+              <label className="inline-flex items-center gap-2 text-sm text-slate-700"><input name="spanish_available" type="checkbox" defaultChecked={tool.spanish_available} disabled={isPending} /> Interfaz en español</label>
+              <label className="inline-flex items-center gap-2 text-sm text-slate-700"><input name="featured" type="checkbox" defaultChecked={tool.featured} disabled={isPending} /> Destacada</label>
+            </div>
+          </div>
 
-          <label className="inline-flex items-center gap-2 text-sm text-slate-700"><input name="verified" type="checkbox" defaultChecked={tool.verified} disabled={isPending} /> Verificada</label>
-          <label className="inline-flex items-center gap-2 text-sm text-slate-700"><input name="edu_verified" type="checkbox" defaultChecked={tool.edu_verified} disabled={isPending} /> Verificación académica</label>
-          <label className="inline-flex items-center gap-2 text-sm text-slate-700"><input name="spanish_available" type="checkbox" defaultChecked={tool.spanish_available} disabled={isPending} /> Interfaz en español</label>
-          <label className="inline-flex items-center gap-2 text-sm text-slate-700 md:col-span-2"><input name="featured" type="checkbox" defaultChecked={tool.featured} disabled={isPending} /> Destacada</label>
+          <ToolListField
+            label="Features clave"
+            description="Cada feature se completa en su propia fila y el formulario lo serializa automáticamente."
+            name="feature_bullets"
+            placeholder="Ej: Genera video desde texto con control de cámara"
+            addLabel="Agregar feature"
+            initialValues={tool.feature_bullets}
+          />
+          <ToolFaqField initialValues={tool.faq_items} />
 
           <div className="md:col-span-2 flex items-center justify-between gap-3">
             <div className="flex items-center gap-2">
