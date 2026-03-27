@@ -31,7 +31,7 @@ export default async function BuscarPage({ searchParams }: PageProps) {
   });
 
   return (
-    <main className="relative flex min-h-screen flex-col bg-[#f7f3ec]">
+    <main className="relative flex min-h-screen flex-col bg-[linear-gradient(180deg,#f5f2ec_0%,#faf8f4_45%,#ffffff_100%)]">
       <Header />
 
       <section className="flex-1 px-5 py-8 md:px-6 md:py-10 xl:px-8">

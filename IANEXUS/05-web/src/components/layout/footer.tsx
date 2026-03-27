@@ -35,11 +35,11 @@ const SOCIAL_LINKS = [
 export default function Footer() {
   return (
     <footer className="relative z-50 px-4 pb-24 md:pb-6">
-      <div className="editorial-frame rounded-xl border border-slate-200 bg-white/90 px-5 py-4 shadow-[0_10px_24px_rgba(15,23,42,0.05)] backdrop-blur-sm editorial-surface">
+      <div className="editorial-frame rounded-[1.15rem] border border-slate-300/70 bg-white/94 px-5 py-4 shadow-[0_8px_20px_rgba(17,24,39,0.05)] backdrop-blur-sm editorial-surface">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-3">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-slate-900 text-white shadow-sm">
+              <div className="flex h-8 w-8 items-center justify-center rounded-[0.9rem] border border-slate-300 bg-slate-900 text-white shadow-sm">
                 <span className="text-[0.8rem] font-semibold tracking-tight">Y</span>
               </div>
               <div className="flex flex-col leading-tight">
@@ -75,7 +75,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={item.label}
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-300/80 bg-white text-slate-600 transition-colors hover:border-slate-400 hover:bg-slate-50 hover:text-slate-900"
                 >
                   <Icon className="h-4 w-4" />
                 </Link>

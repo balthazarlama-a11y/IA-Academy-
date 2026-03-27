@@ -55,7 +55,7 @@ export default function DayToolsFeed({ tools, filters }: DayToolsFeedProps) {
 
   if (filteredTools.length === 0) {
     return (
-      <div className="rounded-xl border border-slate-200/80 bg-white p-5 text-center shadow-sm">
+      <div className="ui-empty rounded-[1rem] p-5 text-center">
         <ExternalLink className="mx-auto mb-3 h-8 w-8 text-slate-300" />
         <p className="text-sm text-slate-500">No hay tools que coincidan con este filtro.</p>
         <p className="mt-1 text-xs text-slate-400">Cambia categoría, nivel o plan para abrir el feed.</p>
@@ -72,12 +72,12 @@ export default function DayToolsFeed({ tools, filters }: DayToolsFeedProps) {
             Descubrimiento práctico
           </h2>
         </div>
-        <span className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs text-slate-500">
+        <span className="ui-chip rounded-full px-3 py-1 text-xs">
           {filteredTools.length} resultados
         </span>
       </div>
 
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-3 md:gap-4">
         {filteredTools.map((tool) => {
           const plan = PLAN_CONFIG[tool.plan];
           const accentColor = tool.primaryArea?.color_accent ?? "#6366f1";
@@ -85,7 +85,7 @@ export default function DayToolsFeed({ tools, filters }: DayToolsFeedProps) {
           return (
             <article
               key={tool.id}
-            className="group relative overflow-hidden rounded-xl border border-slate-200/80 bg-white shadow-[0_10px_28px_rgba(15,23,42,0.04)] transition duration-200 hover:-translate-y-0.5 hover:border-slate-300"
+            className="group relative overflow-hidden rounded-[0.95rem] border border-slate-300/70 bg-white shadow-[0_8px_18px_rgba(17,24,39,0.05)] transition duration-200 hover:-translate-y-0.5 hover:border-slate-400 md:rounded-[1rem]"
             >
               <StaffEditButton
                 href={`/admin/tools?q=${encodeURIComponent(tool.slug)}`}
@@ -94,7 +94,7 @@ export default function DayToolsFeed({ tools, filters }: DayToolsFeedProps) {
               />
 
               <div className="grid gap-0 lg:grid-cols-[0.88fr_1.12fr]">
-                <div className="relative min-h-[160px] overflow-hidden bg-slate-50">
+                <div className="relative min-h-[132px] overflow-hidden bg-slate-50 md:min-h-[160px]">
                   {tool.cover_image_url ? (
                     <Image
                       src={tool.cover_image_url}
@@ -106,7 +106,7 @@ export default function DayToolsFeed({ tools, filters }: DayToolsFeedProps) {
                     />
                   ) : (
                     <div
-                      className="flex min-h-[160px] items-center justify-center"
+                      className="flex min-h-[132px] items-center justify-center md:min-h-[160px]"
                       style={{
                         background: `radial-gradient(circle at top, ${accentColor}20, transparent 52%), linear-gradient(160deg, rgba(248,250,252,1), rgba(255,255,255,1))`,
                       }}
@@ -121,12 +121,12 @@ export default function DayToolsFeed({ tools, filters }: DayToolsFeedProps) {
                   )}
                 </div>
 
-                <div className="flex min-w-0 flex-1 flex-col gap-3.5 p-4">
+                <div className="flex min-w-0 flex-1 flex-col gap-3 p-3.5 md:gap-3.5 md:p-4">
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0">
                       <div className="mb-2 flex flex-wrap items-center gap-2">
                         <span
-                          className="inline-flex items-center rounded-full px-3 py-1 text-[10px] font-medium uppercase tracking-[0.14em]"
+                          className="inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.14em] md:px-3"
                           style={{
                             color: accentColor,
                             background: `${accentColor}14`,
@@ -135,12 +135,12 @@ export default function DayToolsFeed({ tools, filters }: DayToolsFeedProps) {
                         >
                           {tool.primaryArea?.name ?? "Área general"}
                         </span>
-                        <span className="inline-flex items-center rounded-full border border-slate-200 bg-white px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-slate-500">
+                        <span className="ui-chip inline-flex items-center rounded-full px-2.5 py-1 text-[10px] uppercase tracking-[0.14em] md:px-3">
                           {LEVEL_LABEL[tool.level]}
                         </span>
                       </div>
 
-                      <h3 className="text-[1.02rem] font-semibold tracking-[-0.02em] text-slate-950">
+                      <h3 className="text-[15px] font-semibold tracking-[-0.02em] text-slate-950 md:text-[1.02rem]">
                         {tool.name}
                       </h3>
                     </div>
@@ -153,16 +153,16 @@ export default function DayToolsFeed({ tools, filters }: DayToolsFeedProps) {
                   </div>
 
                   {tool.description ? (
-                    <p className="line-clamp-2 text-sm leading-6 text-slate-600">
+                    <p className="line-clamp-2 text-[13px] leading-6 text-slate-600 md:text-sm">
                       {tool.description}
                     </p>
                   ) : (
-                    <p className="text-sm leading-6 text-slate-500">
+                    <p className="text-[13px] leading-6 text-slate-500 md:text-sm">
                       Herramienta curada para resolver una tarea concreta del día.
                     </p>
                   )}
 
-                  <div className="mt-auto flex items-center justify-between gap-3 border-t border-slate-200 pt-4">
+                  <div className="mt-auto flex items-center justify-between gap-3 border-t border-slate-200 pt-3 md:pt-4">
                     <div className="flex flex-wrap items-center gap-2">
                       {tool.verified && (
                         <span className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-[10px] text-emerald-700">
@@ -181,7 +181,7 @@ export default function DayToolsFeed({ tools, filters }: DayToolsFeedProps) {
                     <div className="flex items-center gap-2">
                       <Link
                         href={`/herramientas/${tool.slug}`}
-                        className="inline-flex items-center gap-1 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 transition hover:border-slate-300 hover:bg-slate-50"
+                        className="inline-flex items-center gap-1 rounded-[0.8rem] border border-slate-300/70 bg-white px-2.5 py-1.5 text-[11px] font-medium text-slate-700 transition hover:border-slate-400 hover:bg-slate-50 md:rounded-[0.85rem] md:px-3 md:text-xs"
                       >
                         Detalle
                         <ArrowUpRight className="h-3.5 w-3.5" />
@@ -190,7 +190,7 @@ export default function DayToolsFeed({ tools, filters }: DayToolsFeedProps) {
                         href={tool.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-slate-500 transition hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900"
+                        className="inline-flex items-center justify-center rounded-[0.8rem] border border-slate-300/70 bg-white px-2.5 py-1.5 text-slate-500 transition hover:border-slate-400 hover:bg-slate-50 hover:text-slate-900 md:rounded-[0.85rem] md:px-3"
                       >
                         <ExternalLink className="h-3.5 w-3.5" />
                       </a>

@@ -25,12 +25,10 @@ export default function LatestUpdatesSection({
   }
 
   return (
-    <section className="overflow-hidden rounded-2xl border border-white/80 bg-white/92 shadow-[0_18px_50px_rgba(15,23,42,0.05)]">
-      <div className="grid gap-px bg-slate-200 lg:grid-cols-[0.9fr_1.1fr]">
-        <div className="bg-white p-4 md:p-5">
-          <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-slate-500">
-            Ahora
-          </p>
+    <section className="overflow-hidden rounded-[1.35rem] ui-shell">
+      <div className="grid gap-px border-transparent ui-rule lg:grid-cols-[0.9fr_1.1fr]">
+        <div className="bg-[linear-gradient(180deg,rgba(247,243,236,0.8)_0%,rgba(255,255,255,0.95)_100%)] p-4 md:p-5">
+          <p className="ui-label">Ahora</p>
           <h2 className="mt-2 text-xl font-semibold tracking-tight text-slate-950 md:text-2xl">
             {title}
           </h2>
@@ -38,14 +36,14 @@ export default function LatestUpdatesSection({
 
           <Link
             href="/blog"
-            className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-slate-800 transition hover:text-slate-600"
+            className="mt-5 inline-flex items-center gap-2 rounded-full border border-slate-300/70 bg-white px-4 py-2 text-sm font-medium text-slate-800 transition hover:border-slate-400 hover:bg-slate-50"
           >
             Ver archivo completo
             <ArrowUpRight className="h-4 w-4" />
           </Link>
         </div>
 
-        <div className="grid gap-px bg-slate-200 md:grid-cols-3">
+        <div className="grid gap-px border-transparent ui-rule md:grid-cols-3">
           {posts.map((post, index) => (
             <Link
               key={post.id}

@@ -30,27 +30,18 @@ export default async function BlogPage() {
   );
 
   return (
-    <main
-      className="relative min-h-screen flex flex-col overflow-hidden text-slate-900"
-      style={{
-        background:
-          "radial-gradient(circle at top left, rgba(203,213,225,0.32), transparent 34%), radial-gradient(circle at top right, rgba(199,210,254,0.32), transparent 28%), linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%)",
-      }}
-    >
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-[28rem] bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.85),transparent_58%)]" />
+    <main className="relative min-h-screen flex flex-col overflow-hidden bg-[linear-gradient(180deg,#f5f2ec_0%,#faf8f4_45%,#ffffff_100%)] text-slate-900">
 
       <Header />
 
       <section className="relative flex-1 w-full px-4 py-6 md:px-6 md:py-10">
         <div className="editorial-frame flex flex-col gap-6">
-          <header className="rounded-2xl border border-white/80 bg-white/92 shadow-[0_18px_50px_rgba(15,23,42,0.06)] backdrop-blur-sm">
+          <header className="overflow-hidden rounded-[1.5rem] ui-shell">
             <div className="grid gap-0 lg:grid-cols-[0.95fr_1.05fr]">
-              <div className="border-b border-slate-200/80 p-5 md:p-6 lg:border-b-0 lg:border-r lg:p-7">
-                <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-slate-500">
-                  Archivo editorial
-                </p>
+              <div className="border-b ui-rule bg-[linear-gradient(180deg,rgba(247,243,236,0.8)_0%,rgba(255,255,255,0.95)_100%)] p-5 md:p-6 lg:border-b-0 lg:border-r lg:p-7">
+                <p className="ui-label">Archivo editorial</p>
 
-                <h1 className="mt-3 max-w-2xl text-2xl font-semibold tracking-tight text-slate-950 md:text-3xl">
+                <h1 className="ui-title mt-3 max-w-2xl text-[2.35rem] leading-[0.96] text-slate-950 md:text-[3.25rem]">
                   Blog, guias y notas para seguir IA con criterio.
                 </h1>
 
@@ -69,7 +60,7 @@ export default async function BlogPage() {
                   </Link>
                   <Link
                     href="/dia-a-dia"
-                    className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:border-slate-300 hover:bg-slate-50"
+                    className="inline-flex items-center gap-2 rounded-full border border-slate-300/70 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:border-slate-400 hover:bg-slate-50"
                   >
                     Ver feed del día
                   </Link>
@@ -77,11 +68,9 @@ export default async function BlogPage() {
               </div>
 
               <div className="p-5 md:p-6 lg:p-7">
-                <div className="flex items-center justify-between gap-4 border-b border-slate-200 pb-3">
+                <div className="flex items-center justify-between gap-4 border-b ui-rule pb-3">
                   <div>
-                    <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-slate-500">
-                      En portada
-                    </p>
+                    <p className="ui-label">En portada</p>
                     <p className="mt-1 text-sm text-slate-600">
                       La lectura principal del archivo hoy.
                     </p>
@@ -94,7 +83,7 @@ export default async function BlogPage() {
                     <BlogPostCard post={featuredPost} compact />
                   </div>
                 ) : (
-                  <div className="mt-4 rounded-xl border border-dashed border-slate-300 bg-slate-50 p-5">
+                  <div className="ui-empty mt-4 rounded-[1rem] p-5">
                     <p className="text-sm text-slate-600">
                       Cuando publiquemos la primera pieza aparecerá aquí como portada del
                       archivo.
@@ -113,13 +102,11 @@ export default async function BlogPage() {
             />
           ) : null}
 
-          <section className="rounded-2xl border border-white/80 bg-white/92 p-4 shadow-[0_18px_50px_rgba(15,23,42,0.05)] md:p-5">
-            <div className="mb-5 flex flex-col gap-2 border-b border-slate-200 pb-4 md:flex-row md:items-end md:justify-between">
+          <section className="rounded-[1.35rem] ui-shell p-4 md:p-5">
+            <div className="mb-5 flex flex-col gap-2 border-b ui-rule pb-4 md:flex-row md:items-end md:justify-between">
               <div>
-                <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-slate-500">
-                  Archivo
-                </p>
-                <h2 className="mt-1 text-2xl font-semibold tracking-tight text-slate-950">
+                <p className="ui-label">Archivo</p>
+                <h2 className="ui-title mt-1 text-[2.1rem] text-slate-950">
                   Todas las lecturas
                 </h2>
               </div>

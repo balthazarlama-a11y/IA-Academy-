@@ -54,7 +54,7 @@ export default function DayBlogFeed({ posts, filters }: DayBlogFeedProps) {
 
   if (filteredPosts.length === 0) {
     return (
-      <div className="rounded-xl border border-slate-200/80 bg-white p-5 text-center shadow-sm">
+      <div className="ui-empty rounded-[1rem] p-5 text-center">
         <Sparkles className="mx-auto mb-3 h-8 w-8 text-slate-300" />
         <p className="text-sm text-slate-500">No hay posts que coincidan con este filtro.</p>
         <p className="mt-1 text-xs text-slate-400">Prueba otra categoría, plan o término de búsqueda.</p>
@@ -71,12 +71,12 @@ export default function DayBlogFeed({ posts, filters }: DayBlogFeedProps) {
             Lecturas y contexto
           </h2>
         </div>
-        <span className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs text-slate-500">
+        <span className="ui-chip rounded-full px-3 py-1 text-xs">
           {filteredPosts.length} resultados
         </span>
       </div>
 
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-3 md:gap-4">
         {filteredPosts.map((post) => {
           const kindLabel = getKindLabel(post.post_kind);
           const badgeClass =
@@ -93,12 +93,12 @@ export default function DayBlogFeed({ posts, filters }: DayBlogFeedProps) {
               key={post.id}
               href={`/blog/${post.slug}`}
               prefetch={true}
-            className={`group overflow-hidden rounded-xl border border-slate-200/80 bg-white shadow-[0_10px_28px_rgba(15,23,42,0.04)] transition duration-200 hover:-translate-y-0.5 hover:border-slate-300 ${
+            className={`group overflow-hidden rounded-[0.95rem] border border-slate-300/70 bg-white shadow-[0_8px_18px_rgba(17,24,39,0.05)] transition duration-200 hover:-translate-y-0.5 hover:border-slate-400 md:rounded-[1rem] ${
                 post.cover_image_url ? "grid gap-0 lg:grid-cols-[0.88fr_1.12fr]" : "p-4"
               }`}
             >
               {post.cover_image_url ? (
-                <div className="relative min-h-[160px] overflow-hidden bg-slate-100 lg:min-h-full">
+                <div className="relative min-h-[132px] overflow-hidden bg-slate-100 md:min-h-[160px] lg:min-h-full">
                   <Image
                     src={post.cover_image_url}
                     alt={post.title}
@@ -110,20 +110,20 @@ export default function DayBlogFeed({ posts, filters }: DayBlogFeedProps) {
                 </div>
               ) : null}
 
-              <div className={`flex min-w-0 flex-1 flex-col gap-3.5 ${post.cover_image_url ? "p-4" : ""}`}>
+              <div className={`flex min-w-0 flex-1 flex-col gap-3 ${post.cover_image_url ? "p-3.5 md:p-4" : "p-3.5 md:p-4"}`}>
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
                     <div className="mb-2 flex flex-wrap items-center gap-2">
-                      <span className={`inline-flex rounded-full px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.14em] ${badgeClass}`}>
-                        {kindLabel}
-                      </span>
+                        <span className={`inline-flex rounded-full px-2 py-1 text-[10px] font-medium uppercase tracking-[0.14em] md:px-2.5 ${badgeClass}`}>
+                          {kindLabel}
+                        </span>
                       {post.ia_type ? (
-                        <span className="inline-flex rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[10px] uppercase tracking-[0.14em] text-slate-500">
+                        <span className="ui-chip inline-flex rounded-full px-2 py-1 text-[10px] uppercase tracking-[0.14em] md:px-2.5">
                           {post.ia_type}
                         </span>
                       ) : null}
                     </div>
-                    <h3 className="line-clamp-2 text-[1.02rem] font-semibold leading-snug tracking-[-0.02em] text-slate-950 group-hover:text-slate-700">
+                    <h3 className="line-clamp-2 text-[15px] font-semibold leading-snug tracking-[-0.02em] text-slate-950 group-hover:text-slate-700 md:text-[1.02rem]">
                       {post.title}
                     </h3>
                   </div>
@@ -131,13 +131,13 @@ export default function DayBlogFeed({ posts, filters }: DayBlogFeedProps) {
                 </div>
 
                 {post.excerpt ? (
-                  <p className="line-clamp-2 text-sm leading-6 text-slate-600">
+                  <p className="line-clamp-2 text-[13px] leading-6 text-slate-600 md:text-sm">
                     {post.excerpt}
                   </p>
                 ) : null}
 
                 <div className="mt-auto flex items-center gap-2 pt-1">
-                  <time className="text-[11px] text-slate-400">{formatDate(post.published_at)}</time>
+                  <time className="text-[10px] text-slate-400 md:text-[11px]">{formatDate(post.published_at)}</time>
                   {post.post_kind === "news" ? (
                     <span className="rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[10px] text-amber-700">
                       Update

@@ -34,7 +34,7 @@ type BlogPostCardProps = {
 
 export default function BlogPostCard({ post, compact = false }: BlogPostCardProps) {
   return (
-    <article className="group relative overflow-hidden rounded-xl border border-slate-200 bg-white shadow-[0_1px_0_rgba(15,23,42,0.04)] transition duration-200 hover:border-slate-300 hover:shadow-[0_14px_32px_rgba(15,23,42,0.06)]">
+    <article className="group relative overflow-hidden rounded-[0.95rem] border border-slate-300/70 bg-white shadow-[0_8px_18px_rgba(17,24,39,0.05)] transition duration-200 hover:border-slate-400 hover:shadow-[0_12px_24px_rgba(17,24,39,0.07)] md:rounded-[1rem]">
       <StaffEditButton
         href={`/admin/posts?q=${encodeURIComponent(post.slug)}`}
         label={`Editar post "${post.title}" en Admin`}
@@ -57,13 +57,13 @@ export default function BlogPostCard({ post, compact = false }: BlogPostCardProp
           </div>
         ) : null}
 
-        <div className={`space-y-3 ${compact ? "p-4 md:p-5" : "p-4"}`}>
+        <div className={`space-y-2.5 ${compact ? "p-3.5 md:p-5" : "p-3.5 md:p-4"}`}>
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0 space-y-1">
-              <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-slate-500">
+              <p className="ui-label text-[10px] md:text-[11px]">
                 {formatLabel(post.post_kind)}
               </p>
-              <h2 className={`font-semibold leading-snug text-slate-950 ${compact ? "text-xl md:text-2xl" : "text-[1rem] md:text-[1.05rem]"}`}>
+              <h2 className={`leading-snug text-slate-950 ${compact ? "ui-title text-[2rem] md:text-[2.35rem]" : "text-[1rem] font-semibold md:text-[1.05rem]"}`}>
                 {post.title}
               </h2>
               {post.subtitle ? (
@@ -75,12 +75,12 @@ export default function BlogPostCard({ post, compact = false }: BlogPostCardProp
             <ArrowUpRight className="mt-1 h-4 w-4 shrink-0 text-slate-400 transition group-hover:text-slate-700" />
           </div>
 
-          <p className={`leading-relaxed text-slate-600 ${compact ? "line-clamp-3 text-sm md:text-base" : "line-clamp-2 text-sm"}`}>
+          <p className={`leading-relaxed text-slate-600 ${compact ? "line-clamp-3 text-[13px] md:text-base" : "line-clamp-2 text-[13px] md:text-sm"}`}>
             {post.excerpt ||
               "Una lectura curada para entender mejor el movimiento de la IA y decidir con más contexto."}
           </p>
 
-          <div className="flex flex-wrap items-center gap-2 border-t border-slate-200 pt-3 text-xs text-slate-500">
+          <div className="flex flex-wrap items-center gap-2 border-t ui-rule pt-2.5 text-[11px] text-slate-500 md:pt-3 md:text-xs">
             <time>{formatDate(post.published_at)}</time>
             {post.ia_type ? (
               <>

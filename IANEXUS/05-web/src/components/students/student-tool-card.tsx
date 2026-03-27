@@ -1,116 +1,154 @@
 import Image from "next/image";
-import { memo } from "react";
 import Link from "next/link";
-import { BadgeCheck, GraduationCap } from "lucide-react";
-import type { Tool } from "@/lib/repositories/tools-repo";
+import { memo } from "react";
+import { BadgeCheck, BookOpen, ExternalLink, GraduationCap } from "lucide-react";
+import type { Tool, ToolLevel, ToolPlan } from "@/lib/repositories/tools-repo";
 import { StaffEditButton } from "@/components/staff/staff-edit-button";
 
+const PLAN_CONFIG: Record<ToolPlan, { label: string; color: string; bg: string }> = {
+  free: { label: "Gratis", color: "rgba(16,185,129,0.92)", bg: "rgba(16,185,129,0.10)" },
+  edu_free: {
+    label: "Beneficio estudiantil",
+    color: "rgba(14,165,233,0.92)",
+    bg: "rgba(14,165,233,0.10)",
+  },
+  freemium: {
+    label: "Freemium",
+    color: "rgba(234,179,8,0.95)",
+    bg: "rgba(234,179,8,0.10)",
+  },
+  paid: { label: "Pago", color: "rgba(100,116,139,0.92)", bg: "rgba(148,163,184,0.08)" },
+};
+
+const LEVEL_LABEL: Record<ToolLevel, string> = {
+  beginner: "Principiante",
+  intermediate: "Intermedio",
+  advanced: "Avanzado",
+  all: "Todos los niveles",
+};
+
 function shortDescription(value: string | null) {
-  if (!value) return "Herramienta recomendada para tu trabajo académico.";
-  if (value.length <= 90) return value;
-  return `${value.slice(0, 87)}...`;
+  if (!value) return "Herramienta útil para estudiar, investigar y avanzar sin ruido.";
+  if (value.length <= 120) return value;
+  return `${value.slice(0, 117)}...`;
 }
 
-function planLabel(plan: Tool["plan"]) {
-  if (plan === "edu_free") return "Beneficio estudiantil";
-  if (plan === "free") return "Gratis";
-  if (plan === "freemium") return "Freemium";
-  return "Pago";
+function planSummary(tool: Tool) {
+  if (tool.plan === "edu_free") return "Se activa con correo institucional o validación académica.";
+  if (tool.plan === "free") return "Puedes empezar sin pago ni tarjeta.";
+  if (tool.plan === "freemium") return "Tiene entrada gratuita y luego opciones de upgrade.";
+  return "Requiere pago o suscripción para desbloquear su uso principal.";
 }
 
-function planTone(plan: Tool["plan"]) {
-  if (plan === "edu_free") return "border-emerald-300/40 bg-emerald-400/15 text-emerald-700";
-  if (plan === "free") return "border-cyan-300/40 bg-cyan-400/15 text-cyan-700";
-  if (plan === "freemium") return "border-violet-300/40 bg-violet-400/15 text-violet-700";
-  return "border-slate-300 bg-slate-50 text-slate-700";
-}
+function StudentToolCard({ tool }: { tool: Tool }) {
+  const plan = PLAN_CONFIG[tool.plan];
+  const accentColor = tool.edu_verified ? "#0f766e" : "#16325d";
 
-function planSummary(plan: Tool["plan"]) {
-  if (plan === "edu_free") return "Requiere correo institucional";
-  if (plan === "free") return "Acceso sin pago ni tarjeta";
-  if (plan === "freemium") return "Empieza gratis y luego decide";
-  return "Requiere pago o upgrade";
-}
-
-export default memo(function StudentToolCard({ tool }: { tool: Tool }) {
   return (
     <article
-      className="group relative overflow-hidden rounded-[1.4rem] border border-slate-200 bg-white p-5 shadow-[0_8px_22px_rgba(15,23,42,0.06)] transition-all duration-150 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-[0_12px_26px_rgba(15,23,42,0.08)]"
-      style={{
-        background: "linear-gradient(180deg,#ffffff 0%,#f8fafc 100%)",
-        contain: "layout style paint",
-      }}
+      className="group relative flex flex-col overflow-hidden rounded-[0.95rem] border border-slate-300/70 bg-white p-3.5 shadow-[0_8px_18px_rgba(17,24,39,0.05)] transition-all duration-150 hover:-translate-y-0.5 hover:border-slate-400 md:rounded-[1rem] md:p-4"
+      style={{ contain: "layout style paint" }}
     >
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-cyan-300/80 via-violet-300/70 to-emerald-300/80" />
+      <div className="absolute inset-x-0 top-0 h-1 bg-[linear-gradient(90deg,rgba(22,50,93,0.82),rgba(14,165,233,0.82))]" />
 
       <StaffEditButton
         href={`/admin/tools?q=${encodeURIComponent(tool.slug)}`}
         label={`Editar herramienta "${tool.name}" en Admin`}
-        className="absolute right-4 top-4 z-10"
+        className="absolute right-3 top-3 z-20"
       />
 
-      <div className="flex min-h-[204px] flex-col">
-        {tool.cover_image_url ? (
-          <div className="relative mb-4 flex h-14 w-14 items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-            <Image
-              src={tool.cover_image_url}
-              alt={`${tool.name} logo`}
-              fill
-              unoptimized
-              className="object-contain p-0.5"
-              sizes="56px"
-            />
-          </div>
-        ) : (
-          <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-slate-200 bg-slate-50">
-            <span className="text-2xl font-bold text-slate-300">
-              {tool.name.charAt(0).toUpperCase()}
+      <div className="relative z-10 flex h-full flex-col gap-3">
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex items-center gap-3">
+            {tool.cover_image_url ? (
+              <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-[0.85rem] border border-slate-300/70 bg-white shadow-sm md:h-12 md:w-12 md:rounded-[0.9rem]">
+                <Image
+                  src={tool.cover_image_url}
+                  alt={`${tool.name} logo`}
+                  width={48}
+                  height={48}
+                  className="h-full w-full object-contain p-0.5"
+                />
+              </div>
+            ) : (
+              <div className="flex h-10 w-10 items-center justify-center rounded-[0.85rem] border border-slate-200 bg-slate-50 md:h-12 md:w-12 md:rounded-xl">
+                <span className="text-base font-semibold text-slate-300 md:text-lg">
+                  {tool.name.charAt(0).toUpperCase()}
+                </span>
+              </div>
+            )}
+            <span
+              className="inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-semibold md:px-3 md:text-xs"
+              style={{ color: plan.color, background: plan.bg }}
+            >
+              {plan.label}
             </span>
           </div>
-        )}
+        </div>
 
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="space-y-1">
+          <h3 className="text-[15px] font-semibold leading-snug text-slate-950 transition-colors duration-150 group-hover:text-slate-900 md:text-base">
+            {tool.name}
+          </h3>
+          <p className="line-clamp-2 text-[13px] leading-6 text-slate-600 md:text-sm md:leading-relaxed">
+            {shortDescription(tool.description)}
+          </p>
+        </div>
+
+        <div className="flex flex-wrap gap-1.5 md:gap-2">
           <span
-            className={`inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-medium ${planTone(tool.plan)}`}
+            className="inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-medium md:px-3 md:text-xs"
+            style={{
+              color: accentColor,
+              background: `${accentColor}12`,
+              border: `1px solid ${accentColor}28`,
+            }}
           >
-            {planLabel(tool.plan)}
+            Estudiantes
           </span>
-          {tool.edu_verified && (
-            <span className="inline-flex items-center gap-1 rounded-full border border-emerald-300/30 bg-emerald-400/10 px-2.5 py-1 text-xs font-medium text-emerald-700">
-              <GraduationCap className="h-3 w-3" />
-              Beneficio estudiantil
-            </span>
-          )}
-          {tool.verified && (
-            <span className="inline-flex items-center gap-1 rounded-full border border-blue-300/30 bg-blue-400/10 px-2.5 py-1 text-xs font-medium text-blue-700">
-              <BadgeCheck className="h-3 w-3" />
-              Verificada
-            </span>
-          )}
-          {tool.ia_type && !tool.edu_verified && (
-            <span className="inline-flex items-center rounded-full border border-slate-300 bg-slate-50 px-2.5 py-1 text-xs text-slate-600">
+          <span className="inline-flex items-center rounded-full border border-slate-200 px-2.5 py-1 text-[11px] font-medium text-slate-600 md:px-3 md:text-xs">
+            {LEVEL_LABEL[tool.level]}
+          </span>
+          {tool.ia_type ? (
+            <span className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[11px] text-slate-500 md:px-3 md:text-xs">
               {tool.ia_type}
             </span>
-          )}
+          ) : null}
         </div>
 
-        <h2 className="mt-4 text-lg font-semibold leading-snug text-slate-900">
-          {tool.name}
-        </h2>
-        <p className="mt-2 text-sm leading-relaxed text-slate-600">
-          {shortDescription(tool.description)}
-        </p>
-
-        <div className="mt-4 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
-          <p className="text-[11px] uppercase tracking-[0.14em] text-slate-500">Acceso rapido</p>
-          <p className="mt-1 text-sm font-medium text-slate-900">{planSummary(tool.plan)}</p>
+        <div className="rounded-[0.85rem] border border-slate-300/60 bg-[rgba(250,249,247,0.9)] px-3.5 py-2.5 md:rounded-[0.9rem] md:px-4 md:py-3">
+          <p className="text-[11px] uppercase tracking-[0.14em] text-slate-500">Acceso</p>
+          <p className="mt-1 text-[13px] font-medium leading-6 text-slate-950 md:text-sm">
+            {planSummary(tool)}
+          </p>
         </div>
 
-        <div className="mt-auto flex flex-wrap items-center gap-3 pt-5">
+        <div className="flex items-center gap-2.5 border-t border-slate-200 pt-3 text-[11px] md:gap-3 md:pt-4 md:text-xs">
+          {tool.edu_verified ? (
+            <span className="inline-flex items-center gap-1.5 text-cyan-700">
+              <GraduationCap className="h-4 w-4" />
+              Validación académica
+            </span>
+          ) : null}
+          {tool.verified ? (
+            <span className="inline-flex items-center gap-1.5 text-emerald-600">
+              <BadgeCheck className="h-4 w-4" />
+              Verificada
+            </span>
+          ) : null}
+        </div>
+
+        <div className="mt-1 flex gap-2">
           <Link
             href={`/herramientas/${tool.slug}`}
-            className="inline-flex items-center rounded-full border border-cyan-300/40 bg-cyan-400/15 px-4 py-2 text-sm font-medium text-cyan-700 transition-colors duration-150 hover:bg-cyan-400/25"
+            className="inline-flex flex-1 items-center justify-center gap-2 rounded-[0.85rem] px-3.5 py-2.5 text-[13px] font-semibold transition-colors duration-150 md:rounded-[0.9rem] md:px-4 md:text-sm"
+            style={{
+              background: `${accentColor}16`,
+              border: `1px solid ${accentColor}30`,
+              color: accentColor,
+            }}
           >
+            <BookOpen className="h-4 w-4" />
             Ver detalle
           </Link>
           {tool.url ? (
@@ -118,14 +156,19 @@ export default memo(function StudentToolCard({ tool }: { tool: Tool }) {
               href={tool.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center rounded-full border border-slate-300 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-700 transition-colors duration-150 hover:bg-slate-100"
+              className="inline-flex items-center justify-center gap-1.5 rounded-[0.85rem] px-3 py-2.5 text-[13px] font-semibold text-slate-600 transition-colors duration-150 hover:text-slate-900 md:rounded-[0.9rem] md:px-3.5 md:text-sm"
+              style={{
+                background: "rgba(250,249,247,0.95)",
+                border: "1px solid rgba(148,163,184,0.32)",
+              }}
             >
-              Ir a herramienta
+              <ExternalLink className="h-4 w-4" />
             </a>
           ) : null}
         </div>
       </div>
     </article>
   );
-});
+}
 
+export default memo(StudentToolCard);

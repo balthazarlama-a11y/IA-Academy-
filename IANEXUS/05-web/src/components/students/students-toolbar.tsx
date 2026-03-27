@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { Tool, ToolPlan } from "@/lib/types/tool";
+import { GraduationCap, Layers3, X } from "lucide-react";
+import type { Tool, ToolPlan, ToolUseCase } from "@/lib/types/tool";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import StudentToolCard from "@/components/students/student-tool-card";
 import StudentsEmptyState from "@/components/students/students-empty-state";
@@ -10,13 +11,23 @@ type StudentsToolbarProps = {
   initialTools: Tool[];
   initialHasMore: boolean;
   initialNextOffset: number | null;
+  useCases: ToolUseCase[];
 };
 
 type StudentsFilters = {
-  search: string;
   scope: "all_free" | "student_pack";
   includeFreemium: boolean;
-  iaType: string;
+  useCaseSlugs: string[];
+};
+
+type RawUseCase = {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  color_accent: string | null;
+  icon_name: string | null;
+  sort_order: number;
 };
 
 type RawToolRow = {
@@ -32,6 +43,12 @@ type RawToolRow = {
   featured: boolean;
   sort_order: number;
   created_at: string;
+  tool_use_cases:
+    | {
+        sort_order: number;
+        use_cases: RawUseCase | RawUseCase[] | null;
+      }[]
+    | null;
 };
 
 type PageResult = {
@@ -47,12 +64,44 @@ type CacheEntry = {
 };
 
 const PAGE_SIZE = 50;
-const SEARCH_DEBOUNCE_MS = 400;
 const CACHE_TTL_MS = 90_000;
 const TOOL_SELECT =
-  "id, name, slug, description, url, cover_image_url, plan, ia_type, edu_verified, featured, sort_order, created_at";
+  "id, name, slug, description, url, cover_image_url, plan, ia_type, edu_verified, featured, sort_order, created_at, tool_use_cases(sort_order, use_cases(id, name, slug, description, color_accent, icon_name, sort_order))";
+
+const USE_CASE_DISPLAY_LABELS: Record<string, string> = {
+  resumir: "Resumir",
+  "buscar-investigar": "Buscar e investigar",
+  "generar-contenido-creativo": "Generar contenido creativo",
+  "programar-depurar": "Programar y depurar",
+  "estudiar-practicar": "Estudiar y practicar",
+  "organizar-automatizar": "Organizar y automatizar",
+};
+
+function pickFirst<T>(value: T | T[] | null): T | null {
+  if (!value) return null;
+  return Array.isArray(value) ? (value[0] ?? null) : value;
+}
+
+function mapUseCase(row: RawUseCase | null): ToolUseCase | null {
+  if (!row) return null;
+  return {
+    id: row.id,
+    name: row.name,
+    slug: row.slug,
+    description: row.description,
+    color_accent: row.color_accent,
+    icon_name: row.icon_name,
+    sort_order: row.sort_order,
+  };
+}
 
 function mapTool(row: RawToolRow): Tool {
+  const useCases = (row.tool_use_cases ?? [])
+    .map((relation) => ({ sort_order: relation.sort_order, useCase: mapUseCase(pickFirst(relation.use_cases)) }))
+    .filter((entry): entry is { sort_order: number; useCase: ToolUseCase } => Boolean(entry.useCase))
+    .sort((left, right) => left.sort_order - right.sort_order)
+    .map((entry) => entry.useCase);
+
   return {
     id: row.id,
     name: row.name,
@@ -79,39 +128,17 @@ function mapTool(row: RawToolRow): Tool {
     faq_items: [],
     areas: [],
     primaryArea: null,
-    useCases: [],
+    useCases,
     created_at: row.created_at,
     guide_slug: null,
   };
 }
 
-function normalizeText(value: string | null | undefined) {
-  return (value ?? "")
-    .trim()
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9]+/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-function extractIaTypes(tools: Tool[]) {
-  return Array.from(
-    new Set(tools.map((tool) => (tool.ia_type ?? "").trim()).filter(Boolean)),
-  ).sort((a, b) => a.localeCompare(b));
-}
-
-function clampSearch(value: string) {
-  return value.trim().replaceAll(",", " ");
-}
-
 function buildKey(filters: StudentsFilters, offset: number) {
   return JSON.stringify({
-    search: clampSearch(filters.search).toLowerCase(),
     scope: filters.scope,
     includeFreemium: filters.includeFreemium,
-    iaType: filters.iaType,
+    useCaseSlugs: [...filters.useCaseSlugs].sort(),
     offset,
     limit: PAGE_SIZE,
   });
@@ -140,12 +167,6 @@ function planPriority(plan: Tool["plan"]) {
 
 function scoreTool(tool: Tool, filters: StudentsFilters) {
   let score = 0;
-  const search = normalizeText(filters.search);
-  const name = normalizeText(tool.name);
-  const slug = normalizeText(tool.slug);
-  const description = normalizeText(tool.description);
-  const iaType = normalizeText(tool.ia_type);
-  const targetIaType = normalizeText(filters.iaType);
 
   if (filters.scope === "student_pack") {
     if (tool.plan === "edu_free") score += 50;
@@ -161,24 +182,13 @@ function scoreTool(tool: Tool, filters: StudentsFilters) {
     score -= 12;
   }
 
-  if (targetIaType) {
-    if (iaType === targetIaType) score += 24;
-    else if (iaType.includes(targetIaType)) score += 10;
+  if (filters.useCaseSlugs.length > 0) {
+    const hits = tool.useCases.filter((item) => filters.useCaseSlugs.includes(item.slug)).length;
+    score += hits * 24;
   }
 
   if (tool.featured) score += 8;
   if (tool.edu_verified) score += 12;
-
-  if (search) {
-    if (name === search) score += 60;
-    else if (name.startsWith(search)) score += 40;
-    else if (name.includes(search)) score += 24;
-
-    if (slug.includes(search)) score += 16;
-    if (iaType.includes(search)) score += 18;
-    if (description.includes(search)) score += 8;
-  }
-
   score += planPriority(tool.plan);
   score += Math.max(0, 20 - Math.min(tool.sort_order, 20));
 
@@ -198,40 +208,43 @@ function rankTools(tools: Tool[], filters: StudentsFilters) {
   });
 }
 
+function toggleItem<T>(items: T[], item: T) {
+  return items.includes(item) ? items.filter((value) => value !== item) : [...items, item];
+}
+
+function getUseCaseDisplayName(useCase: ToolUseCase) {
+  return USE_CASE_DISPLAY_LABELS[useCase.slug] ?? useCase.name;
+}
+
 export default function StudentsToolbar({
   initialTools,
   initialHasMore,
   initialNextOffset,
+  useCases,
 }: StudentsToolbarProps) {
   const supabase = useMemo(() => getSupabaseBrowserClient(), []);
-
-  const [searchInput, setSearchInput] = useState("");
   const [scopeValue, setScopeValue] = useState<"all_free" | "student_pack">("all_free");
   const [includeFreemiumValue, setIncludeFreemiumValue] = useState(false);
-  const [iaTypeValue, setIaTypeValue] = useState("");
-
+  const [selectedUseCases, setSelectedUseCases] = useState<string[]>([]);
   const [tools, setTools] = useState<Tool[]>(initialTools);
   const [hasMore, setHasMore] = useState(initialHasMore);
   const [nextOffset, setNextOffset] = useState<number | null>(
     initialNextOffset ?? (initialHasMore ? initialTools.length : null),
   );
-
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const requestIdRef = useRef(0);
-  const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const cacheRef = useRef<Map<string, CacheEntry>>(new Map());
   const inFlightRef = useRef<Map<string, Promise<PageResult>>>(new Map());
 
   useEffect(() => {
     const initialKey = buildKey(
       {
-        search: "",
         scope: "all_free",
         includeFreemium: false,
-        iaType: "",
+        useCaseSlugs: [],
       },
       0,
     );
@@ -247,25 +260,13 @@ export default function StudentsToolbar({
     });
   }, [initialHasMore, initialNextOffset, initialTools]);
 
-  useEffect(
-    () => () => {
-      if (searchTimerRef.current) {
-        clearTimeout(searchTimerRef.current);
-      }
-    },
-    [],
-  );
-
   const fetchPage = useCallback(
     async (offset: number, append: boolean, filters: StudentsFilters) => {
       const requestId = ++requestIdRef.current;
       const requestKey = buildKey(filters, offset);
 
-      if (append) {
-        setIsLoadingMore(true);
-      } else {
-        setIsLoading(true);
-      }
+      if (append) setIsLoadingMore(true);
+      else setIsLoading(true);
 
       setErrorMessage(null);
 
@@ -274,9 +275,7 @@ export default function StudentsToolbar({
         if (requestId !== requestIdRef.current) return;
 
         setTools((previous) =>
-          append
-            ? rankTools(mergeUniqueById(previous, cached.value.tools), filters)
-            : cached.value.tools,
+          append ? rankTools(mergeUniqueById(previous, cached.value.tools), filters) : cached.value.tools,
         );
         setHasMore(cached.value.hasMore);
         setNextOffset(cached.value.nextOffset);
@@ -285,9 +284,7 @@ export default function StudentsToolbar({
         return;
       }
 
-      if (cached && cached.expiresAt <= Date.now()) {
-        cacheRef.current.delete(requestKey);
-      }
+      if (cached && cached.expiresAt <= Date.now()) cacheRef.current.delete(requestKey);
 
       const existing = inFlightRef.current.get(requestKey);
 
@@ -307,19 +304,12 @@ export default function StudentsToolbar({
             .order("sort_order", { ascending: true })
             .order("created_at", { ascending: false });
 
-          if (filters.iaType) {
-            query = query.eq("ia_type", filters.iaType);
-          }
-
           if (filters.scope === "student_pack") {
             query = query.or("plan.eq.edu_free,edu_verified.eq.true");
           }
 
-          const safeSearch = clampSearch(filters.search);
-          if (safeSearch.length > 0) {
-            query = query.or(
-              `name.ilike.%${safeSearch}%,ia_type.ilike.%${safeSearch}%,description.ilike.%${safeSearch}%`,
-            );
+          if (filters.useCaseSlugs.length > 0) {
+            query = query.in("tool_use_cases.use_cases.slug", filters.useCaseSlugs);
           }
 
           const { data, error } = await query.range(offset, offset + PAGE_SIZE - 1);
@@ -329,7 +319,7 @@ export default function StudentsToolbar({
               tools: [],
               hasMore: false,
               nextOffset: null,
-              error: "No se pudo cargar el catalogo. Intenta nuevamente.",
+              error: "No se pudo cargar el catálogo. Intenta nuevamente.",
             };
           }
 
@@ -345,19 +335,12 @@ export default function StudentsToolbar({
           };
         })();
 
-      if (!existing) {
-        inFlightRef.current.set(requestKey, task);
-      }
+      if (!existing) inFlightRef.current.set(requestKey, task);
 
       const result = await task;
 
-      if (!existing) {
-        inFlightRef.current.delete(requestKey);
-      }
-
-      if (requestId !== requestIdRef.current) {
-        return;
-      }
+      if (!existing) inFlightRef.current.delete(requestKey);
+      if (requestId !== requestIdRef.current) return;
 
       if (result.error) {
         setErrorMessage(result.error);
@@ -382,251 +365,205 @@ export default function StudentsToolbar({
     [supabase],
   );
 
-  function clearSearchTimer() {
-    if (searchTimerRef.current) {
-      clearTimeout(searchTimerRef.current);
-      searchTimerRef.current = null;
-    }
-  }
-
   function buildFilters(overrides: Partial<StudentsFilters> = {}): StudentsFilters {
     return {
-      search: searchInput.trim(),
       scope: scopeValue,
       includeFreemium: includeFreemiumValue,
-      iaType: iaTypeValue,
+      useCaseSlugs: selectedUseCases,
       ...overrides,
     };
   }
 
-  function handleSearchChange(value: string) {
-    setSearchInput(value);
-    clearSearchTimer();
-
-    searchTimerRef.current = setTimeout(() => {
-      const nextFilters = buildFilters({ search: value.trim() });
-      void fetchPage(0, false, nextFilters);
-    }, SEARCH_DEBOUNCE_MS);
-  }
-
   function handleScopeChange(nextScope: "all_free" | "student_pack") {
     if (nextScope === scopeValue) return;
-    clearSearchTimer();
     setScopeValue(nextScope);
-    const nextFilters = buildFilters({ scope: nextScope });
-    void fetchPage(0, false, nextFilters);
+    void fetchPage(0, false, buildFilters({ scope: nextScope }));
   }
 
   function handleFreemiumChange(nextFreemium: boolean) {
     if (nextFreemium === includeFreemiumValue) return;
-    clearSearchTimer();
     setIncludeFreemiumValue(nextFreemium);
-    const nextFilters = buildFilters({ includeFreemium: nextFreemium });
-    void fetchPage(0, false, nextFilters);
+    void fetchPage(0, false, buildFilters({ includeFreemium: nextFreemium }));
   }
 
-  function handleIaTypeChange(nextIaType: string) {
-    if (nextIaType === iaTypeValue) return;
-    clearSearchTimer();
-    setIaTypeValue(nextIaType);
-    const nextFilters = buildFilters({ iaType: nextIaType });
-    void fetchPage(0, false, nextFilters);
+  function handleUseCaseToggle(slug: string) {
+    const next = toggleItem(selectedUseCases, slug);
+    setSelectedUseCases(next);
+    void fetchPage(0, false, buildFilters({ useCaseSlugs: next }));
   }
 
   function handleLoadMore() {
-    if (!hasMore || nextOffset === null || isLoadingMore) {
-      return;
-    }
-
-    const nextFilters = buildFilters();
-    void fetchPage(nextOffset, true, nextFilters);
+    if (!hasMore || nextOffset === null || isLoadingMore) return;
+    void fetchPage(nextOffset, true, buildFilters());
   }
 
   function handleClear() {
-    clearSearchTimer();
-    setSearchInput("");
     setScopeValue("all_free");
     setIncludeFreemiumValue(false);
-    setIaTypeValue("");
+    setSelectedUseCases([]);
 
     void fetchPage(0, false, {
-      search: "",
       scope: "all_free",
       includeFreemium: false,
-      iaType: "",
+      useCaseSlugs: [],
     });
   }
 
-  const iaTypeOptions = useMemo(() => extractIaTypes(tools), [tools]);
   const hasActiveFilters =
-    searchInput.trim().length > 0 ||
-    scopeValue === "student_pack" ||
-    includeFreemiumValue ||
-    iaTypeValue.length > 0;
+    scopeValue === "student_pack" || includeFreemiumValue || selectedUseCases.length > 0;
+
   const activeFilterLabels = [
-    searchInput.trim() ? `Búsqueda: ${searchInput.trim()}` : null,
     scopeValue === "student_pack" ? "Beneficio estudiantil" : null,
     includeFreemiumValue ? "Freemium incluido" : null,
-    iaTypeValue ? `Tipo: ${iaTypeValue}` : null,
+    ...selectedUseCases.map((slug) => {
+      const useCase = useCases.find((item) => item.slug === slug);
+      return useCase ? getUseCaseDisplayName(useCase) : slug;
+    }),
   ].filter(Boolean) as string[];
 
   return (
     <>
-      <section className="mt-6 overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-[0_12px_36px_rgba(15,23,42,0.05)]">
-        <div className="border-b border-slate-200/80 px-5 py-4 md:px-6 lg:px-7">
-          <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <p className="text-xs uppercase tracking-[0.16em] text-slate-500">
-                Filtro rapido
-              </p>
-              <h2 className="mt-1 text-lg font-semibold text-slate-900">
-                Encuentra acceso util sin leer de mas
-              </h2>
-              <p className="mt-1 max-w-2xl text-sm leading-relaxed text-slate-600">
-                Primero acceso, luego tipo de IA. El filtro prioriza herramientas que puedes usar
-                hoy o activar con correo institucional.
-              </p>
-            </div>
-
-            <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-xs text-slate-600">
-              <span className="font-semibold text-slate-900">{tools.length}</span>
-              {hasMore ? "+" : ""} resultados visibles
-            </div>
-          </div>
-        </div>
-
-        <div className="px-5 py-5 md:px-6 lg:px-7">
-          <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1.2fr)_minmax(0,0.95fr)]">
-            <div className="space-y-4">
-              <label
-                htmlFor="q"
-                className="block text-xs uppercase tracking-[0.12em] text-slate-600"
-              >
-                Buscador
-              </label>
-              <div className="rounded-2xl border border-slate-200 bg-slate-50/80 p-3">
-                <input
-                  id="q"
-                  value={searchInput}
-                  onChange={(event) => handleSearchChange(event.target.value)}
-                  placeholder="Ej: chatgpt, notion, github copilot..."
-                  className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-slate-400"
-                />
-                <p className="mt-2 text-xs leading-relaxed text-slate-500">
-                  Busca por nombre, descripcion o tipo de IA.
+      <section className="mt-6 overflow-hidden rounded-[1.5rem] ui-shell">
+        <div className="border-b ui-rule bg-[linear-gradient(180deg,rgba(247,243,236,0.8)_0%,rgba(255,255,255,0.95)_100%)] px-4 py-4 md:px-6 md:py-6">
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-wrap items-end justify-between gap-3">
+              <div className="max-w-3xl">
+                <p className="ui-label">Filtro rápido</p>
+                <h2 className="mt-2 text-lg font-semibold text-slate-950 md:text-[1.4rem]">
+                  Encuentra acceso útil sin leer de más.
+                </h2>
+                <p className="mt-2 max-w-2xl text-[13px] leading-relaxed text-slate-600 md:text-sm">
+                  Primero acceso real. Después aterriza el caso de uso. La idea es reducir el
+                  catálogo a lo que un estudiante puede activar hoy.
                 </p>
+              </div>
+              <div className="inline-flex items-center gap-2 rounded-full border border-slate-300/70 bg-white px-3 py-1.5 text-[11px] text-slate-600 shadow-[0_6px_14px_rgba(17,24,39,0.04)] md:px-4 md:py-2 md:text-xs">
+                <span className="font-semibold text-slate-950">{tools.length}</span>
+                {hasMore ? "+" : ""} resultados visibles
               </div>
             </div>
 
-            <div className="space-y-4">
-              <div>
-                <p className="mb-2 block text-xs uppercase tracking-[0.12em] text-slate-600">
-                  Acceso
-                </p>
-                <div className="grid gap-2 sm:grid-cols-3">
+            <div className="grid items-start gap-4 xl:grid-cols-[0.9fr_1.1fr]">
+              <div className="rounded-[1rem] border ui-rule bg-[rgba(250,249,247,0.92)] p-3.5">
+                <div>
+                  <p className="ui-label inline-flex items-center gap-1.5">
+                    <GraduationCap className="h-3.5 w-3.5 text-sky-500" />
+                    Acceso
+                  </p>
+                  <p className="mt-1 text-sm text-slate-600">
+                    Prioriza la forma real de entrada antes de refinar el resto.
+                  </p>
+                </div>
+                <div className="mt-3 flex flex-wrap gap-2">
                   <button
                     type="button"
                     onClick={() => handleScopeChange("all_free")}
                     aria-pressed={scopeValue === "all_free"}
-                    className={`rounded-2xl border px-4 py-3 text-left text-sm transition ${
+                    className={`inline-flex items-center rounded-full border px-3.5 py-2 text-sm font-medium transition ${
                       scopeValue === "all_free"
-                        ? "border-cyan-300 bg-cyan-400/12 text-cyan-800 shadow-[0_0_0_1px_rgba(34,211,238,0.1)]"
-                        : "border-slate-200 bg-slate-50 text-slate-700 hover:border-slate-300"
+                        ? "border-slate-950 bg-slate-950 text-white shadow-[0_6px_14px_rgba(17,24,39,0.1)]"
+                        : "border-slate-300/70 bg-white text-slate-700 hover:border-slate-400 hover:bg-slate-50"
                     }`}
                   >
-                    <span className="block font-semibold text-slate-900">Gratis total</span>
-                    <span className="mt-1 block text-xs leading-relaxed text-slate-500">
-                      Sin pago ni tarjeta para empezar.
-                    </span>
+                    Gratis total
                   </button>
-
                   <button
                     type="button"
                     onClick={() => handleScopeChange("student_pack")}
                     aria-pressed={scopeValue === "student_pack"}
-                    className={`rounded-2xl border px-4 py-3 text-left text-sm transition ${
+                    className={`inline-flex items-center rounded-full border px-3.5 py-2 text-sm font-medium transition ${
                       scopeValue === "student_pack"
-                        ? "border-emerald-300 bg-emerald-400/12 text-emerald-800 shadow-[0_0_0_1px_rgba(52,211,153,0.1)]"
-                        : "border-slate-200 bg-slate-50 text-slate-700 hover:border-slate-300"
+                        ? "border-slate-950 bg-slate-950 text-white shadow-[0_6px_14px_rgba(17,24,39,0.1)]"
+                        : "border-slate-300/70 bg-white text-slate-700 hover:border-slate-400 hover:bg-slate-50"
                     }`}
                   >
-                    <span className="block font-semibold text-slate-900">Beneficio</span>
-                    <span className="mt-1 block text-xs leading-relaxed text-slate-500">
-                      Correo institucional o verificacion academica.
-                    </span>
+                    Beneficio estudiantil
                   </button>
-
                   <button
                     type="button"
                     onClick={() => handleFreemiumChange(!includeFreemiumValue)}
                     aria-pressed={includeFreemiumValue}
-                    className={`rounded-2xl border px-4 py-3 text-left text-sm transition ${
+                    className={`inline-flex items-center rounded-full border px-3.5 py-2 text-sm font-medium transition ${
                       includeFreemiumValue
-                        ? "border-violet-300 bg-violet-400/12 text-violet-800 shadow-[0_0_0_1px_rgba(196,181,253,0.12)]"
-                        : "border-slate-200 bg-slate-50 text-slate-700 hover:border-slate-300"
+                        ? "border-slate-950 bg-slate-950 text-white shadow-[0_6px_14px_rgba(17,24,39,0.1)]"
+                        : "border-slate-300/70 bg-white text-slate-700 hover:border-slate-400 hover:bg-slate-50"
                     }`}
                   >
-                    <span className="block font-semibold text-slate-900">Freemium</span>
-                    <span className="mt-1 block text-xs leading-relaxed text-slate-500">
-                      Empiezas gratis y luego decides.
-                    </span>
+                    Incluir freemium
                   </button>
                 </div>
               </div>
 
-              <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
-                <label htmlFor="ia_type" className="block">
-                  <span className="mb-2 block text-xs uppercase tracking-[0.12em] text-slate-600">
-                    Tipo de IA
+              <div className="rounded-[1rem] border border-slate-300/70 bg-[linear-gradient(180deg,rgba(250,249,247,0.96)_0%,rgba(255,255,255,0.96)_100%)] p-3.5 shadow-[0_8px_16px_rgba(17,24,39,0.03)]">
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <p className="inline-flex items-center gap-1 text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+                      <Layers3 className="h-3 w-3 text-sky-500" />
+                      Casos de uso
+                    </p>
+                    <h3 className="mt-0.5 text-sm font-semibold text-slate-950">
+                      Aterriza la intención.
+                    </h3>
+                  </div>
+                  <span className="text-[11px] whitespace-nowrap text-slate-500">
+                    {selectedUseCases.length > 0 ? `${selectedUseCases.length} activos` : "Todos"}
                   </span>
-                  <select
-                    id="ia_type"
-                    value={iaTypeValue}
-                    onChange={(event) => handleIaTypeChange(event.target.value)}
-                    className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-slate-400"
-                  >
-                    <option value="">Todos</option>
-                    {iaTypeOptions.map((option) => (
-                      <option key={option} value={option}>
-                        {option}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-
-                <button
-                  type="button"
-                  onClick={handleClear}
-                  className="inline-flex h-11 items-center justify-center rounded-full border border-slate-300 bg-slate-50 px-4 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
-                >
-                  Limpiar
-                </button>
+                </div>
+                <div className="mt-3 grid grid-cols-2 gap-1.5 md:gap-2">
+                  {useCases.map((useCase) => {
+                    const selected = selectedUseCases.includes(useCase.slug);
+                    return (
+                      <button
+                        key={useCase.slug}
+                        type="button"
+                        onClick={() => handleUseCaseToggle(useCase.slug)}
+                        className={`inline-flex min-h-[2.45rem] items-center justify-center rounded-[0.85rem] border px-2 py-1.5 text-center text-[11px] font-medium leading-tight transition md:rounded-[0.9rem] md:px-3 md:text-[12.5px] ${
+                          selected
+                            ? "border-slate-950 bg-slate-950 text-white shadow-[0_6px_14px_rgba(17,24,39,0.1)]"
+                            : "border-slate-300/70 bg-white text-slate-700 hover:border-slate-400 hover:bg-slate-50"
+                        }`}
+                      >
+                        {getUseCaseDisplayName(useCase)}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="mt-4 flex flex-col gap-3 border-t border-slate-200 pt-4 md:flex-row md:items-center md:justify-between">
             {activeFilterLabels.length > 0 ? (
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap items-center gap-2 rounded-[1rem] border ui-rule bg-[rgba(250,249,247,0.92)] px-3 py-3">
+                <span className="ui-chip inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium">
+                  Filtros activos
+                </span>
                 {activeFilterLabels.map((label) => (
                   <span
                     key={label}
-                    className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs text-slate-700"
+                    className="ui-chip inline-flex items-center rounded-full px-3 py-1.5 text-xs font-medium"
                   >
                     {label}
                   </span>
                 ))}
+                <button
+                  type="button"
+                  onClick={handleClear}
+                  className="ml-auto inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-slate-50"
+                >
+                  <X className="h-3.5 w-3.5" />
+                  Limpiar todo
+                </button>
               </div>
             ) : (
-              <p className="text-sm text-slate-500">
-                Empieza por acceso y deja el resto como ajuste fino.
-              </p>
+              <div className="flex flex-wrap items-center justify-between gap-3 rounded-[1rem] border ui-rule bg-[rgba(250,249,247,0.92)] px-3 py-3">
+                <p className="text-sm text-slate-500">
+                  Empieza por acceso y elige un caso de uso solo si quieres aterrizar más rápido.
+                </p>
+                <p className="text-sm text-slate-600">
+                  Mostrando <span className="font-semibold text-slate-900">{tools.length}</span>
+                  {hasMore ? "+" : ""} herramientas.
+                </p>
+              </div>
             )}
-
-            <p className="text-sm text-slate-600">
-              Mostrando <span className="font-semibold text-slate-900">{tools.length}</span>
-              {hasMore ? "+" : ""} herramientas para estudiantes.
-            </p>
           </div>
         </div>
       </section>
@@ -638,12 +575,14 @@ export default function StudentsToolbar({
       ) : null}
 
       {isLoading && tools.length === 0 ? (
-        <div className="mt-8 rounded-2xl border border-slate-200 bg-white px-6 py-9 text-center text-slate-700">
+        <div className="mt-8 rounded-[1rem] ui-panel px-6 py-9 text-center text-slate-700">
           Cargando herramientas...
         </div>
       ) : tools.length > 0 ? (
         <div
-          className={`mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3 transition-opacity duration-150 ${isLoading ? "pointer-events-none opacity-50" : "opacity-100"}`}
+          className={`mt-8 grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3 transition-opacity duration-150 ${
+            isLoading ? "pointer-events-none opacity-50" : "opacity-100"
+          }`}
         >
           {tools.map((tool) => (
             <StudentToolCard key={tool.id} tool={tool} />
@@ -663,7 +602,7 @@ export default function StudentsToolbar({
             disabled={isLoadingMore}
             className="inline-flex items-center rounded-full border border-slate-300 bg-slate-50 px-5 py-2.5 text-sm font-medium text-slate-800 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {isLoadingMore ? "Cargando..." : "Cargar 50 mas"}
+            {isLoadingMore ? "Cargando..." : "Cargar 50 más"}
           </button>
         </div>
       ) : null}

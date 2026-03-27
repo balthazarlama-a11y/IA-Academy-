@@ -21,7 +21,7 @@ export default async function AreasPage() {
   ]);
 
   return (
-    <main className="relative flex min-h-screen flex-col bg-[linear-gradient(180deg,#f8f3ea_0%,#fbf8f3_40%,#ffffff_100%)]">
+    <main className="relative flex min-h-screen flex-col bg-[linear-gradient(180deg,#f5f2ec_0%,#faf8f4_45%,#ffffff_100%)]">
       <Header />
 
       <section className="flex-1 w-full px-5 py-8 md:px-6 md:py-10 xl:px-8">

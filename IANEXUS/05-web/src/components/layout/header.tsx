@@ -1,10 +1,10 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import {
-  BookOpen,
   LogIn,
   LogOut,
   PenSquare,
@@ -86,7 +86,7 @@ function HeaderBadge({
 }) {
   const tones = {
     slate: "border-slate-300/80 bg-white/78 text-slate-700",
-    blue: "border-blue-200/80 bg-[color:var(--accent-soft)] text-[#3351c8]",
+    blue: "border-[rgba(22,50,93,0.16)] bg-[color:var(--accent-soft)] text-[color:var(--accent-main)]",
   } as const;
 
   return (
@@ -112,7 +112,7 @@ function ActionPill({
     default: "border-slate-300/80 bg-white/82 text-slate-700 hover:bg-white",
     emerald: "border-emerald-200/80 bg-[#eef8f4] text-emerald-700 hover:brightness-95",
     violet: "border-violet-200/80 bg-[#f3efff] text-violet-700 hover:brightness-95",
-    blue: "border-blue-200/80 bg-[color:var(--accent-soft)] text-[#3351c8] hover:brightness-95",
+    blue: "border-[rgba(22,50,93,0.16)] bg-[color:var(--accent-soft)] text-[color:var(--accent-main)] hover:brightness-95",
   } as const;
 
   return (
@@ -215,16 +215,23 @@ export default function Header() {
   const searchIsActive = pathname === "/buscar";
 
   return (
-    <header className="relative z-50 w-full border-b border-[color:var(--line-muted)] bg-[rgba(246,242,234,0.92)] backdrop-blur-md">
-      <div className="editorial-frame flex min-h-[102px] items-center justify-between gap-8 px-4 py-4 md:px-6 md:py-5 xl:gap-10">
+    <header className="relative z-50 w-full border-b border-[color:var(--line-muted)] bg-[rgba(247,244,239,0.92)] backdrop-blur-md">
+      <div className="editorial-frame flex min-h-[96px] items-center justify-between gap-8 px-4 py-4 md:px-6 md:py-5 xl:gap-10">
         <Link href="/" className="min-w-0 shrink-0">
           <div className="flex items-center gap-4">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-slate-200/80 bg-white/82 text-[#172033] shadow-sm">
-              <BookOpen className="h-[18px] w-[18px]" />
+            <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-[1.1rem] border border-[rgba(18,40,77,0.16)] bg-white text-[#172033] shadow-[0_4px_10px_rgba(16,33,61,0.05)]">
+              <Image
+                src="/yourai-logo.jpeg"
+                alt="YourAI logo"
+                width={56}
+                height={56}
+                className="h-[56px] w-[56px] scale-[1.32] object-cover"
+                priority
+              />
             </div>
             <div className="min-w-0">
               <p className="editorial-kicker editorial-muted">YourAI editorial desk</p>
-              <div className="editorial-display mt-1 text-[2.05rem] leading-none font-semibold tracking-[-0.05em] text-[#111827] md:text-[2.7rem]">
+              <div className="editorial-display mt-1 text-[2rem] leading-none font-semibold tracking-[-0.05em] text-[#111827] md:text-[2.55rem]">
                 YourAI
               </div>
             </div>
@@ -242,7 +249,7 @@ export default function Header() {
                   key={item.href}
                   href={item.href}
                   className={`editorial-display nav-link whitespace-nowrap text-[1.12rem] leading-none transition-colors ${
-                    isActive ? "text-[#172033]" : "text-[#5a6478] hover:text-[#3351c8]"
+                    isActive ? "text-[#172033]" : "text-[#5a6478] hover:text-[color:var(--accent-main)]"
                   }`}
                 >
                   {item.label}
@@ -256,8 +263,8 @@ export default function Header() {
               href={searchHref}
               className={`inline-flex h-11 items-center gap-2 rounded-full border px-4 text-sm font-medium transition-colors ${
                 searchIsActive
-                  ? "border-[#172033] bg-[#172033] text-white"
-                  : "border-slate-300/80 bg-white/72 text-slate-700 hover:bg-white"
+                  ? "border-[color:var(--accent-main)] bg-[color:var(--accent-main)] text-white"
+                  : "border-slate-300/90 bg-white text-slate-700 hover:border-slate-400 hover:bg-white"
               }`}
             >
               <Search className="h-4 w-4" />
@@ -273,8 +280,8 @@ export default function Header() {
               </ActionPill>
             ) : (
               <>
-                <div className="inline-flex h-11 items-center gap-2 rounded-full border border-slate-200/80 bg-white/72 px-4">
-                  {isStaff ? <Shield className="h-3.5 w-3.5 text-[#3351c8]" /> : null}
+                <div className="inline-flex h-11 items-center gap-2 rounded-full border border-slate-300/70 bg-white px-4">
+                  {isStaff ? <Shield className="h-3.5 w-3.5 text-[color:var(--accent-main)]" /> : null}
                   <div className="flex flex-col leading-tight">
                     <span className="text-[10px] font-medium uppercase tracking-[0.16em] text-slate-500">
                       Sesión activa
@@ -307,7 +314,7 @@ export default function Header() {
                     writeCachedHeaderSession(null);
                     router.refresh();
                   }}
-                  className="inline-flex h-11 items-center gap-1.5 rounded-full border border-slate-300/80 bg-white/72 px-4 text-sm font-medium text-slate-700 transition-colors hover:bg-white"
+                  className="inline-flex h-11 items-center gap-1.5 rounded-full border border-slate-300/90 bg-white px-4 text-sm font-medium text-slate-700 transition-colors hover:border-slate-400 hover:bg-white"
                 >
                   <LogOut className="h-3.5 w-3.5" />
                   Salir
@@ -323,7 +330,7 @@ export default function Header() {
             onClick={() => setMobileMenuOpen((v) => !v)}
             aria-label={mobileMenuOpen ? "Cerrar menu" : "Abrir menu"}
             aria-expanded={mobileMenuOpen}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-300/80 bg-white/80 text-slate-700 shadow-sm"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-[1rem] border border-slate-300/90 bg-white text-slate-700 shadow-sm"
           >
             {mobileMenuOpen ? <X className="h-5 w-5" /> : (<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" /></svg>)}
           </button>
@@ -331,7 +338,7 @@ export default function Header() {
       </div>
 
       {mobileMenuOpen ? (
-        <div className="editorial-rule border-t bg-[rgba(246,242,234,0.96)] md:hidden">
+        <div className="editorial-rule border-t bg-[rgba(247,244,239,0.96)] md:hidden">
           <div className="editorial-frame px-4 py-4">
             <div className="grid gap-2">
               <Link

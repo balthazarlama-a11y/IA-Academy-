@@ -64,11 +64,11 @@ export default function DayFilterBar({ onFilterChange, categories }: DayFilterBa
   }, [onFilterChange]);
 
   return (
-    <div className="w-full rounded-2xl border border-slate-200/80 bg-white/92 p-4 shadow-[0_12px_36px_rgba(15,23,42,0.05)] md:p-5">
-      <div className="flex flex-col gap-3 border-b border-slate-200 pb-4 md:flex-row md:items-end md:justify-between">
+    <div className="w-full rounded-[1.1rem] ui-panel p-3.5 md:rounded-[1.3rem] md:p-5">
+      <div className="flex flex-col gap-3 border-b ui-rule pb-3.5 md:pb-4 md:flex-row md:items-end md:justify-between">
         <div>
-          <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Filtrar feed</p>
-          <h2 className="mt-1 text-lg font-semibold tracking-[-0.02em] text-slate-950">
+          <p className="ui-label">Filtrar feed</p>
+          <h2 className="mt-1 text-base font-semibold tracking-[-0.02em] text-slate-950 md:text-lg">
             Ajusta la lectura sin salir de la misma vista.
           </h2>
         </div>
@@ -83,7 +83,7 @@ export default function DayFilterBar({ onFilterChange, categories }: DayFilterBa
         ) : null}
       </div>
 
-      <div className="mt-4 grid grid-cols-1 gap-3 lg:grid-cols-12">
+      <div className="mt-3.5 grid grid-cols-1 gap-2.5 md:mt-4 md:gap-3 lg:grid-cols-12">
         <div className="lg:col-span-4">
           <label className="mb-1.5 block text-[11px] uppercase tracking-[0.16em] text-slate-500">
             Buscar
@@ -93,7 +93,7 @@ export default function DayFilterBar({ onFilterChange, categories }: DayFilterBa
             placeholder="Título, descripción o tipo de IA"
             value={filters.search}
             onChange={(e) => updateFilter("search", e.target.value)}
-            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-sky-300 focus:bg-white"
+            className="ui-input w-full rounded-[0.85rem] px-3.5 py-2.5 text-[13px] placeholder:text-slate-400 outline-none transition md:rounded-[0.9rem] md:px-4 md:py-3 md:text-sm"
           />
         </div>
 
@@ -104,7 +104,7 @@ export default function DayFilterBar({ onFilterChange, categories }: DayFilterBa
           <select
             value={filters.plan}
             onChange={(e) => updateFilter("plan", e.target.value as FilterState["plan"])}
-            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-300 focus:bg-white"
+            className="ui-select w-full rounded-[0.85rem] px-3.5 py-2.5 text-[13px] outline-none transition md:rounded-[0.9rem] md:px-4 md:py-3 md:text-sm"
           >
             {PLAN_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value} className="bg-white">
@@ -121,7 +121,7 @@ export default function DayFilterBar({ onFilterChange, categories }: DayFilterBa
           <select
             value={filters.category}
             onChange={(e) => updateFilter("category", e.target.value)}
-            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-300 focus:bg-white"
+            className="ui-select w-full rounded-[0.85rem] px-3.5 py-2.5 text-[13px] outline-none transition md:rounded-[0.9rem] md:px-4 md:py-3 md:text-sm"
           >
             <option value="" className="bg-white">
               Todos
@@ -141,7 +141,7 @@ export default function DayFilterBar({ onFilterChange, categories }: DayFilterBa
           <select
             value={filters.level}
             onChange={(e) => updateFilter("level", e.target.value as FilterState["level"])}
-            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-300 focus:bg-white"
+            className="ui-select w-full rounded-[0.85rem] px-3.5 py-2.5 text-[13px] outline-none transition md:rounded-[0.9rem] md:px-4 md:py-3 md:text-sm"
           >
             {LEVEL_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value} className="bg-white">
