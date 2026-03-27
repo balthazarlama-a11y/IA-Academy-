@@ -28,7 +28,7 @@ export default async function TendenciasPage() {
 
         <section className="editorial-frame px-4 py-6 md:px-6 md:py-10 xl:px-8">
           <div className="flex flex-col gap-5">
-            <div className="rounded-2xl border border-slate-200 bg-white/92 p-5 shadow-[0_14px_42px_rgba(15,23,42,0.06)] md:p-6">
+            <div className="rounded-2xl border border-slate-200 bg-white/92 p-4 md:p-6 shadow-[0_14px_42px_rgba(15,23,42,0.06)]">
               <div className="grid gap-6 lg:grid-cols-[1fr_320px] lg:items-end">
                 <div>
                   <p className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] uppercase tracking-[0.16em] text-slate-600">
@@ -56,7 +56,7 @@ export default async function TendenciasPage() {
                   </div>
                 </div>
 
-                <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 md:p-4">
                   <p className="text-[11px] uppercase tracking-[0.14em] text-slate-500">
                     Como se ordena
                   </p>
@@ -69,7 +69,7 @@ export default async function TendenciasPage() {
               </div>
 
               <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-                <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 md:p-4">
                   <p className="text-[11px] uppercase tracking-[0.16em] text-slate-500">
                     Destacadas
                   </p>
@@ -78,7 +78,7 @@ export default async function TendenciasPage() {
                   </p>
                   <p className="mt-1 text-sm text-slate-600">Tienen peso manual en la seleccion.</p>
                 </div>
-                <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 md:p-4">
                   <p className="text-[11px] uppercase tracking-[0.16em] text-slate-500">
                     Con guia
                   </p>
@@ -87,7 +87,7 @@ export default async function TendenciasPage() {
                   </p>
                   <p className="mt-1 text-sm text-slate-600">Ya tienen lectura asociada.</p>
                 </div>
-                <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 md:p-4">
                   <p className="text-[11px] uppercase tracking-[0.16em] text-slate-500">
                     Recientes
                   </p>
@@ -96,7 +96,7 @@ export default async function TendenciasPage() {
                   </p>
                   <p className="mt-1 text-sm text-slate-600">Entraron en los ultimos 45 dias.</p>
                 </div>
-                <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 md:p-4">
                   <p className="text-[11px] uppercase tracking-[0.16em] text-slate-500">
                     Con señal de calidad
                   </p>
@@ -130,7 +130,7 @@ export default async function TendenciasPage() {
             </section>
 
             <section className="grid gap-4 lg:grid-cols-2">
-              <div className="rounded-2xl border border-slate-200 bg-white/92 p-4 shadow-[0_10px_24px_rgba(15,23,42,0.05)]">
+              <div className="rounded-2xl border border-slate-200 bg-white/92 p-3 md:p-4 shadow-[0_10px_24px_rgba(15,23,42,0.05)]">
                 <div className="flex items-center justify-between gap-3">
                   <div>
                     <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">
@@ -167,7 +167,7 @@ export default async function TendenciasPage() {
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-slate-200 bg-white/92 p-4 shadow-[0_10px_24px_rgba(15,23,42,0.05)]">
+              <div className="rounded-2xl border border-slate-200 bg-white/92 p-3 md:p-4 shadow-[0_10px_24px_rgba(15,23,42,0.05)]">
                 <div className="flex items-center justify-between gap-3">
                   <div>
                     <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">
@@ -205,7 +205,7 @@ export default async function TendenciasPage() {
               </div>
             </section>
 
-            <section className="rounded-2xl border border-slate-200 bg-slate-950 px-5 py-6 text-white shadow-[0_12px_28px_rgba(15,23,42,0.14)] md:px-6 md:py-7">
+            <section className="rounded-2xl border border-slate-200 bg-slate-950 px-4 py-5 text-white shadow-[0_12px_28px_rgba(15,23,42,0.14)] md:px-6 md:py-7">
               <div className="grid gap-5 lg:grid-cols-[1fr_auto] lg:items-center">
                 <div>
                   <p className="inline-flex items-center rounded-md border border-white/15 bg-white/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-300">

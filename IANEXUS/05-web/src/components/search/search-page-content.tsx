@@ -79,9 +79,9 @@ export default function SearchPageContent({ data }: { data: SearchPageData }) {
                 </select>
               </label>
 
-              <div className="flex items-end gap-2 xl:justify-end">
-                <button type="submit" className="inline-flex h-11 items-center justify-center rounded-xl bg-slate-950 px-4 text-sm font-semibold text-white transition hover:bg-slate-800">Buscar</button>
-                {hasFilters ? <Link href="/buscar" className="inline-flex h-11 items-center justify-center rounded-xl border border-slate-300 bg-white px-4 text-sm font-medium text-slate-700 transition hover:bg-slate-50">Limpiar</Link> : null}
+              <div className="flex flex-col-reverse md:flex-row items-stretch md:items-end gap-2 xl:justify-end">
+                {hasFilters ? <Link href="/buscar" className="inline-flex h-11 w-full md:w-auto items-center justify-center rounded-xl border border-slate-300 bg-white px-4 text-sm font-medium text-slate-700 transition hover:bg-slate-50">Limpiar</Link> : null}
+                <button type="submit" className="inline-flex h-11 w-full md:w-auto items-center justify-center rounded-xl bg-slate-950 px-4 text-sm font-semibold text-white transition hover:bg-slate-800">Buscar</button>
               </div>
             </div>
           </div>

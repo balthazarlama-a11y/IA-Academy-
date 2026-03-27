@@ -34,13 +34,13 @@ const SOCIAL_LINKS = [
 
 export default function Footer() {
   return (
-    <footer className="relative z-50 px-4 pb-3">
+    <footer className="relative z-50 px-4 pb-24 md:pb-6">
       <div className="editorial-frame rounded-xl border border-slate-200 bg-white/90 px-5 py-4 shadow-[0_10px_24px_rgba(15,23,42,0.05)] backdrop-blur-sm editorial-surface">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-3">
               <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-slate-900 text-white shadow-sm">
-                <span className="text-[0.8rem] font-semibold tracking-tight">IA</span>
+                <span className="text-[0.8rem] font-semibold tracking-tight">Y</span>
               </div>
               <div className="flex flex-col leading-tight">
                 <span className="text-sm font-semibold tracking-tight text-slate-900">

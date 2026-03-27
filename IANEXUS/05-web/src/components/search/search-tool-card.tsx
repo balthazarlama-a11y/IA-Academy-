@@ -32,14 +32,14 @@ export default function SearchToolCard({ tool }: { tool: Tool }) {
   return (
     <article className="group overflow-hidden rounded-[1.4rem] border border-slate-200 bg-white shadow-[0_10px_24px_rgba(15,23,42,0.05)] transition hover:border-slate-300 hover:shadow-[0_14px_30px_rgba(15,23,42,0.08)]">
       <div className="h-1 w-full" style={{ background: accent }} />
-      <div className="p-4">
+      <div className="p-3 md:p-4">
         <div className="flex items-start gap-3">
           {tool.cover_image_url ? (
-            <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-2xl border border-slate-200 bg-white">
+            <div className="relative h-12 w-12 md:h-14 md:w-14 shrink-0 overflow-hidden rounded-xl md:rounded-2xl border border-slate-200 bg-white">
               <Image src={tool.cover_image_url} alt={`${tool.name} logo`} fill unoptimized className="object-contain p-1.5" sizes="56px" />
             </div>
           ) : (
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-slate-200 text-lg font-semibold" style={{ color: accent, background: `${accent}12` }}>
+            <div className="flex h-12 w-12 md:h-14 md:w-14 shrink-0 items-center justify-center rounded-xl md:rounded-2xl border border-slate-200 text-base md:text-lg font-semibold" style={{ color: accent, background: `${accent}12` }}>
               {tool.name.charAt(0).toUpperCase()}
             </div>
           )}
@@ -51,7 +51,7 @@ export default function SearchToolCard({ tool }: { tool: Tool }) {
               {tool.guide_slug ? <span className="inline-flex rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[11px] text-slate-600">Guía disponible</span> : null}
             </div>
 
-            <h3 className="mt-3 text-lg font-semibold leading-snug tracking-tight text-slate-950">{tool.name}</h3>
+            <h3 className="mt-3 text-base md:text-lg font-semibold leading-snug tracking-tight text-slate-950">{tool.name}</h3>
             <p className="mt-2 line-clamp-2 text-sm leading-6 text-slate-600">{description}</p>
 
             <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2 text-[11px] text-slate-500">

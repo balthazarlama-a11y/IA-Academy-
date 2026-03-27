@@ -166,7 +166,7 @@ export default async function Home() {
         <div className="editorial-frame px-5 pb-16 pt-8 md:px-6 lg:px-8 lg:pt-10">
           <section className="grid gap-10 lg:grid-cols-[1.45fr_2.75fr_1.35fr] lg:gap-8">
             <aside className="editorial-rule flex flex-col gap-8 border-b pb-8 lg:border-b-0 lg:border-r lg:pb-0 lg:pr-8">
-              <div className="rounded-[1.95rem] border border-[#dbe2f4] bg-[linear-gradient(180deg,rgba(255,255,255,0.84),rgba(233,239,255,0.42))] p-6 shadow-[0_22px_48px_rgba(22,34,51,0.06)]">
+              <div className="rounded-[1.95rem] border border-[#dbe2f4] bg-[linear-gradient(180deg,rgba(255,255,255,0.84),rgba(233,239,255,0.42))] p-4 md:p-6 shadow-[0_22px_48px_rgba(22,34,51,0.06)]">
                 <p className="editorial-kicker editorial-muted">Mapa editorial</p>
                 <nav className="mt-6 flex flex-col gap-4">
                   {editorialRoutes.map((route) => {
@@ -197,7 +197,7 @@ export default async function Home() {
                 </nav>
               </div>
 
-              <div className="rounded-[1.8rem] border border-[#cad7ff] bg-[linear-gradient(180deg,rgba(233,239,255,0.95),rgba(242,237,255,0.88))] p-5 shadow-[0_18px_38px_rgba(91,102,184,0.08)]">
+              <div className="rounded-[1.8rem] border border-[#cad7ff] bg-[linear-gradient(180deg,rgba(233,239,255,0.95),rgba(242,237,255,0.88))] p-4 md:p-5 shadow-[0_18px_38px_rgba(91,102,184,0.08)]">
                 <p className="editorial-kicker text-[#3351c8]">Nota editorial</p>
                 <p className="editorial-display mt-3 text-[1rem] leading-7 text-[#243046]">
                   “El objetivo no es listar todo. Es ayudarte a encontrar primero lo que sí vale la pena probar.”
@@ -208,9 +208,9 @@ export default async function Home() {
             <EditorialCoverRotator slides={coverSlides} />
 
             <aside>
-              <div className="rounded-[1.6rem] border-2 border-[#1f2740]/7 bg-[linear-gradient(180deg,rgba(255,255,255,0.86),rgba(233,239,255,0.24)_100%)] p-5 shadow-[0_20px_44px_rgba(15,23,42,0.05)] md:p-5">
+              <div className="rounded-[1.6rem] border-2 border-[#1f2740]/7 bg-[linear-gradient(180deg,rgba(255,255,255,0.86),rgba(233,239,255,0.24)_100%)] p-4 shadow-[0_20px_44px_rgba(15,23,42,0.05)] md:p-5">
                 <div className="flex items-center justify-between">
-                  <h3 className="editorial-display text-[1.8rem] font-semibold leading-none text-[#111827]">
+                  <h3 className="editorial-display text-[1.45rem] md:text-[1.8rem] font-semibold leading-none text-[#111827]">
                     Trending Tools
                   </h3>
                   <span className="editorial-kicker editorial-muted">Top 3</span>
@@ -223,7 +223,7 @@ export default async function Home() {
                       href={`/herramientas/${tool.slug}`}
                       className="editorial-rule group -mx-2 flex gap-4 border-b px-2 py-4 transition-colors hover:bg-white/55"
                     >
-                      <span className="editorial-display text-[1.85rem] font-light text-[#9aa3b6] transition-colors group-hover:text-[#3351c8]">
+                      <span className="editorial-display text-[1.5rem] md:text-[1.85rem] font-light text-[#9aa3b6] transition-colors group-hover:text-[#3351c8]">
                         {String(index + 1).padStart(2, "0")}
                       </span>
                       <span className="min-w-0 flex-1">
@@ -263,11 +263,11 @@ export default async function Home() {
           </section>
 
           <section className="editorial-rule mt-12 grid gap-8 border-t pt-8 lg:grid-cols-[1.2fr_0.8fr]">
-            <div className="rounded-[1.9rem] border border-[#dfe5f2] bg-[linear-gradient(180deg,rgba(255,255,255,0.8),rgba(238,248,244,0.42))] p-6 shadow-[0_22px_48px_rgba(15,23,42,0.05)] md:p-7">
+            <div className="rounded-[1.9rem] border border-[#dfe5f2] bg-[linear-gradient(180deg,rgba(255,255,255,0.8),rgba(238,248,244,0.42))] p-4 shadow-[0_22px_48px_rgba(15,23,42,0.05)] md:p-7">
               <div className="flex items-center justify-between gap-4">
                 <div>
                   <p className="editorial-kicker editorial-muted">Últimas lecturas</p>
-                  <h3 className="editorial-display mt-2 text-[2rem] font-semibold leading-none text-[#111827]">
+                  <h3 className="editorial-display mt-2 text-[1.6rem] md:text-[2rem] font-semibold leading-none text-[#111827]">
                     Sigue desde aquí
                   </h3>
                 </div>
@@ -311,16 +311,16 @@ export default async function Home() {
               </div>
             </div>
 
-            <div className="rounded-[1.9rem] border border-[#dbe2f4] bg-[linear-gradient(180deg,rgba(255,255,255,0.86),rgba(233,239,255,0.32))] p-5 shadow-[0_24px_50px_rgba(15,23,42,0.06)] md:p-6">
+            <div className="rounded-[1.9rem] border border-[#dbe2f4] bg-[linear-gradient(180deg,rgba(255,255,255,0.86),rgba(233,239,255,0.32))] p-4 shadow-[0_24px_50px_rgba(15,23,42,0.06)] md:p-6">
               <p className="editorial-kicker editorial-muted">Señales rápidas</p>
               <div className="mt-5 space-y-4">
                 {latestSignals.map((post, index) => (
                   <Link
                     key={post.id}
                     href={`/blog/${post.slug}`}
-                    className="flex items-start gap-4 rounded-2xl px-2 py-2 transition-colors hover:bg-white/72"
+                    className="flex items-start gap-3 md:gap-4 rounded-2xl px-2 py-2 transition-colors hover:bg-white/72"
                   >
-                    <span className="editorial-display text-[1.7rem] leading-none text-[#9aa3b6]">
+                    <span className="editorial-display text-[1.4rem] md:text-[1.7rem] leading-none text-[#9aa3b6]">
                       {String(index + 1).padStart(2, "0")}
                     </span>
                     <span className="min-w-0 flex-1">
